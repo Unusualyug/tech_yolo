@@ -1,9 +1,9 @@
 {
-  "title": "TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam System with Language-Configured Speech",
+  "title": "TRINEXIS: An Alert-Aware Narration Policy and a Protocol for Measuring Its Effect on Alert Delivery",
   "upload_type": "software",
   "publication_date": "2026-11-10",
-  "version": "v0.3.0-standalone",
-  "description": "Repository-fixed TRINEXIS software and standalone technical report. The paper documents an alert-aware, interval-throttled open-vocabulary webcam pipeline with language-configured speech, deterministic software verification, AGPL-3.0 licensing, and a weights checksum script. No empirical detection, latency, distance-calibration, or user-study result is claimed.",
+  "version": "PENDING_FINAL_RELEASE",
+  "description": "Unreleased working-tree revision of the TRINEXIS software and standalone technical report. The paper defines an alert-aware narration policy, real-log instrumentation, experiment protocols, blank NO DATA result templates, mocked Flask route tests, CI, and language-fallback documentation. No empirical detection, latency, distance-calibration, translation-rating, or user-study result is claimed.",
   "creators": [
     {
       "name": "Lakhani, Yug G.",
@@ -18,13 +18,14 @@
     "Flask",
     "alert-aware narration",
     "research software",
-    "technical report"
+    "technical report",
+    "empirical protocol"
   ],
-  "notes": "Zenodo DOI pending author authorization. Connect the GitHub repository to Zenodo, enable the repository, and publish the v0.3.0-standalone release to mint the DOI. Replace the GitHub release URL in the manuscript, CITATION.cff, codemeta.json, and zenodo.json with the resulting DOI.",
+  "notes": "Zenodo DOI pending author authorization and the final GitHub/Zenodo release. Do not mint from v0.3.0-standalone or this working tree: a DOI is permanent for the exact version. After the final release, insert the DOI in CITATION.cff, README.md, and the paper Data and Code Availability section, then rebuild the manuscript.",
   "related_identifiers": [
     {
       "identifier": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone",
-      "relation": "isIdenticalTo",
+      "relation": "isDerivedFrom",
       "scheme": "url"
     }
   ]

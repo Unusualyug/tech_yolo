@@ -83,6 +83,33 @@ class SourceContractTests(unittest.TestCase):
         self.assertEqual(data["updated_drop_count"], 0)
         self.assertEqual(data["legacy_drop_count"] + data["updated_drop_count"] >= 0, True)
         self.assertGreater(data["absolute_drop_rate_reduction"], 0)
+        self.assertEqual(data["evidence_type"], "unit_test_artifact")
+        self.assertEqual(data["source"], "tests/test_synthetic_regression.py")
+        self.assertFalse((ROOT / "experiments" / "alert_selection_audit.py").exists())
+
+    def test_github_actions_runs_tests_on_every_push(self):
+        workflow = read(".github/workflows/ci.yml")
+        self.assertIn("push:", workflow)
+        self.assertIn("pull_request:", workflow)
+        self.assertIn("requirements-ci.txt", workflow)
+        self.assertIn("unittest discover -s tests -v", workflow)
+
+    def test_language_fallback_and_evidence_boundary_are_documented(self):
+        readme = read("README.md")
+        self.assertIn("English fallback", readme)
+        self.assertIn("Google Translate", readme)
+        self.assertIn("unchecked", readme.lower())
+        self.assertIn("not submission-ready", readme.lower())
+        status = read("FIX_STATUS.md")
+        self.assertIn("pending", status.lower())
+        self.assertIn("NO DATA", status)
+
+    def test_zenodo_doi_remains_pending(self):
+        zenodo = json.loads(read("zenodo.json"))
+        self.assertIn("DOI pending", zenodo["notes"])
+        cff = read("CITATION.cff")
+        self.assertNotIn("\ndoi:", cff)
+        self.assertIn("Zenodo DOI pending", cff)
 
 
 if __name__ == "__main__":

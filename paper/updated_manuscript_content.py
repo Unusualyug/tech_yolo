@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Structured content for the standalone TRINEXIS technical report."""
+"""Structured content for the standalone TRINEXIS technical report.
+
+This working-tree revision reframes the report around an alert-aware narration
+policy, a testable alert-delivery question, and blank empirical protocols. It
+does not report measured detection, latency, language, or user-study results.
+"""
 from __future__ import annotations
 
 import json
@@ -13,10 +18,24 @@ ALERT = json.loads(
         encoding="utf-8"
     )
 )
+SUMMARY_PATH = ROOT / "paper" / "artifacts" / "test_summary.json"
+TEST_SUMMARY = (
+    json.loads(SUMMARY_PATH.read_text(encoding="utf-8"))
+    if SUMMARY_PATH.exists()
+    else {}
+)
+ROUTE_TESTS = TEST_SUMMARY.get("route_tests", "pending")
+POLICY_TESTS = TEST_SUMMARY.get("policy_tests", "pending")
+SOURCE_CONTRACT_TESTS = TEST_SUMMARY.get("source_contract_tests", "pending")
+TOTAL_TESTS = TEST_SUMMARY.get("total_tests", "pending")
+TEST_PHRASE = TEST_SUMMARY.get(
+    "exact_report_phrase",
+    "route/policy test counts pending; run scripts/report_test_counts.py",
+)
 
 TITLE = (
-    "TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam "
-    "System with Language-Configured Speech"
+    "TRINEXIS: An Alert-Aware Narration Policy and a Protocol for Measuring "
+    "Its Effect on Alert Delivery"
 )
 AUTHORS = (
     "Yug G. Lakhani¹\n"
@@ -31,31 +50,30 @@ UPDATED_RATE = ALERT["updated_drop_rate"] * 100
 EXPECTED_RATE = 4 / 6 * 100
 
 ABSTRACT = (
-    "Open-vocabulary detectors can be configured with text prompts, but an "
-    "interactive prototype also needs predictable control flow, bounded "
-    "speech, and an explicit account of what has been evaluated. TRINEXIS is "
-    "a Flask-based webcam system that couples an interval-throttled "
-    "YOLO-World detector, a browser dashboard, language-configured speech "
-    "output, session telemetry, and alert-aware narration. The system ranks "
-    "user-designated alert objects before choosing the short spoken shortlist, "
-    "uses wall-clock heatmap decay, reports a unitless relative distance "
-    "index, and exposes configurable camera, security, and runtime settings. "
-    "A deterministic synthetic regression check confirms that alert-first "
-    "ranking preserves the configured alert object in cases where "
-    "confidence-first shortlist truncation can omit it; the omission rate "
-    "expected from the synthetic rank model shows that the check validates "
-    "an ordering invariant rather than real-world detection behavior. The "
-    "principal limitation is that no labeled detection dataset, hardware "
-    "timing campaign, known-distance calibration, translated-template rating, "
-    "or consented user study was conducted. This technical report therefore "
-    "documents the system and its software verification without claiming "
-    "detection quality, latency, distance error, multilingual comprehension, "
-    "or assistive effectiveness."
+    "Open-vocabulary webcam systems must decide which detected objects to "
+    "speak when output is short and time-limited. This report is framed around "
+    "an alert-aware narration policy and its measured effect on alert delivery, "
+    "which a future experiment must establish rather than assume. The policy ranks user-designated "
+    "alert objects before truncating the spoken shortlist; a confidence-first "
+    "baseline truncates by detector confidence first. The research question is "
+    "whether alert-first narration makes users notice a designated object "
+    "faster or more often than confidence-first narration. TRINEXIS implements "
+    "the policy in an interval-throttled, language-configured webcam system "
+    "and adds optional real-log instrumentation, a frozen alert manifest, "
+    "Flask route tests, and continuous integration. Experiments A-D specify "
+    "hardware timing, labeled detection evaluation, a vocabulary/confidence "
+    "grid, real-log alert replay, and checked-language ratings; all empirical "
+    "result cells remain NO DATA. The report therefore does not claim a "
+    "measured user benefit, detection quality, latency, distance accuracy, "
+    "multilingual comprehension, or assistive effectiveness. Its contribution "
+    "is the policy, its failable software checks, and a preregistrable "
+    "protocol for measuring alert delivery, not a description of a Flask "
+    "application."
 )
 
 KEYWORDS = (
-    "open-vocabulary detection; alert-aware narration; research software; "
-    "speech interface; interval throttling; technical report"
+    "alert-aware narration; open-vocabulary detection; research software; "
+    "speech interface; empirical protocol; interval throttling; technical report"
 )
 
 REFS = [
@@ -87,14 +105,24 @@ REFS = [
 
 COMMANDS = """git clone https://github.com/Unusualyug/tech_yolo.git
 cd tech_yolo
-git checkout v0.3.0-standalone
+git checkout arena/69777d37-tech-yolo
+python3 -m pip install -r requirements-ci.txt
+python3 -m unittest discover -s tests -v
+python3 -m unittest tests.test_synthetic_regression -v
+python3 scripts/report_test_counts.py
+python3 experiments/latency_benchmark.py --self-check
+python3 experiments/detection_eval.py --self-check
+python3 experiments/vocab_confidence_grid.py --self-check
+python3 experiments/alert_replay.py --self-check
+python3 experiments/language_eval.py --self-check
+python3 scripts/verify_no_fabricated_results.py
+# Live studies only; CI does not install these or open hardware:
 python3 -m pip install -r requirements.txt
 python3 weights/download_weights.py --fetch --verify
-python3 experiments/alert_selection_audit.py
-python3 -m unittest discover -s tests -v
 python3 -m pip install -r paper/requirements-paper.txt
 python3 paper/make_updated_figures.py
-python3 paper/build_updated_manuscript.py"""
+python3 paper/build_updated_manuscript.py
+python3 paper/audit_updated_repository.py"""
 
 BLOCKS = [
     ("title", TITLE),
@@ -103,18 +131,20 @@ BLOCKS = [
     ("keywords", KEYWORDS),
 
     ("h1", "I. INTRODUCTION"),
-    ("h2", "A. Motivation"),
-    ("p", "Object detection predicts bounding boxes and semantic labels for objects in an image. The YOLO family formulated detection as a single regression problem [1], and COCO-style benchmarks standardized evaluation over a fixed vocabulary of 80 released categories [2]. Vision-language pre-training broadened the interface: CLIP enabled zero-shot transfer from natural-language supervision [3], Grounding DINO fused language and vision for open-set detection [4], and YOLO-World introduced a prompt-then-detect paradigm [5]. Ultralytics exposes that family through a set_classes interface [6]. These advances make it feasible to build interactive applications around user-selected object names."),
-    ("p", "TRINEXIS is a Flask-based webcam application that combines an interval-throttled YOLO-World detector, a browser dashboard, language-configured speech output, detection logs, a heatmap, and session telemetry. Its maintained backend, app23.py, uses Flask control routes [7], OpenCV capture [8], Ultralytics YOLO [15], and gTTS speech [9]. The design question is how to turn a configurable open-vocabulary detector into a bounded, testable interaction loop with predictable alert handling."),
+    ("h2", "A. Motivation and Research Question"),
+    ("p", "Object detection predicts bounding boxes and semantic labels for objects in an image. The YOLO family formulated detection as a single regression problem [1], and COCO-style benchmarks standardized evaluation over a fixed vocabulary of 80 released categories [2]. Vision-language pre-training broadened the interface: CLIP enabled zero-shot transfer from natural-language supervision [3], Grounding DINO fused language and vision for open-set detection [4], and YOLO-World introduced a prompt-then-detect paradigm [5]. Ultralytics exposes that family through a set_classes interface [6]. These advances make configurable object names possible, but an interactive narration system still has to decide what to say first when only a few objects can be spoken."),
+    ("p", "The research question is: Does alert-first narration make users notice a designated object faster or more often than confidence-first narration? This report separates two measurable parts. Replayed real logs can measure whether an alert reaches the spoken shortlist and how long alert-to-speech delivery takes. Whether a person notices the object faster or more often requires a separate consented user study. Neither effect has been measured here; all empirical cells remain NO DATA."),
+    ("p", "TRINEXIS is the research instrument used to implement the policy: an interval-throttled YOLO-World webcam pipeline with a browser dashboard, language-configured speech output, session telemetry, and optional real-log instrumentation. Its maintained backend, app23.py, uses Flask control routes [7], OpenCV capture [8], Ultralytics YOLO [15], and gTTS speech [9]. The Flask application is implementation infrastructure, not the paper's contribution."),
     ("h2", "B. Contribution"),
-    ("p", "The system's focus is alert-aware, language-configured scene narration in an interval-throttled open-vocabulary webcam pipeline. User-designated alert objects are ranked before the spoken shortlist is truncated. This ordering is isolated in a dependency-free policy module, verified by a seeded synthetic regression check, and kept separate from empirical detection or user-benefit claims."),
+    ("p", "The contribution is an alert-aware narration policy and a protocol for measuring its effect on alert delivery, not a Flask app or a general webcam-application description. User-designated alert objects are ranked before the spoken shortlist is truncated. The ordering is isolated in a dependency-free policy module, checked by mutation-sensitive unit tests, instrumented for real-log replay, and deliberately kept separate from empirical detection or user-benefit claims."),
     ("bullets", [
-        "A documented Flask/YOLO-World application with AGPL-3.0 licensing [24], pinned requirements, configurable camera/security settings, and vector figures.",
-        "An alert-aware speech selector that ranks alerts before shortlist truncation, with a deterministic ordering-invariant check.",
-        "A tagged release [23], CITATION.cff, codemeta.json, a weights download/checksum script, and a short software-verification appendix.",
+        "A policy and research question: alert-first versus confidence-first narration for a predesignated object, with delivery and noticing treated as distinct endpoints.",
+        "A maintained implementation with AGPL-3.0 licensing [24], configurable camera/security settings, optional real-log timing and speech-event recorders, and a frozen alert-manifest mode.",
+        "Real Flask test-client route tests, deterministic policy tests, continuous integration, and a source-level evidence-boundary check.",
+        "Preregistrable Experiments A-D with hardware/data/rating manifests, runnable harnesses, and blank NO DATA result templates.",
     ]),
     ("h2", "C. Scope and Limitations"),
-    ("p", "This manuscript is a technical report for arXiv or an institutional repository; no journal or conference was selected. No labeled detection dataset, hardware timing campaign, known-distance calibration, translated-template rating, or consented user study was conducted; therefore no detection-quality, latency, distance-error, robustness, multilingual-comprehension, assistive-effectiveness, or user-study result is claimed. The generic single-column layout and numeric citations are fallbacks; any later journal or conference submission requires that venue's current Guide for Authors and official template."),
+    ("p", "This manuscript is a standalone technical report with experiment protocols and blank empirical results; it is not submission-ready. No labeled detection dataset, hardware timing campaign, known-distance calibration, translated-template rating, consented user study, dashboard screenshot, or spoken input-to-output example was completed. No official venue template, current Guide for Authors, or citation style was supplied/read; generic single-column layout and numeric citations remain fallbacks. Funding and competing-interest statements require author confirmation, AI-tool disclosure must be rechecked against venue policy, and the author must personally verify every number. No detection-quality, latency, distance-error, robustness, multilingual-comprehension, assistive-effectiveness, or user-benefit result is claimed."),
 
     ("h1", "II. RELATED WORK / LITERATURE REVIEW"),
     ("h2", "A. Detection and Open-Vocabulary Models"),
@@ -134,14 +164,14 @@ BLOCKS = [
         ],
     }),
     ("h2", "B. Assistive Interfaces, Speech, and Privacy"),
-    ("p", "Remote sighted assistance has been studied through Be My Eyes [16], while Seeing AI [17] and AI scene-description applications [18] illustrate practical auditory presentation of visual information. These systems are relevant to the design space but do not validate TRINEXIS. The repository configures 72 language codes and 62 top-level speech resources; because the translations were not produced or checked under a documented protocol, the title and text use “language-configured” rather than “multilingual.” Camera-based systems also raise privacy and face-recognition concerns [20], [21]. The optional face-recognition hook remains unavailable, and no consent, retention, or biometric-processing protocol is claimed."),
+    ("p", "Remote sighted assistance has been studied through Be My Eyes [16], while Seeing AI [17] and AI scene-description applications [18] illustrate practical auditory presentation of visual information. These systems are relevant to the design space but do not validate TRINEXIS. The repository configures 72 language codes and 62 top-level speech resources. Ten language codes use an English template fallback in the UI; the remaining 72-language claim is unchecked. gTTS uses Google Translate's speech service [9], so raters should listen to sample audio and the author should listen to a few languages before any quality claim. Camera-based systems also raise privacy and face-recognition concerns [20], [21]. The optional face-recognition hook remains unavailable, and no consent, retention, or biometric-processing protocol is claimed."),
     ("h2", "C. Research Software and Reproducibility"),
-    ("p", "Git LFS stores small pointer files in Git while large model content is held elsewhere [10]. The software is distributed as a tagged GitHub release [23] with CITATION.cff, codemeta.json, dependency-license notes, pinned manifests, and a weights download script that verifies Git LFS object identifiers as SHA-256 checksums. The project adopts AGPL-3.0-only [24] because Ultralytics YOLO is distributed under AGPL-3.0 [22]. A Zenodo DOI has not been minted; the release URL is cited instead. The source census and software checks are retained as appendix-level verification records."),
+    ("p", "Git LFS stores small pointer files in Git while large model content is held elsewhere [10]. The prior immutable software release [23] includes CITATION.cff, codemeta.json, dependency-license notes, pinned manifests, and a weights download script that verifies Git LFS object identifiers as SHA-256 checksums. The unreleased working-tree revision adds experiment protocols, route tests, CI, and instrumentation that are not part of that release. The project adopts AGPL-3.0-only [24] because Ultralytics YOLO is distributed under AGPL-3.0 [22]. A Zenodo DOI has not been minted; the final GitHub/Zenodo release must come last because a DOI is permanent for the exact version."),
 
     ("pagebreak", None),
     ("h1", "III. SYSTEM DESIGN"),
     ("h2", "A. Architecture and Control Flow"),
-    ("p", "Figure 1 shows the runtime and control flow. A browser client calls Flask control routes and displays a Motion JPEG stream. A configurable camera backend supplies frames to OpenCV. Detector calls are gated by an interval throttle, after which YOLO-World produces text-conditioned detection records. Those records feed visual overlays, a relative distance index, a time-decayed heatmap, session telemetry, and an alert-aware speech selector. Optional face recognition is shown as a dashed, unavailable path. There is no training or benchmark-evaluation path."),
+    ("p", "Figure 1 shows the runtime and control flow. A browser client calls Flask control routes and displays a Motion JPEG stream. A configurable camera backend supplies frames to OpenCV. Detector calls are gated by an interval throttle, after which YOLO-World produces text-conditioned detection records. Those records feed visual overlays, a relative distance index, a time-decayed heatmap, session telemetry, an alert-aware speech selector, and optional real-log recorders. Optional face recognition is shown as a dashed, unavailable path. There is no training or benchmark-evaluation path."),
     ("figure", {
         "caption": "Fig. 1. TRINEXIS system architecture. Solid arrows denote implemented runtime paths; the dashed arrow denotes an optional/unavailable face-recognition hook. Vector SVG/PDF versions are provided in the release artifacts.",
         "png": "paper/artifacts/fig1_system_architecture_updated.png",
@@ -154,15 +184,15 @@ BLOCKS = [
     ("equation", "t - t_prev >= Delta.                                         (1)"),
     ("p", "The default is Delta = 1.5 s and the spoken shortlist is limited to two objects. Let A be the set of user-designated alert names, c(o) the detector confidence, and d(o) the relative distance index. The selector sorts every detection record o by the ascending key"),
     ("equation", "R(o) = (I_alert(o), -c(o), d(o)),                            (2)"),
-    ("p", "and only then takes the first two records. In Eq. (2), I_alert(o) = 0 when o.name is in A and 1 otherwise; alert objects therefore receive priority regardless of whether they are among the two highest-confidence detections. A confidence-first shortlist followed by alert-aware reranking inside the shortlist would not provide this invariant."),
+    ("p", "and only then takes the first two records. In Eq. (2), I_alert(o) = 0 when o.name is in A and 1 otherwise; alert objects therefore receive priority regardless of whether they are among the two highest-confidence detections. A confidence-first shortlist followed by alert-aware reranking inside the shortlist would not provide this invariant. For Experiment C, alert names A are declared in a manifest before collection; the runtime freezes /set_alerts and embeds the manifest hash in detection and speech-event records."),
     ("h2", "C. Time-Based Heatmap and Relative Distance Index"),
     ("p", "Eq. (3) replaces the older per-frame 0.995 multiplier, whose decay depends on camera frame rate, with elapsed wall-clock time dt and an adjustable half-life tau:"),
     ("equation", "H_t = 2^(-dt/tau) * H_(t-1) + sum_i C(c_i; 35).               (3)"),
     ("p", "In Eq. (3), H_t is the heatmap at time t, C(c_i; 35) is a filled circle of radius 35 pixels centered on detection box c_i, and tau defaults to 60 s. The 60 s value is an adjustable default chosen to retain visible activity for roughly one minute; it is not fitted to data. The distance overlay is a unitless, relative size-based index"),
     ("equation", "d_idx = (W * F) / max(w_px, 1),                               (4)"),
     ("p", "where w_px is the observed box width, W = 60, and F = 360. W and F are heuristic constants, not calibrated physical measurements; d_idx has no metric unit and must not be interpreted as centimetres or metres."),
-    ("h2", "D. Configuration, Security, and Deployment"),
-    ("p", "Camera index, backend, resolution, host, port, optional API token, single-client mode, client timeout, session secret, and heatmap half-life are read from environment variables. The default bind address is 127.0.0.1 rather than 0.0.0.0. /set_model accepts only a checked-in model allowlist. Mutating control endpoints can require an X-API-Token or Bearer header, and single-client arbitration prevents a second browser from mutating shared state while the first session is active. Capture-frame and detector-invocation rates are reported separately."),
+    ("h2", "D. Configuration, Security, Language Fallback, and Instrumentation"),
+    ("p", "Camera index, backend, resolution, host, port, optional API token, read-only mode, single-client mode, client timeout, session secret, and heatmap half-life are read from environment variables. The default bind address is 127.0.0.1 rather than 0.0.0.0. /set_model accepts only a checked-in model allowlist. Mutating control endpoints can require an X-API-Token or Bearer header: missing or invalid tokens return 401, unsupported schemes and read-only mutations return 403, and a second controlling client receives 409. Capture-frame and detector-invocation rates are reported separately. Optional JSONL recorders remain off unless TRINEXIS_LATENCY_LOG and TRINEXIS_EVENT_LOG are configured; they timestamp capture, inference, TTS synthesis, playback, rendering, speech enqueue, and playback events. /get_languages exposes the English-fallback language list and an empty verified-language list."),
     ("table", {
         "caption": "TABLE II. IMPLEMENTATION FEATURES AND VERIFICATION",
         "widths": [0.30, 0.42, 0.28],
@@ -170,101 +200,133 @@ BLOCKS = [
             ["Feature", "Implementation", "Verification"],
             ["Open-source distribution", "AGPL-3.0 LICENSE [24], README, pinned requirements, CITATION.cff, codemeta.json, and dependency-license notes", "Source-contract tests and README instructions"],
             ["Confidence display", "Dashboard reports AVG CONFIDENCE rather than ACCURACY", "Source-contract test"],
-            ["Alert-aware speech", "Rank alerts before shortlist truncation via trinexis_core.select_speech_objects", "Unit test and seeded synthetic regression check"],
-            ["Client-state safety", "Single-client control arbitration with stale-session timeout", "Pure-function unit test"],
-            ["Network defaults", "Default host 127.0.0.1; optional API token on mutating control routes", "Source-contract and pure-function tests"],
-            ["Model loading", "Allowlisted model filenames with HTTP 400 on rejection", "Unit test"],
+            ["Alert-aware speech", "Rank alerts before shortlist truncation via trinexis_core.select_speech_objects", "Mutation-sensitive unit test and tests/ synthetic unit-test artifact"],
+            ["Client-state safety", "Single-client control arbitration, 401/403/409 behavior, and stale-session timeout", "Flask route tests and pure-function unit tests"],
+            ["Network defaults", "Default host 127.0.0.1; optional API token and read-only mode on mutating control routes", "Flask route tests and source-contract tests"],
+            ["Model loading", "Allowlisted model filenames with HTTP 400 on rejection", "Unit and route tests"],
             ["Heatmap decay", "Wall-clock exponential decay with adjustable half-life", "Unit test"],
             ["Distance display", "Unitless relative distance index with explicit non-calibration note", "Unit and source-contract tests"],
             ["Camera portability", "Configurable camera index and backend", "Unit and source-contract tests"],
             ["Rate reporting", "Separate capture_fps and inference_fps counters and dashboard displays", "Source-contract test"],
+            ["Language fallback", "Ten missing templates fall back to English; 72 language codes remain unchecked", "Route, language, and source-contract tests"],
+            ["Real-log instrumentation", "Optional JSONL timing and speech-event recorders with manifest hashes", "Telemetry unit tests and Experiment C protocol"],
             ["Figures", "Enlarged PNG plus standalone SVG and vector-PDF exports", "make_updated_figures.py"],
         ],
     }),
 
     ("h1", "IV. SOFTWARE VERIFICATION"),
     ("h2", "A. Verification Environment"),
-    ("p", "All checks were static or synthetic. The preparation environment used Python 3.11.2 with the standard library for tests; manuscript and figure generation used the pinned packages in paper/requirements-paper.txt. No model weights were hydrated, no camera was opened, no Flask server was run, no network speech request was made, and no human participant was involved. Figure 2 summarizes the workflow."),
+    ("p", "All checks were static, synthetic, or exercised through Flask's test client with mocked native modules. The preparation environment used Python 3.11.2 with the standard library and Flask 3.1.3 for route tests; manuscript and figure generation used the pinned packages in paper/requirements-paper.txt. No model weights were hydrated, no camera was opened, no live Flask server was run, no network speech request was made, and no human participant was involved. Figure 2 summarizes the workflow. GitHub Actions is configured to run the same test suite on every push; a local CI-equivalent run passed, but no empirical result follows from a green test suite."),
     ("figure", {
-        "caption": "Fig. 2. Software-verification workflow. Every step is static or synthetic; no model inference, camera capture, labeled dataset, or human data is used. Vector SVG/PDF versions are provided in the release artifacts.",
+        "caption": "Fig. 2. Software-verification workflow. Every step is static, synthetic, or a mocked Flask route test; no model inference, camera capture, labeled dataset, or human data is used. Vector SVG/PDF versions are provided in the release artifacts.",
         "png": "paper/artifacts/fig2_implementation_verification.png",
         "svg": "paper/artifacts/fig2_implementation_verification.svg",
         "pdf": "paper/artifacts/fig2_implementation_verification.pdf",
         "spec": FIG2,
     }),
-    ("h2", "B. Alert-Selection Regression Check"),
-    ("p", "The alert-selection check used "
-     f"{ALERT['cases']:,} seeded synthetic detection cases, each with six records, one alert object, and a two-object speech shortlist. With six records and a top-2 shortlist, a uniformly ranked alert falls outside the shortlist with probability 4/6 "
+    ("h2", "B. Synthetic Alert-Selection Unit Test"),
+    ("p", "The seeded 1,000-case synthetic check is generated only by tests/test_synthetic_regression.py; the old experiments/ generator was removed. Each case has six records, one alert object, and a two-object speech shortlist. With six records and a top-2 shortlist, a uniformly ranked alert falls outside the shortlist with probability 4/6 "
      f"({EXPECTED_RATE:.1f}%). The confidence-first ordering omitted the alert object in "
      f"{ALERT['legacy_drop_count']} of {ALERT['cases']} cases ({LEGACY_RATE:.1f}%), consistent with that probability setup; the alert-first ordering omitted it in "
-     f"{ALERT['updated_drop_count']} of {ALERT['cases']} cases ({UPDATED_RATE:.1f}%). This is a regression test of an ordering invariant. It does not show how often real detections contain alerts, whether a real user hears an alert, or whether the speech output is useful."),
+     f"{ALERT['updated_drop_count']} of {ALERT['cases']} cases ({UPDATED_RATE:.1f}%). A deliberately broken confidence-first selector makes the unit test fail. This is a failable unit-test artifact of an ordering invariant, not an experiment: it does not show how often real detections contain alerts, whether a real user hears an alert, or whether speech output is useful."),
     ("table", {
-        "caption": "TABLE III. SEEDED SYNTHETIC ALERT-SELECTION REGRESSION CHECK",
+        "caption": "TABLE III. SEEDED SYNTHETIC UNIT-TEST REGRESSION CHECK",
         "widths": [0.40, 0.20, 0.20, 0.20],
         "rows": [
             ["Metric", "Confidence-first", "Alert-first", "Change"],
             ["Cases with a configured alert object", "1,000", "1,000", "—"],
             ["Alert omissions from the two-object shortlist", str(ALERT["legacy_drop_count"]), str(ALERT["updated_drop_count"]), f"−{ALERT['legacy_drop_count']}"],
             ["Omission rate", f"{LEGACY_RATE:.1f}%", f"{UPDATED_RATE:.1f}%", f"−{LEGACY_RATE:.1f} pp"],
-            ["Evidence type", "Synthetic ordering check", "Synthetic ordering check", "No model inference"],
+            ["Evidence type", "Synthetic unit test", "Synthetic unit test", "No model inference"],
         ],
     }),
-    ("h2", "C. Unit and Source-Contract Tests"),
-    ("p", "The standard-library unittest suite contains 24 tests: 14 pure-policy tests and 10 source-contract tests. All 24 passed with zero failures and zero errors. The suite covers camera configuration, model allowlisting, alert-first ranking, confidence-first drop reproduction, time-based decay, relative distance index, rate calculation, token validation, single-client timeout, license/readme/requirements presence, corrected UI labels, configurable host/backend, and the absence of metric centimetre labels in the primary backend."),
+    ("h2", "C. Route, Policy, and Source-Contract Tests"),
+    ("p", f"The standard-library unittest suite contains {TOTAL_TESTS} tests: {ROUTE_TESTS} Flask route tests, {POLICY_TESTS} policy/harness/telemetry tests, and {SOURCE_CONTRACT_TESTS} source-contract tests. The exact CI statement is: {TEST_PHRASE}. Route tests are reported separately from source-text tests. They exercise all 23 routes' status codes, JSON-object validation, clamping, API-token 401 behavior, unsupported-scheme/read-only 403 behavior, Bearer authentication, single-client 409 behavior, frozen alert manifests, and language-support metadata. Camera, NumPy, detector, and TTS imports are mocked with unittest.mock; no live runtime is validated by these counts. Policy tests cover narration ranking, mutation sensitivity, control status, telemetry arithmetic, language fallback, experiment-harness self-checks, and the seeded synthetic unit test. Continuous integration runs the suite on every push and pull request."),
     ("table", {
         "caption": "TABLE IV. TEST-SUITE SUMMARY",
         "widths": [0.40, 0.20, 0.20, 0.20],
         "rows": [
             ["Test group", "Tests", "Failures", "Errors"],
-            ["trinexis_core pure-policy tests", "14", "0", "0"],
-            ["Repository/source-contract tests", "10", "0", "0"],
-            ["Total", "24", "0", "0"],
+            ["Flask test-client route tests", str(ROUTE_TESTS), "0", "0"],
+            ["Policy/harness/telemetry tests", str(POLICY_TESTS), "0", "0"],
+            ["Repository/source-contract tests", str(SOURCE_CONTRACT_TESTS), "0", "0"],
+            ["Total", str(TOTAL_TESTS), "0", "0"],
         ],
     }),
     ("h2", "D. Release and Reproducibility"),
-    ("p", "The software and manuscript are associated with GitHub release v0.3.0-standalone [23], CITATION.cff, and codemeta.json. CITATION.cff and codemeta.json provide machine-readable metadata; weights/download_weights.py parses the checked-in Git LFS pointers and verifies the declared SHA-256 object identifiers after Git LFS materialization. A Zenodo DOI has not been minted because author authorization is required; the release URL is cited instead. Appendix A lists reproduction commands, and Appendix B lists the principal artifacts."),
+    ("p", "The prior immutable software release is GitHub release v0.3.0-standalone [23]. The working-tree fix revision described here is unreleased; it adds CITATION.cff/codemeta metadata updates, experiment protocols, real-log instrumentation, route tests, CI, language-fallback documentation, and the reframed paper. weights/download_weights.py parses the checked-in Git LFS pointers and verifies the declared SHA-256 object identifiers after Git LFS materialization. Appendix A lists reproduction commands, and Appendix B lists the principal artifacts."),
     ("h2", "E. Future Work"),
     ("bullets", [
-        "Evaluate detection quality on a labeled dataset and ablate vocabulary size and confidence thresholds.",
-        "Instrument capture, inference, speech, and rendering separately on declared CPU/GPU hardware.",
+        "Run Experiments A-D on declared hardware, labeled data, real logs, and checked languages; report negative results as-is.",
+        "Obtain consent and institutional ethics approval before any user-noticing study.",
         "Calibrate the distance proxy at known distances or retain the unitless index with its current disclaimer.",
-        "Obtain ethics approval for translated-template ratings and any assistive-use study.",
+        "Add a dashboard screenshot, one spoken input-to-output example, and venue-policy/author-declaration checks before any submission.",
     ]),
 
-    ("h1", "V. DISCUSSION"),
+    ("h1", "V. EMPIRICAL PROTOCOLS AND BLANK RESULTS"),
+    ("h2", "A. Preregistration and Real Logs"),
+    ("p", "All empirical cells are NO DATA. Before collection, the author must freeze hardware/software manifests, the paper and code, a 200-300-image report split, frozen prompt sets, and a predeclared alert-object manifest. The live app writes timestamped JSONL only when TRINEXIS_LATENCY_LOG and TRINEXIS_EVENT_LOG are configured. /export_logs supplies detection frames; event logs supply speech enqueue/playback records. The harnesses reject explicitly synthetic rows for empirical runs. Alert objects must be chosen in advance; the frozen manifest prevents post-hoc selection. No tuning on reported images is allowed, and the author must personally verify every number."),
+    ("h2", "B. Experiments A-D"),
+    ("p", "Experiment A collects at least 500 camera frames per setting at 416, 640, and 832 input sizes on declared CPU/GPU/RAM/OS, Python, camera, audio, and TTS-backend configuration. It reports median and p95 for capture, inference, TTS synthesis, playback, and rendering. Experiment B evaluates 200-300 labeled COCO, LVIS, or own images with pycocotools or Ultralytics val, reporting precision, recall, mAP@0.5, and speed; its grid is {455, 20, 50, 80} prompts x {0.15, 0.25, 0.35}. Experiment C replays real detection logs through alert-first and confidence-first orderings with predeclared alert objects and reports delivery rate plus mean alert-to-speech delay. Experiment D samples 5-10 languages with native or reliable bilingual raters on 10 announcements each, rated 1-5 for correctness and naturalness; only checked languages may be reported, the remaining 72-language claims are unchecked, and raters should listen to gTTS/Google Translate speech samples. Negative or worse results are reportable."),
+    ("h2", "C. Blank Result Table"),
+    ("table", {
+        "caption": "TABLE V. EMPIRICAL PROTOCOLS AND BLANK RESULTS",
+        "widths": [0.18, 0.30, 0.34, 0.18],
+        "rows": [
+            ["Experiment", "Primary endpoint", "Prerequisite", "Result"],
+            ["A. Latency", "Median/p95 by stage and input size", "Declared hardware; 500+ frames per 416/640/832 setting", "NO DATA"],
+            ["B. Detection", "Precision/recall/mAP@0.5/speed", "200-300 labeled images; separate tuning split; pycocotools or Ultralytics val", "NO DATA"],
+            ["B. Grid", "Twelve vocabulary/confidence cells", "Frozen {455, 20, 50, 80} prompts x {0.15, 0.25, 0.35}", "NO DATA"],
+            ["C. Alert replay", "Delivery rate; mean alert-to-speech delay", "Real /export_logs and speech events; predeclared alert manifest", "NO DATA"],
+            ["D. Language", "Mean correctness/naturalness", "5-10 checked languages x 10 announcements; 1-5 ratings; listen to samples", "NO DATA"],
+            ["E. User noticing", "Notice rate; time-to-notice", "Consent and institutional ethics approval; optional 8-12 person within-subject study", "NO DATA"],
+        ],
+    }),
+    ("h2", "D. What Replay Does Not Establish"),
+    ("p", "Experiment C measures alert delivery from logs, not whether a person notices a designated object faster or more often. Answering the user-facing research question requires a separate consented, ethics-approved study with preregistered outcomes. No such approval, participant, or user benefit is claimed. The dashboard screenshot and spoken input-to-output example are also pending. A workshop or journal paper should be prepared only after these empirical steps are complete."),
+
+    ("h1", "VI. DISCUSSION"),
     ("h2", "A. Interpretation"),
-    ("p", "TRINEXIS shows how an open-vocabulary detector can be wrapped in a bounded, testable interaction loop. Alert-first ranking makes the speech policy independent of whether an alert happens to be among the highest-confidence detections, while interval throttling separates detector cadence from camera frame rate. Time-based heatmap decay and the unitless distance index remove two frame-rate- and calibration-dependent ambiguities. The published detector literature is not comparable to this webcam pipeline because its datasets, prompts, splits, and hardware protocols differ."),
+    ("p", "The alert-aware policy makes the spoken shortlist independent of whether a designated object happens to be among the highest-confidence detections. Interval throttling separates detector cadence from camera frame rate; time-based heatmap decay and the unitless distance index remove two frame-rate- and calibration-dependent ambiguities. The Flask route tests establish control behavior under mocked dependencies, not live deployment success. Published detector literature is not comparable to this webcam pipeline because its datasets, prompts, splits, and hardware protocols differ. No measured effect on alert delivery or user noticing is reported."),
     ("h2", "B. Ethical and Practical Implications"),
     ("p", "Camera-based interfaces can expose bystanders and sensitive environments. Privacy, consent, retention, and biometric-processing policies must be defined before any real-world or assistive-use study [20], [21]. The AGPL-3.0 license [24] and dependency-license notice clarify redistribution obligations but do not substitute for an ethics review. The system should not be described as assistive technology for blind or low-vision users until a consented study demonstrates benefit."),
+    ("h2", "C. Language Coverage and TTS"),
+    ("p", "Seventy-two language codes and 62 top-level speech resources are configured. Ten language codes lack a top-level template and use the English fallback, which is now disclosed by /get_languages and the UI. No language is verified; no multilingual comprehension or translation-quality claim is made. gTTS uses Google Translate's speech service [9]. A checked-language study must use native or reliable bilingual raters, listen to sample audio, and report only the 5-10 languages actually rated; the author should also listen to a few languages. Missing templates may be added later only with reliable review; English fallback is documented rather than silently assumed."),
 
-    ("h1", "VI. CONCLUSION AND FUTURE WORK"),
-    ("p", "TRINEXIS is a documented, configurable, interval-throttled open-vocabulary webcam system with alert-aware, language-configured speech. Its software verification establishes the alert-ordering invariant and the behavior of the configuration, security, and display policies. The next steps are detection-quality evaluation, latency instrumentation, distance calibration or continued use of the unitless index, and ethics-approved speech/user studies. Those experiments would support a separate applied-vision or HCI workshop paper."),
+    ("h1", "VII. CONCLUSION AND FUTURE WORK"),
+    ("p", "This report defines an alert-aware narration policy, implements it in a configurable open-vocabulary webcam system, and supplies a protocol for measuring its effect on alert delivery. Software verification establishes the ordering invariant, HTTP control behavior, language fallback, and blank-result harnesses. The measured effect remains unknown: detection evaluation, hardware timing, real-log alert replay, checked-language ratings, and any user-noticing study are future work. The final release and Zenodo DOI must follow completed evidence and author verification, not precede them."),
 
     ("h1", "DECLARATIONS"),
     ("h2", "A. Funding and Competing Interests"),
-    ("p", "No external funding was reported for this work. No competing interests were disclosed by the author."),
+    ("p", "Author confirmation is pending; no approved funding or competing-interest statement is made in this working-tree draft. The author must verify these declarations before submission."),
     ("h2", "B. Author Contributions (CRediT)"),
-    ("p", "Yug G. Lakhani: conceptualization, methodology, software, formal analysis, investigation, writing—original draft, and writing—review and editing. Validation and data curation are not listed because no validation dataset or curated research data were used."),
+    ("p", "Draft CRediT assignment for author confirmation: Yug G. Lakhani—conceptualization, software, and writing—original draft. Methodology, formal analysis, investigation, validation, data curation, and review/editing must be matched to work actually performed after the empirical studies. No validation dataset or curated research data were used in this report."),
     ("h2", "C. AI-Tool Disclosure"),
-    ("p", "Arena.ai Agent Mode was used for source auditing, figure generation, repository scripting, and manuscript formatting. The author is responsible for the final manuscript and for verifying every number and declaration against the target venue's policy."),
+    ("p", "Arena.ai Agent Mode was used for source auditing, harness/test scripting, figure generation, repository scripting, and manuscript formatting. The author is responsible for the final manuscript, for rechecking this disclosure against the target venue's current AI-tool policy, and for verifying every number and declaration. No institutional ethics approval is claimed."),
     ("h2", "D. Data and Code Availability"),
-    ("p", "The software and manuscript are available from GitHub release v0.3.0-standalone [23] under AGPL-3.0-only [24]. Ultralytics' AGPL-3.0 license is cited directly [22]. Model weights are Git LFS pointers and are fetched and checked with weights/download_weights.py [10]. No labeled dataset, experimental log, or valid Zenodo DOI is claimed. Dependency licenses are documented in THIRD_PARTY_LICENSES.md."),
+    ("p", "The prior immutable software release is available from GitHub release v0.3.0-standalone [23] under AGPL-3.0-only [24]; Ultralytics' AGPL-3.0 license is cited directly [22]. The unreleased working-tree revision on arena/69777d37-tech-yolo contains the reframed paper, experiment protocols, instrumentation, route tests, CI, and language-fallback UI; it is not part of that release. Model weights are Git LFS pointers and are fetched and checked with weights/download_weights.py [10]. No labeled dataset, experimental log, or valid Zenodo DOI is claimed. Zenodo DOI has not been minted because author authorization and the final GitHub/Zenodo release are pending; a DOI is permanent for the exact version. After that final release, insert the DOI into CITATION.cff, README.md, and this Data and Code Availability section, then rebuild the manuscript. Dependency licenses are documented in THIRD_PARTY_LICENSES.md. The generic layout and numeric citations remain fallbacks because no official venue template, current Guide for Authors, or citation style was supplied/read; this manuscript is not submission-ready."),
 
     ("pagebreak", None),
     ("h1", "REFERENCES"),
     ("refs", REFS),
 
     ("h1", "APPENDIX A. REPRODUCTION COMMANDS"),
+    ("p", "The branch below is mutable and represents the unreleased working-tree revision, not the prior immutable tag."),
     ("code", COMMANDS),
     ("h1", "APPENDIX B. PRINCIPAL ARTIFACTS"),
     ("bullets", [
-        "paper/tech_yolo_updated_research_paper.pdf, .docx, and .md: standalone technical report.",
-        "paper/artifacts/alert_selection_audit.json: seeded synthetic alert-selection regression check.",
+        "paper/tech_yolo_updated_research_paper.pdf, .docx, and .md: standalone technical report with blank empirical results.",
+        "paper/artifacts/alert_selection_audit.json: tests/ unit-test artifact for the seeded synthetic alert-ordering regression.",
+        "paper/artifacts/test_summary.json: route/policy/source-contract counts and exact CI report phrase.",
         "paper/artifacts/fig1_system_architecture_updated.{png,svg,pdf} and fig2_implementation_verification.{png,svg,pdf}: figure exports.",
-        "paper/artifacts/updated_repository_audit.json: machine-readable release/test summary.",
+        "paper/artifacts/updated_repository_audit.json: machine-readable working-tree/test summary.",
+        "experiments/README.md and experiments/RESULTS_TEMPLATE.md: experiment protocols and blank NO DATA cells.",
+        "experiments/latency_benchmark.py, detection_eval.py, vocab_confidence_grid.py, alert_replay.py, language_eval.py, and common.py: runnable harnesses.",
+        "tests/test_routes.py, tests/route_test_support.py, and tests/test_synthetic_regression.py: real Flask route tests and the synthetic unit test.",
+        ".github/workflows/ci.yml, requirements-ci.txt, scripts/report_test_counts.py, and scripts/verify_no_fabricated_results.py: CI and evidence-boundary checks.",
         "weights/download_weights.py and weights/weights_checksums.sha256: Git LFS pointer parser and SHA-256 manifest.",
-        "zenodo.json and ZENODO.md: prepared Zenodo metadata and DOI-minting instructions.",
+        "zenodo.json and ZENODO.md: prepared Zenodo metadata and final-release DOI-minting instructions.",
         "paper/reference_verification.md: per-reference DOI/publisher verification log.",
-        "trinexis_core.py, tests/, experiments/, CITATION.cff, codemeta.json, README.md, LICENSE, requirements.txt, and THIRD_PARTY_LICENSES.md: software artifacts.",
+        "FIX_STATUS.md, trinexis_core.py, trinexis_telemetry.py, trinexis_language.py, CITATION.cff, codemeta.json, README.md, LICENSE, requirements.txt, and THIRD_PARTY_LICENSES.md: software and status artifacts.",
     ]),
 ]

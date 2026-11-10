@@ -1,0 +1,10 @@
+{
+  "declared_before_predictions": false,
+  "prompt_sets": {
+    "455": [],
+    "20": [],
+    "50": [],
+    "80": []
+  },
+  "notes": "Freeze the full 455 unique prompts and three reduced prompt sets. Do not change them after generating predictions."
+}

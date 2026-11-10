@@ -119,7 +119,12 @@ def rate_per_second(
 
 
 def validate_control_request(api_token: str, headers: Mapping[str, str]) -> bool:
-    """Validate an optional API token on mutating control requests."""
+    """Validate an optional API token on mutating control requests.
+
+    Kept for backward compatibility with the existing unit tests and callers.
+    New route code should use :func:`control_request_status`, which also
+    distinguishes read-only and unsupported-scheme rejections.
+    """
     token = str(api_token or "")
     if not token:
         return True
@@ -127,6 +132,42 @@ def validate_control_request(api_token: str, headers: Mapping[str, str]) -> bool
     if supplied.startswith("Bearer "):
         supplied = supplied[7:]
     return hmac.compare_digest(str(supplied), token)
+
+
+def control_request_status(
+    api_token: str,
+    headers: Mapping[str, str],
+    read_only: bool = False,
+    method: str = "GET",
+) -> tuple[bool, int, str]:
+    """Return ``(allowed, status_code, message)`` for one control request.
+
+    ``401`` means the API token is missing or invalid. ``403`` means the
+    request is understood but forbidden: either mutations are disabled in
+    read-only mode or an unsupported Authorization scheme was supplied. GET
+    requests remain readable; deployment code applies this helper only to
+    mutating control routes.
+    """
+    token = str(api_token or "")
+    auth = str(headers.get("Authorization") or "")
+    explicit = str(headers.get("X-API-Token") or "")
+
+    if token:
+        if auth and not auth.startswith("Bearer ") and not explicit:
+            return (
+                False,
+                403,
+                "Unsupported authorization scheme; use X-API-Token or Bearer",
+            )
+        supplied = explicit or auth
+        if supplied.startswith("Bearer "):
+            supplied = supplied[7:]
+        if not hmac.compare_digest(str(supplied), token):
+            return False, 401, "Invalid or missing API token"
+
+    if read_only and str(method).upper() in {"POST", "PUT", "PATCH", "DELETE"}:
+        return False, 403, "Mutations disabled by read-only mode"
+    return True, 200, "Allowed"
 
 
 def single_client_check(

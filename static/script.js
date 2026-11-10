@@ -1547,6 +1547,17 @@ async function loadLanguages() {
             "English";
 
 
+        const note =
+            $("language-support-note");
+
+
+        if (note) {
+            note.textContent =
+                data.support_note ||
+                "Missing templates fall back to English; language support is unverified.";
+        }
+
+
     } catch (error) {
 
         console.error(
@@ -1560,6 +1571,16 @@ async function loadLanguages() {
                     English
                 </option>
             `;
+
+
+        const note =
+            $("language-support-note");
+
+
+        if (note) {
+            note.textContent =
+                "Language support could not be loaded; English fallback is used.";
+        }
 
     }
 

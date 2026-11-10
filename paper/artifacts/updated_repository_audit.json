@@ -1,37 +1,73 @@
 {
   "audit_date": "2026-11-10",
-  "release_tag": "v0.3.0-standalone",
-  "release_url": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone",
+  "prior_immutable_release_tag": "v0.3.0-standalone",
+  "prior_release_url": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone",
+  "working_branch": "arena/69777d37-tech-yolo",
+  "unreleased_fixes": true,
   "source_baseline_commit": "6a0405613171a5ed400a7339c3e0a8f6bb94b26d",
   "zenodo_doi": null,
-  "zenodo_status": "pending author authorization",
+  "zenodo_status": "pending author authorization and final GitHub/Zenodo release",
   "license": "AGPL-3.0-only",
-  "evidence_boundary": "Static and synthetic verification only. No model inference, camera capture, labeled dataset, hardware timing campaign, distance calibration, translated-template rating, or human-participant evaluation was performed.",
+  "submission_ready": false,
+  "evidence_boundary": "Static, synthetic, and mocked-route software verification only. No model inference, camera capture, labeled dataset, hardware timing campaign, distance calibration, translated-template rating, or human-participant evaluation was performed. All empirical result cells are NO DATA.",
   "repository_fixes": [
     "AGPL-3.0 LICENSE, README.md, pinned requirements.txt, CITATION.cff, codemeta.json, .env.example, THIRD_PARTY_LICENSES.md",
-    "configurable camera index/backend, host/port, API token, single-client mode, and heatmap half-life",
-    "alert-aware speech selection before shortlist truncation",
+    "configurable camera index/backend, host/port, API token, read-only mode, single-client mode, and heatmap half-life",
+    "alert-aware speech selection before shortlist truncation and a frozen predeclared alert-manifest mode",
     "separate capture_fps and inference_fps counters",
     "AVG CONFIDENCE dashboard label",
     "time-based heatmap decay and unitless relative distance index",
     "model allowlist for /set_model",
-    "standard-library unit and source-contract tests",
+    "real Flask test-client route tests for all 23 routes with unittest.mock",
+    "policy/telemetry/language/harness unit tests and a tests/-only synthetic regression",
+    "GitHub Actions CI on every push and pull request",
+    "optional JSONL latency and speech-event instrumentation",
+    "Experiments A-D protocols, blank NO DATA result templates, and manifest templates",
+    "language-fallback metadata/UI and explicit unchecked-language status",
     "weights download script with SHA-256 LFS-pointer manifest",
     "per-reference DOI/publisher verification log",
-    "prepared Zenodo metadata; DOI pending author authorization",
+    "prepared Zenodo metadata; DOI pending author authorization and final release",
     "enlarged PNG plus standalone SVG and vector-PDF figures"
+  ],
+  "experiment_protocols": [
+    "A: 500+ frames at 416/640/832 on declared hardware; median/p95 by stage",
+    "B: 200-300 labeled images; precision/recall/mAP@0.5/speed; frozen prompt grid",
+    "C: real detection/speech logs; predeclared alerts; alert-first vs confidence-first replay",
+    "D: 5-10 checked languages x 10 announcements; 1-5 correctness/naturalness ratings",
+    "E: optional 8-12 person user-noticing study pending consent and institutional ethics approval"
   ],
   "tests": {
     "command": "python3 -m unittest discover -s tests -v",
     "python_version": "3.11.2",
     "returncode": 0,
-    "test_count": 24,
+    "test_count": 93,
     "failures": 0,
     "errors": 0,
     "ok": true
   },
+  "test_summary": {
+    "route_tests": 43,
+    "policy_tests": 37,
+    "source_contract_tests": 13,
+    "other_tests": 0,
+    "total_tests": 93,
+    "by_module": {
+      "test_core": 14,
+      "test_experiment_harnesses": 8,
+      "test_language": 4,
+      "test_policy_regression": 5,
+      "test_routes": 43,
+      "test_source_contract": 13,
+      "test_synthetic_regression": 1,
+      "test_telemetry": 5
+    },
+    "ci_workflow": ".github/workflows/ci.yml",
+    "exact_report_phrase": "43 route tests plus 37 policy tests, run in CI",
+    "scope": "Flask test-client route tests use mocked camera/detector/TTS imports. Policy tests are deterministic software checks. No empirical result is represented by these counts."
+  },
   "alert_selection_audit": {
-    "experiment": "seeded_synthetic_alert_selection_regression",
+    "experiment": "seeded_synthetic_alert_selection_unit_test",
+    "source": "tests/test_synthetic_regression.py",
     "seed": 20261110,
     "cases": 1000,
     "objects_per_case": 6,
@@ -43,16 +79,18 @@
     "updated_drop_rate": 0.0,
     "absolute_drop_rate_reduction": 0.681,
     "relative_drop_rate_reduction": 1.0,
-    "evidence_type": "deterministic_software_regression_test",
-    "disclaimer": "Synthetic detection records only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
+    "evidence_type": "unit_test_artifact",
+    "disclaimer": "Synthetic detection records in a tests/ unit test only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
   },
-  "file_count": 70,
+  "file_count": 99,
   "files": [
     ".env.example",
     ".gitattributes",
+    ".github/workflows/ci.yml",
     ".gitignore",
     "CHANGELOG.md",
     "CITATION.cff",
+    "FIX_STATUS.md",
     "LICENSE",
     "README.md",
     "RELEASE_NOTES.md",
@@ -62,8 +100,21 @@
     "app23.py",
     "camera_test.py",
     "codemeta.json",
+    "experiments/README.md",
+    "experiments/RESULTS_TEMPLATE.md",
     "experiments/__init__.py",
+    "experiments/alert_manifest.template.json",
+    "experiments/alert_replay.py",
     "experiments/alert_selection_audit.py",
+    "experiments/common.py",
+    "experiments/dataset_manifest.template.json",
+    "experiments/detection_eval.py",
+    "experiments/hardware_manifest.template.json",
+    "experiments/language_eval.py",
+    "experiments/latency_benchmark.py",
+    "experiments/results/.gitkeep",
+    "experiments/vocab_confidence_grid.py",
+    "experiments/vocab_manifest.template.json",
     "paper/README.md",
     "paper/artifacts/alert_selection_audit.json",
     "paper/artifacts/fig1_system_architecture.png",
@@ -75,6 +126,7 @@
     "paper/artifacts/fig2_implementation_verification.svg",
     "paper/artifacts/fig2_static_audit_workflow.png",
     "paper/artifacts/repository_audit.json",
+    "paper/artifacts/test_summary.json",
     "paper/artifacts/updated_repository_audit.json",
     "paper/audit_repository.py",
     "paper/audit_updated_repository.py",
@@ -93,7 +145,10 @@
     "paper/tech_yolo_updated_research_paper.md",
     "paper/tech_yolo_updated_research_paper.pdf",
     "paper/updated_manuscript_content.py",
+    "requirements-ci.txt",
     "requirements.txt",
+    "scripts/report_test_counts.py",
+    "scripts/verify_no_fabricated_results.py",
     "speech.mp3",
     "speech_30672.mp3",
     "speech_5060.mp3",
@@ -106,9 +161,19 @@
     "static/unnamed.png",
     "templates/index.html",
     "tests/__init__.py",
+    "tests/route_test_support.py",
+    "tests/synthetic_regression.py",
     "tests/test_core.py",
+    "tests/test_experiment_harnesses.py",
+    "tests/test_language.py",
+    "tests/test_policy_regression.py",
+    "tests/test_routes.py",
     "tests/test_source_contract.py",
+    "tests/test_synthetic_regression.py",
+    "tests/test_telemetry.py",
     "trinexis_core.py",
+    "trinexis_language.py",
+    "trinexis_telemetry.py",
     "utils/coco.txt",
     "weights/clip/ViT-B-32.pt",
     "weights/download_weights.py",
@@ -121,20 +186,24 @@
   ],
   "artifact_checksums": {
     "paper/tech_yolo_updated_research_paper.pdf": {
-      "bytes": 32177,
-      "sha256": "9921edce7a3a82cb2287f80bd56c4f4bccfb801fe6b1e290772efed87a618cb4"
+      "bytes": 41598,
+      "sha256": "c3db7371811106fc76efcec38dee347fd05b17cd5c3ff0d9ed5bf58231597741"
     },
     "paper/tech_yolo_updated_research_paper.docx": {
-      "bytes": 144409,
-      "sha256": "f3d83aa4fa64b20f5c3deefe49d1a3a3a69d633afc2506a04213c77c9c124a54"
+      "bytes": 148361,
+      "sha256": "6c041c36a82510c8dc7f3875fd7cae0c478a5c53a613e0b031994c6ab7ef0590"
     },
     "paper/tech_yolo_updated_research_paper.md": {
-      "bytes": 25711,
-      "sha256": "b1278d44d8e126687bec3c0a3f46f5358632ef4b9a7640cc72fde1fededd216b"
+      "bytes": 35356,
+      "sha256": "6e75f3fe7ff2ee8efe578486ca7990328803288cd0f9b89d46251375995d0963"
     },
     "paper/artifacts/alert_selection_audit.json": {
-      "bytes": 618,
-      "sha256": "7d700bfa2347e36bc6ab8f38e87ecba76ce5e085d2ede9e90fe8cbb34882d9d4"
+      "bytes": 669,
+      "sha256": "05d7f55676d7696544ba8fb5ca7330d76e4ed3f39559684263b24cd8eae9df5b"
+    },
+    "paper/artifacts/test_summary.json": {
+      "bytes": 673,
+      "sha256": "0cce411863d55cfb378f98c79a063af22f3b9a569b2e21b70ccb52fd4cd9f71c"
     },
     "paper/artifacts/fig1_system_architecture_updated.svg": {
       "bytes": 5571,
@@ -156,6 +225,110 @@
       "bytes": 6259,
       "sha256": "4941bd8c73dc6abc7d1da20b3f5fc6e0f9c4903f1733c3b8f794e698b156f4ab"
     },
+    "paper/updated_manuscript_content.py": {
+      "bytes": 40178,
+      "sha256": "a61f2d1102d7485d67b8feaeb08c1c54e70e724f2f7b9a1f6bda6112b33709d2"
+    },
+    "paper/README.md": {
+      "bytes": 4745,
+      "sha256": "ab3cd4b5603ecba618301d848f3fae820875c4d83aa10e2fc104bd1e966995b7"
+    },
+    "FIX_STATUS.md": {
+      "bytes": 9534,
+      "sha256": "8ef81f19c536bfb0229f1164dc49fd820e48c361eb778a4ba83703d3b38e2fd6"
+    },
+    "README.md": {
+      "bytes": 8370,
+      "sha256": "a763ff5b357801f1b557a287d58c268847cbaf9f6729b485f1223baa18bdf850"
+    },
+    "CITATION.cff": {
+      "bytes": 1327,
+      "sha256": "82bb0274894c5bcc264c28916dd077f8de3fe1b2537fd7d452342194e991493e"
+    },
+    "codemeta.json": {
+      "bytes": 1253,
+      "sha256": "1af0708d79ceddf13ef8ee16a8bef6d16932a8b344e400014d8efaf3efb13a24"
+    },
+    "CHANGELOG.md": {
+      "bytes": 3470,
+      "sha256": "a8c4e9094af28380556be43d0a633d3eac7326f09fa0479a8f26096f722ebf60"
+    },
+    "RELEASE_NOTES.md": {
+      "bytes": 1504,
+      "sha256": "135fd7735fa08ee5844ef6aad0d3076a8774cff4793f7272719f9b98d5d7a83a"
+    },
+    "THIRD_PARTY_LICENSES.md": {
+      "bytes": 1588,
+      "sha256": "fd4900cab62efe67c105aa380de97c64ffba916736082b718d2bb731e9825a7b"
+    },
+    "requirements-ci.txt": {
+      "bytes": 160,
+      "sha256": "192ab21f0aff8be61a8dad89fbc0ba6085f609aa21c5cf53cb73d695dd44559a"
+    },
+    ".github/workflows/ci.yml": {
+      "bytes": 1353,
+      "sha256": "d50b313c633eaaaefffc264e4f9bd3cd7b9357b63eec0f4d423ad6344bc55cd6"
+    },
+    "scripts/report_test_counts.py": {
+      "bytes": 3533,
+      "sha256": "aa32808acbd501f5c2b4c5a36cc56aac194b78536c4bebfce817e05449308d61"
+    },
+    "scripts/verify_no_fabricated_results.py": {
+      "bytes": 2828,
+      "sha256": "13b5c8ece3193c7557fdb388c82d85259ec3ac8d247ba0ac93709d3ee1103b66"
+    },
+    "tests/test_routes.py": {
+      "bytes": 13929,
+      "sha256": "a76508fb9556954c066d0efaf369cb95bb4c123db7128e33953be01210361db6"
+    },
+    "tests/test_synthetic_regression.py": {
+      "bytes": 1477,
+      "sha256": "70c4426ad81ec8f0909df89e040230b0790a6ce16e1108cac12ba436b6548a0e"
+    },
+    "tests/synthetic_regression.py": {
+      "bytes": 3360,
+      "sha256": "1a668f5900905f24c6ca68bb5a79b04c0b9425c479fb86514000af622c6152d0"
+    },
+    "experiments/README.md": {
+      "bytes": 9354,
+      "sha256": "f15655e488f873f4c494dc08273ee936daa0df937442e10b01cc3b90092c36a3"
+    },
+    "experiments/RESULTS_TEMPLATE.md": {
+      "bytes": 5033,
+      "sha256": "4bd0c5492b801e61d1ccab5984719509d007ec14fa30530a4cf1acbd2b571e38"
+    },
+    "experiments/latency_benchmark.py": {
+      "bytes": 6538,
+      "sha256": "236b4244b1844021ca19310e2cf5008ed2a54213831702e4a0282a5c408a700d"
+    },
+    "experiments/detection_eval.py": {
+      "bytes": 12991,
+      "sha256": "21ba298f506e313f08c75dc527373e52a1bdaeb3168516d28a53da68f250a273"
+    },
+    "experiments/vocab_confidence_grid.py": {
+      "bytes": 8411,
+      "sha256": "6de161e74ef19c7d6989e596081e545825bd69bbaac8f31caace2295e1bc4eff"
+    },
+    "experiments/alert_replay.py": {
+      "bytes": 12572,
+      "sha256": "24f4446aebe36751a2ee57b94f9fbe669e09baa581ba13fcd60981ac02e65796"
+    },
+    "experiments/language_eval.py": {
+      "bytes": 6866,
+      "sha256": "4dc7f8860da982f2ab2c4d53b604dcff40c33ab7747c8d7b048db298a4bdc47a"
+    },
+    "trinexis_core.py": {
+      "bytes": 6363,
+      "sha256": "52a5d59e92e0c3666e1a505460ff19e6ca8ea155b637ea811ade179ea1c0686f"
+    },
+    "trinexis_telemetry.py": {
+      "bytes": 5167,
+      "sha256": "fb25ed4d31f496796f068cf0577887ac1708c439638792d58ae508358a26bb19"
+    },
+    "trinexis_language.py": {
+      "bytes": 3641,
+      "sha256": "bfaad1753a9dff0c76b23649f8a4f6595706eac03a364944f53c416c2fd1a5bd"
+    },
     "weights/download_weights.py": {
       "bytes": 3183,
       "sha256": "3a31b4ae38645026c2548aac0fb68302ded8139a98c3883faf0ef6d090e624cf"
@@ -165,12 +338,12 @@
       "sha256": "0757ff9e1b17d7639f0a1065596d1d48f50b8b5d15dcadf6539189a1b80e5d77"
     },
     "zenodo.json": {
-      "bytes": 1515,
-      "sha256": "7a6b9977ef4b374c889999cb5cf985db61f4b4df25e97a34b42951fba7bfeddc"
+      "bytes": 1611,
+      "sha256": "dfc09f82e4ef8bd54b58224b461ba5bbe42fd6c7b44c18867c0b356a1aec8aad"
     },
     "ZENODO.md": {
-      "bytes": 873,
-      "sha256": "ab3942fa36f35b17159e17742c13f6dabcf99c7f673ff5ae47a1ab854fd6f3ac"
+      "bytes": 2501,
+      "sha256": "118a6fbf9215ef9d79e8c162ee4249d78659e0590cb070227b5f24c433b3de36"
     }
   }
 }

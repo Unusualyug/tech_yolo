@@ -1,0 +1,13 @@
+{
+  "cpu": null,
+  "gpu": null,
+  "ram": null,
+  "os": null,
+  "python_version": null,
+  "requirements_file": "requirements.txt",
+  "camera": null,
+  "microphone_or_audio_output": null,
+  "tts_backend": "gTTS / Google Translate text-to-speech service",
+  "date_declared": null,
+  "notes": "Fill and freeze this manifest before collecting latency logs."
+}

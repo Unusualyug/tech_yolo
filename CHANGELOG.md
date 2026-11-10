@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased — evidence-protocol and test revision on `arena/69777d37-tech-yolo`
+
+- Reframed the manuscript around an alert-aware narration policy, a testable
+  alert-delivery research question, experiment protocols, and blank `NO DATA`
+  results; retitled it *TRINEXIS: An Alert-Aware Narration Policy and a
+  Protocol for Measuring Its Effect on Alert Delivery*.
+- Added optional real-log instrumentation for capture, inference, TTS
+  synthesis, playback, rendering, speech enqueue, and playback events.
+- Added Experiments A–D protocols, runnable harnesses, hardware/dataset/
+  vocabulary/alert manifest templates, and `experiments/RESULTS_TEMPLATE.md`.
+- Moved the seeded 1,000-case 68.1% synthetic check into
+  `tests/test_synthetic_regression.py`; removed the old `experiments/` generator.
+- Added real Flask test-client tests for all 23 routes, input validation,
+  401/403/409 control behavior, mocked detector/camera/TTS imports, and
+  `.github/workflows/ci.yml` on every push and pull request.
+- Added language-fallback metadata/UI: ten missing templates are disclosed,
+  the 72 language codes remain unchecked, and gTTS's Google Translate speech
+  service plus sample-listening instructions are documented.
+- Added `FIX_STATUS.md`, `scripts/report_test_counts.py`, and
+  `scripts/verify_no_fabricated_results.py`.
+- Clarified that the final GitHub/Zenodo release must come last and that the
+  DOI must then be inserted into `CITATION.cff`, `README.md`, and the paper's
+  Data and Code Availability section. No DOI, tag, or release was created.
+- Kept the manuscript **not submission-ready**: no official venue template,
+  current Guide for Authors, citation style, author declaration confirmation,
+  AI-policy recheck, dashboard screenshot, spoken input→output example, or
+  author verification of every number exists.
+
 ## v0.3.0-standalone — 2026-11-10
 
 - Reframed the manuscript as a standalone technical report with the title

@@ -1,18 +1,48 @@
 # Zenodo DOI instructions
 
-A DOI has **not** been minted yet. Zenodo requires the author to authorize the
-GitHub connection; this sandbox cannot create a deposit under the author's
-Zenodo account.
+A DOI has **not** been minted. `v0.3.0-standalone` is an older immutable
+release; the unreleased working-tree fixes on
+`arena/69777d37-tech-yolo` change the paper, tests, instrumentation, and UI.
+Do **not** mint a DOI from that older release or from this working tree. A DOI
+is permanent for the exact archived version, so the final GitHub/Zenodo release
+must come **last**.
 
-1. Sign in to Zenodo with the author's account.
-2. Connect `https://github.com/Unusualyug/tech_yolo` through Zenodo's GitHub
-   integration and enable the repository.
-3. Enable the existing GitHub release `v0.3.0-standalone` in Zenodo (or republish it).
-4. Zenodo will create a deposit and mint a DOI.
-5. Replace the GitHub release URL in `CITATION.cff`, `codemeta.json`,
-   `zenodo.json`, `paper/updated_manuscript_content.py`, and
-   `paper/README.md` with the DOI.
-6. Rebuild the manuscript and create a new patch release.
+## Why this is pending
 
-`zenodo.json` contains the prepared deposit metadata. Until the DOI exists, the
-paper cites the GitHub release URL [23] rather than claiming a DOI.
+1. Zenodo requires the author to authorize the GitHub connection; this sandbox
+   cannot create a deposit under the author's Zenodo account.
+2. Empirical Experiments A–D are blank `NO DATA` protocols until real hardware,
+   labeled data, logs, and raters are supplied.
+3. Optional user-noticing work requires consent and institutional ethics
+   approval first.
+4. The dashboard screenshot, spoken input→output example, venue's current
+   Guide for Authors, AI-tool-policy recheck, funding/competing-interest
+   confirmation, and author's personal number verification are pending.
+5. No official venue template, citation style, or current Guide for Authors was
+   supplied/read; the manuscript is **not submission-ready**.
+
+## Exact minting order after all of the above are complete
+
+1. Freeze the final paper, code, metadata, and result files.
+2. Create the **final** GitHub release and tag for that exact version; do not
+   reuse `v0.3.0-standalone`.
+3. Sign in to Zenodo with the author's account and connect
+   `https://github.com/Unusualyug/tech_yolo` through Zenodo's GitHub
+   integration.
+4. Enable and publish the final GitHub release in Zenodo. Zenodo creates the
+   deposit and mints the DOI.
+5. Insert the resulting DOI in **all three required locations**:
+   - `CITATION.cff` (`doi` and the preferred-citation URL);
+   - `README.md` (Citation section);
+   - `paper/updated_manuscript_content.py` → Data and Code Availability, then
+     rebuild `paper/tech_yolo_updated_research_paper.{pdf,docx,md}`.
+6. Also update `codemeta.json`, `zenodo.json`, and this file's status so the
+   metadata does not describe a draft. Verify the DOI resolves to the exact
+   final release.
+7. Rebuild the manuscript and audit; have the author personally verify every
+   number and declaration.
+
+`zenodo.json` contains prepared deposit metadata with
+`version: "PENDING_FINAL_RELEASE"` and `notes: "DOI pending..."`. Until the DOI
+exists, cite the immutable prior GitHub release URL [23] for the prior release
+only; do not claim that the unreleased fixes are part of that DOI.

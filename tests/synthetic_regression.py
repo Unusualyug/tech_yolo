@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Seeded synthetic before/after audit of TRINEXIS alert-speech selection.
+"""Seeded 1,000-case synthetic regression used by a unit test only.
 
-This script does not run model inference, open a camera, or use human data. It
-generates deterministic detection records to measure a software regression:
-whether a configured alert object is omitted from the two-object speech
-shortlist. The legacy behavior truncated by confidence before alert-aware
-ranking; the updated behavior ranks alerts before truncation.
+This module lives under ``tests/`` deliberately. It is not an experiment,
+camera study, dataset evaluation, or empirical result. The generated JSON is
+an artifact of the unit test, and the paper cites it only as software
+verification.
 """
 from __future__ import annotations
 
@@ -15,7 +14,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from trinexis_core import (  # noqa: E402
     legacy_select_speech_objects,
@@ -50,7 +50,8 @@ def make_case(rng: random.Random) -> list[dict[str, object]]:
     return objects
 
 
-def main() -> None:
+def run_audit() -> dict[str, object]:
+    """Run the seeded synthetic ordering check and return its unit-test artifact."""
     rng = random.Random(SEED)
     alerts = {ALERT_NAME}
     legacy_drops = 0
@@ -67,8 +68,9 @@ def main() -> None:
 
     legacy_rate = legacy_drops / N_CASES
     updated_rate = updated_drops / N_CASES
-    result = {
-        "experiment": "seeded_synthetic_alert_selection_regression",
+    return {
+        "experiment": "seeded_synthetic_alert_selection_unit_test",
+        "source": "tests/test_synthetic_regression.py",
         "seed": SEED,
         "cases": N_CASES,
         "objects_per_case": N_OBJECTS,
@@ -84,17 +86,21 @@ def main() -> None:
             if legacy_rate
             else None
         ),
-        "evidence_type": "deterministic_software_regression_test",
+        "evidence_type": "unit_test_artifact",
         "disclaimer": (
-            "Synthetic detection records only. No model inference, camera "
-            "capture, labeled dataset, human participant, or real-world "
-            "effectiveness measurement was involved."
+            "Synthetic detection records in a tests/ unit test only. No model "
+            "inference, camera capture, labeled dataset, human participant, "
+            "or real-world effectiveness measurement was involved."
         ),
     }
+
+
+def write_artifact() -> Path:
+    """Write the deterministic unit-test artifact cited by the manuscript."""
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps(result, indent=2))
+    OUT.write_text(json.dumps(run_audit(), indent=2) + "\n", encoding="utf-8")
+    return OUT
 
 
 if __name__ == "__main__":
-    main()
+    print(write_artifact())

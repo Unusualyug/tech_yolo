@@ -40,9 +40,12 @@ from ultralytics import YOLO
 from datetime import datetime
 from gtts import gTTS
 from collections import defaultdict
+from pathlib import Path
+import hashlib
 from trinexis_core import (
     ALLOWED_MODELS,
     camera_config,
+    control_request_status,
     normalize_model_name,
     rate_per_second,
     relative_distance_index,
@@ -50,6 +53,39 @@ from trinexis_core import (
     single_client_check,
     time_decay_factor,
     validate_control_request,
+)
+from trinexis_telemetry import LatencyRecorder, timed
+from trinexis_language import template_coverage
+
+
+def load_alert_manifest():
+    """Load a predeclared, immutable alert-object list for replay experiments."""
+    path_text = os.environ.get("TRINEXIS_ALERT_MANIFEST", "").strip()
+    if not path_text:
+        return None, None, None
+    path = Path(path_text)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    declared_at = data.get("declared_at")
+    if not declared_at:
+        raise ValueError("TRINEXIS_ALERT_MANIFEST requires declared_at")
+    objects = sorted({
+        str(item).strip()
+        for item in data.get("alert_objects", [])
+        if str(item).strip()
+    })
+    if not objects:
+        raise ValueError("TRINEXIS_ALERT_MANIFEST requires alert_objects")
+    canonical = json.dumps(
+        {"alert_objects": objects, "declared_at": declared_at},
+        sort_keys=True,
+        ensure_ascii=False,
+    )
+    digest = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return objects, digest, str(path.resolve())
+
+
+ALERT_MANIFEST_OBJECTS, ALERT_MANIFEST_SHA256, ALERT_MANIFEST_PATH = (
+    load_alert_manifest()
 )
 
 
@@ -64,11 +100,45 @@ app.secret_key = os.environ.get(
 )
 
 API_TOKEN = os.environ.get("TRINEXIS_API_TOKEN", "").strip()
+READ_ONLY_MODE = os.environ.get("TRINEXIS_READ_ONLY", "0") == "1"
 SINGLE_CLIENT_MODE = os.environ.get("TRINEXIS_SINGLE_CLIENT", "1") == "1"
 SINGLE_CLIENT_TIMEOUT_S = float(os.environ.get("TRINEXIS_CLIENT_TIMEOUT_S", "60"))
 ACTIVE_CLIENT_ID = None
 ACTIVE_CLIENT_LAST_SEEN = 0.0
 client_lock = threading.Lock()
+
+
+def request_json_object():
+    """Return a JSON object for control routes, or None for invalid JSON."""
+    data = request.get_json(silent=True)
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        return None
+    return data
+
+# Optional, off-by-default instrumentation. No log is written unless paths are
+# explicitly configured. These recorders never create empirical result claims.
+EXPERIMENT_SETTING = os.environ.get("TRINEXIS_EXPERIMENT_SETTING", "default")
+HARDWARE_MANIFEST = os.environ.get("TRINEXIS_HARDWARE_MANIFEST", "")
+LATENCY_LOG = os.environ.get("TRINEXIS_LATENCY_LOG", "")
+EVENT_LOG = os.environ.get("TRINEXIS_EVENT_LOG", "")
+RECORDER_METADATA = {
+    "hardware_manifest": HARDWARE_MANIFEST or None,
+    "software_manifest": "requirements.txt",
+    "alert_manifest_sha256": ALERT_MANIFEST_SHA256,
+    "experiment_setting": EXPERIMENT_SETTING,
+}
+LATENCY_RECORDER = LatencyRecorder(
+    LATENCY_LOG,
+    setting=EXPERIMENT_SETTING,
+    metadata=RECORDER_METADATA,
+)
+SPEECH_EVENT_RECORDER = LatencyRecorder(
+    EVENT_LOG,
+    setting=EXPERIMENT_SETTING,
+    metadata=RECORDER_METADATA,
+)
 
 
 @app.before_request
@@ -80,11 +150,17 @@ def enforce_control_policy():
     if request.method == "GET" or request.path.startswith("/static/"):
         return None
 
-    if not validate_control_request(API_TOKEN, request.headers):
+    allowed, status_code, message = control_request_status(
+        API_TOKEN,
+        request.headers,
+        READ_ONLY_MODE,
+        request.method,
+    )
+    if not allowed:
         return jsonify({
             "status": "error",
-            "message": "Invalid or missing API token"
-        }), 401
+            "message": message
+        }), status_code
 
     if SINGLE_CLIENT_MODE:
         client_id = session.get("client_id")
@@ -746,7 +822,7 @@ HEATMAP_HALF_LIFE_S = float(
 
 recent_inference_times = []
 
-alert_objects = set()
+alert_objects = set(ALERT_MANIFEST_OBJECTS or [])
 
 
 # ============================================================
@@ -782,6 +858,7 @@ stats = {
     "detection_timeline": [],
 
     "uptime_start": time.time(),
+    "alert_manifest_sha256": ALERT_MANIFEST_SHA256,
 
 }
 
@@ -1432,7 +1509,11 @@ def speech_worker():
             break
 
 
-        text, lang = item
+        if len(item) == 3:
+            text, lang, event_metadata = item
+        else:
+            text, lang = item
+            event_metadata = {}
 
 
         filename = (
@@ -1453,6 +1534,8 @@ def speech_worker():
 
             )
 
+
+            synthesis_started = time.perf_counter()
 
             try:
 
@@ -1493,9 +1576,45 @@ def speech_worker():
                 filename
             )
 
+            synthesis_ms = (
+                time.perf_counter() - synthesis_started
+            ) * 1000.0
 
-            play_audio_sync(
-                filename
+            LATENCY_RECORDER.record(
+                "tts_ms",
+                synthesis_ms,
+                component="synthesis",
+                language=lang,
+                language_code=code,
+            )
+
+
+            _, playback_ms = timed(
+                play_audio_sync,
+                filename,
+            )
+
+            LATENCY_RECORDER.record(
+                "playback_ms",
+                playback_ms,
+                language=lang,
+                language_code=code,
+            )
+
+            SPEECH_EVENT_RECORDER.event(
+                "speech_playback",
+                playback_timestamp_unix=time.time(),
+                playback_ms=playback_ms,
+                tts_ms=synthesis_ms,
+                language=lang,
+                language_code=code,
+                matched_alert_names=event_metadata.get(
+                    "matched_alert_names",
+                    [],
+                ),
+                detection_timestamp_unix=event_metadata.get(
+                    "detection_timestamp_unix",
+                ),
             )
 
 
@@ -1544,7 +1663,9 @@ threading.Thread(
 
 def speak(
     text,
-    lang
+    lang,
+    detected_objects=None,
+    detection_timestamp_unix=None,
 ):
 
     global last_spoken_time
@@ -1604,16 +1725,52 @@ def speak(
     # ADD ONLY LATEST SPEECH
     # --------------------------------------------------------
 
+    spoken = select_speech_objects(
+        detected_objects or [],
+        alert_objects,
+        MAX_OBJECTS_TO_SPEAK,
+    )
+    selected_names = [
+        str(obj.get("name", ""))
+        for obj in spoken
+        if str(obj.get("name", ""))
+    ]
+    matched_alerts = [
+        name for name in selected_names
+        if name in alert_objects
+    ]
+    event_metadata = {
+        "detection_timestamp_unix": detection_timestamp_unix,
+        "enqueue_timestamp_unix": now,
+        "alert_to_enqueue_ms": (
+            (now - float(detection_timestamp_unix)) * 1000.0
+            if detection_timestamp_unix is not None
+            else None
+        ),
+        "selected_object_names": selected_names,
+        "alert_objects_snapshot": sorted(alert_objects),
+        "matched_alert_names": matched_alerts,
+        "language": lang,
+        "speech_text": text,
+        "cooldown_s": SPEECH_COOLDOWN,
+        "max_speak_objects": MAX_OBJECTS_TO_SPEAK,
+    }
+
     try:
 
         speech_queue.put_nowait(
             (
                 text,
-                lang
+                lang,
+                event_metadata,
             )
         )
 
         last_spoken_time = now
+        SPEECH_EVENT_RECORDER.event(
+            "speech_enqueued",
+            **event_metadata,
+        )
 
     except queue.Full:
 
@@ -2162,12 +2319,33 @@ def annotate_frame(
         )
 
 
+        detection_unix = time.time()
+        detection_id = uuid.uuid4().hex
+
         detection_log.append({
 
             "timestamp":
                 now.strftime(
                     "%H:%M:%S"
                 ),
+
+            "timestamp_unix":
+                detection_unix,
+
+            "detection_id":
+                detection_id,
+
+            "experiment_setting":
+                EXPERIMENT_SETTING,
+
+            "hardware_manifest":
+                HARDWARE_MANIFEST or None,
+
+            "alert_manifest_sha256":
+                ALERT_MANIFEST_SHA256,
+
+            "alert_objects_snapshot":
+                sorted(alert_objects),
 
             "objects":
                 annotated,
@@ -2274,7 +2452,11 @@ def annotate_frame(
 
                 speech_text,
 
-                language
+                language,
+
+                annotated,
+
+                detection_unix,
 
             )
 
@@ -2566,7 +2748,15 @@ def generate_feed():
 
     while True:
 
-        ret, frame = cap.read()
+        (ret, frame), capture_ms = timed(
+            cap.read,
+        )
+
+        LATENCY_RECORDER.record(
+            "capture_ms",
+            capture_ms,
+            component="camera_read",
+        )
 
 
         # ====================================================
@@ -2640,12 +2830,22 @@ def generate_feed():
                 # YOLO
                 # ------------------------------------------------
 
-                result = perform_detection(
+                (result, infer_ms) = timed(
+                    perform_detection,
 
                     frame,
 
-                    confidence_threshold
+                    confidence_threshold,
 
+                )
+
+                LATENCY_RECORDER.record(
+                    "infer_ms",
+                    infer_ms,
+                    imgsz=IMG_SIZE,
+                    confidence=confidence_threshold,
+                    vocab_size=len(VOCABULARY),
+                    model=MODEL_NAME,
                 )
 
 
@@ -2669,12 +2869,22 @@ def generate_feed():
 
                 if result is not None:
 
-                    frame = annotate_frame(
+                    (frame, annotate_ms) = timed(
+                        annotate_frame,
 
                         frame,
 
-                        result
+                        result,
 
+                    )
+
+                    LATENCY_RECORDER.record(
+                        "render_ms",
+                        annotate_ms,
+                        component="annotation_and_speech_selection",
+                        imgsz=IMG_SIZE,
+                        confidence=confidence_threshold,
+                        vocab_size=len(VOCABULARY),
                     )
 
 
@@ -3147,7 +3357,8 @@ def generate_feed():
         # JPEG
         # ====================================================
 
-        success, jpeg = cv2.imencode(
+        (success, jpeg), encode_ms = timed(
+            cv2.imencode,
 
             ".jpg",
 
@@ -3158,6 +3369,13 @@ def generate_feed():
                 85
             ]
 
+        )
+
+        LATENCY_RECORDER.record(
+            "render_ms",
+            encode_ms,
+            component="jpeg_encode",
+            imgsz=IMG_SIZE,
         )
 
 
@@ -3277,12 +3495,13 @@ def set_language_route():
 
     global language
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     selected = data.get(
@@ -3326,12 +3545,13 @@ def set_confidence():
     global confidence_threshold
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     try:
@@ -3395,12 +3615,13 @@ def set_interval_route():
     global INTERVAL
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     try:
@@ -3464,12 +3685,13 @@ def set_resolution():
     global IMG_SIZE
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     try:
@@ -3540,12 +3762,13 @@ def set_model():
     global MODEL_NAME
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     selected_model = data.get(
@@ -3690,12 +3913,13 @@ def set_speech_cooldown():
     global SPEECH_COOLDOWN
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     try:
@@ -3754,12 +3978,13 @@ def set_max_speak_objects():
     global MAX_OBJECTS_TO_SPEAK
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     try:
@@ -3818,12 +4043,13 @@ def set_custom_vocab():
     global VOCABULARY
 
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     new_words = data.get(
@@ -3915,13 +4141,25 @@ def set_alerts():
 
     global alert_objects
 
+    if ALERT_MANIFEST_OBJECTS is not None:
+        return jsonify({
+            "status": "error",
+            "message": (
+                "Alert objects are predeclared by TRINEXIS_ALERT_MANIFEST; "
+                "edit the manifest and restart to change them"
+            ),
+            "alerts": sorted(alert_objects),
+            "manifest_sha256": ALERT_MANIFEST_SHA256,
+        }), 403
 
-    data = (
-        request.get_json(
-            silent=True
-        )
-        or {}
-    )
+
+    data = request_json_object()
+
+    if data is None:
+        return jsonify({
+            "status": "error",
+            "message": "Expected a JSON object"
+        }), 400
 
 
     objects = data.get(
@@ -4065,6 +4303,12 @@ def get_languages():
     ]
 
 
+    support = template_coverage(
+        language_code_map,
+        speech_prefixes,
+    )
+
+
     return jsonify({
 
         "current":
@@ -4078,6 +4322,20 @@ def get_languages():
 
         "all":
             indian + international,
+
+        "english_fallback_languages":
+            support["english_fallback_languages"],
+
+        "verified_languages":
+            support["verified_languages"],
+
+        "unchecked_language_count":
+            support["unchecked_language_count"],
+
+        "support_note":
+            "Only checked languages may be reported as verified. Missing "
+            "speech templates fall back to English. gTTS uses Google "
+            "Translate's speech service; listen to sample audio before use.",
 
     })
 
@@ -4247,6 +4505,24 @@ def get_logs():
 
             "camera_source":
                 "Configurable camera",
+
+            "alert_objects":
+                sorted(alert_objects),
+
+            "alert_manifest_sha256":
+                ALERT_MANIFEST_SHA256,
+
+            "experiment_setting":
+                EXPERIMENT_SETTING,
+
+            "hardware_manifest":
+                HARDWARE_MANIFEST or None,
+
+            "latency_log_enabled":
+                LATENCY_RECORDER.enabled,
+
+            "event_log_enabled":
+                SPEECH_EVENT_RECORDER.enabled,
 
         }
 

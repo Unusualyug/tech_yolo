@@ -1,0 +1,5 @@
+{
+  "declared_at": null,
+  "alert_objects": [],
+  "notes": "Choose designated alert objects before any webcam session. Set TRINEXIS_ALERT_MANIFEST to this file; /set_alerts is then frozen."
+}

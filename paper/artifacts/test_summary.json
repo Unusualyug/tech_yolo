@@ -1,0 +1,20 @@
+{
+  "route_tests": 43,
+  "policy_tests": 37,
+  "source_contract_tests": 13,
+  "other_tests": 0,
+  "total_tests": 93,
+  "by_module": {
+    "test_core": 14,
+    "test_experiment_harnesses": 8,
+    "test_language": 4,
+    "test_policy_regression": 5,
+    "test_routes": 43,
+    "test_source_contract": 13,
+    "test_synthetic_regression": 1,
+    "test_telemetry": 5
+  },
+  "ci_workflow": ".github/workflows/ci.yml",
+  "exact_report_phrase": "43 route tests plus 37 policy tests, run in CI",
+  "scope": "Flask test-client route tests use mocked camera/detector/TTS imports. Policy tests are deterministic software checks. No empirical result is represented by these counts."
+}

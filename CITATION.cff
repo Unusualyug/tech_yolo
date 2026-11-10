@@ -1,6 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite this release and the accompanying technical report."
-title: "TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam System with Language-Configured Speech"
+# Zenodo DOI pending author authorization and the final GitHub/Zenodo release.
+# Do not add a doi key until that exact immutable version exists.
+# This title describes the unreleased working-tree technical report; the
+# version/url below still identify the prior immutable v0.3.0-standalone release.
+title: "TRINEXIS: An Alert-Aware Narration Policy and a Protocol for Measuring Its Effect on Alert Delivery"
 authors:
   - family-names: Lakhani
     given-names: Yug G.
@@ -13,7 +17,7 @@ repository-code: "https://github.com/Unusualyug/tech_yolo"
 url: "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone"
 preferred-citation:
   type: report
-  title: "TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam System with Language-Configured Speech"
+  title: "TRINEXIS: An Alert-Aware Narration Policy and a Protocol for Measuring Its Effect on Alert Delivery"
   authors:
     - family-names: Lakhani
       given-names: Yug G.

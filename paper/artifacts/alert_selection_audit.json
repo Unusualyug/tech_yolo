@@ -1,5 +1,6 @@
 {
-  "experiment": "seeded_synthetic_alert_selection_regression",
+  "experiment": "seeded_synthetic_alert_selection_unit_test",
+  "source": "tests/test_synthetic_regression.py",
   "seed": 20261110,
   "cases": 1000,
   "objects_per_case": 6,
@@ -11,6 +12,6 @@
   "updated_drop_rate": 0.0,
   "absolute_drop_rate_reduction": 0.681,
   "relative_drop_rate_reduction": 1.0,
-  "evidence_type": "deterministic_software_regression_test",
-  "disclaimer": "Synthetic detection records only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
+  "evidence_type": "unit_test_artifact",
+  "disclaimer": "Synthetic detection records in a tests/ unit test only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
 }

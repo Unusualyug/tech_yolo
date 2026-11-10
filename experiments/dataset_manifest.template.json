@@ -1,0 +1,11 @@
+{
+  "dataset_name": null,
+  "report_split": null,
+  "tuning_split": null,
+  "image_count": null,
+  "annotation_format": "COCO bounding boxes",
+  "frozen_prompt_manifest_sha256": null,
+  "declared_before_predictions": false,
+  "report_split_sha256": null,
+  "notes": "Use 200-300 labeled images. Never tune on the reported split."
+}

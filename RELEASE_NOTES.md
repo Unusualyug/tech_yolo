@@ -1,5 +1,11 @@
 # TRINEXIS v0.3.0-standalone
 
+> **Historical release notice:** later unreleased fixes on
+> `arena/69777d37-tech-yolo` add empirical protocols, instrumentation, route
+> tests, CI, language-fallback documentation, and a reframed working-tree
+> manuscript. They are **not** part of this immutable release. No new tag,
+> release, or Zenodo DOI has been created for those changes.
+
 This release contains the standalone technical report and the repository after
 Step 1 text revisions and the feasible Step 2 archive/reference fixes.
 

@@ -11,3 +11,10 @@ env/
 *.pt
 *.pth
 *.onnx
+# Generated empirical logs and result files: protocols/templates are tracked.
+experiments/results/*.json
+experiments/results/*.csv
+experiments/results/*.jsonl
+*.jsonl
+*.log
+speech_trinexis_*.mp3
