@@ -5,11 +5,13 @@ list. **Implemented now** means a real repository change on
 `arena/69777d37-tech-yolo`. **How to fix / pending** means the remaining work
 that requires hardware, labeled data, language raters, consented participants,
 author authorization, or a target venue. No empirical result has been invented,
-and no external paper's measurements were borrowed or presented as TRINEXIS
-results. The author selected the honest protocol-only deliverable: the rebuilt
-manuscript is a complete protocol and software-verification report with one
-limitations paragraph, unfilled measurement cells (`NO DATA`), and **not
-submission-ready** as an empirical article.
+and no external paper's measurements were hidden or presented as TRINEXIS
+results. Clearly cited scale facts from refs [2], [3], and [19] were later
+added only as Table I-B related-work context. The author selected the honest
+protocol-only deliverable: the rebuilt manuscript is a complete protocol and
+software-verification report with one limitations paragraph, unfilled
+measurement cells (`NO DATA`), and **not submission-ready** as an empirical
+article.
 
 ## Protocol-only paper revision (2026-11-10)
 
@@ -35,14 +37,19 @@ a polished protocol-only paper.
   snapshot", with a note that no final tag or DOI exists.
 - Removed the dashboard screenshot / spoken-example promise from the paper's
   future-work list and Appendix B's `FIX_STATUS.md` reference.
-- No external numbers, borrowed figures, fake screenshot, fake spoken example,
-  `v1.0.0` tag, GitHub release, or Zenodo DOI were created.
+- Added `TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)` with
+  verified scale facts from refs [2], [3], and [19], an explicit
+  "not entered into Table V" disclaimer, and source-contract checks.
+- No external numbers were presented as TRINEXIS measurements; no borrowed
+  figures, fake screenshot, fake spoken example, `v1.0.0` tag, GitHub release,
+  or Zenodo DOI were created.
 
 **Still required for an empirical article**
 
 - Real C→A→B runs, D/E if resources/approvals exist, one live screenshot, one
   real spoken input→output example, filled result tables, and author
-  verification of every number.
+  verification of every number. The cited-context table does not fill any
+  empirical result cell.
 - A rewrite of title/abstract, Methods, Results, Discussion, and conclusion
   around those real numbers; removal of the final limitations paragraph only
   when it is no longer true.
@@ -210,12 +217,14 @@ a polished protocol-only paper.
   arXiv-metadata, and final-release gate self-checks passed; no empirical data
   was produced.
 - `scripts/verify_no_fabricated_results.py`: **EVIDENCE BOUNDARY CHECK OK**.
-- Rebuilt the protocol-only paper: 13-page PDF, 5 tables, 2 figures, 191-word
+- Rebuilt the protocol-only paper: 13-page PDF, 6 tables, 2 figures, 191-word
   abstract, and citations [1]–[24]. `paper/artifacts/updated_repository_audit.json`
   records 110 files, 93 tests, and `zenodo_doi: null`.
 - Manuscript text checks: `NO DATA`, `not submission-ready`, and
-  `Zenodo DOI has not been minted` each appear exactly once; the mutable branch
-  name, `working-tree`, `Tagged release`, `Blank Result Table`, and
+  `Zenodo DOI has not been minted` each appear exactly once;
+  `TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)` and
+  `not entered into Table V` are present; the mutable branch name,
+  `working-tree`, `Tagged release`, `Blank Result Table`, and
   `FIX_STATUS.md` no longer appear in the paper. Figure 2 SVG/PDF now say
   `Untagged snapshot` and `no final tag or DOI exists`.
 - `git diff --check` passed. No new tag, GitHub release, Zenodo DOI, or paper

@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — cited published-context addition
+
+- Added `TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)` to Section II
+  using only verified scale/scope facts from refs [2], [3], and [19].
+- Stated explicitly that these figures are bibliographic context, are not
+  entered into Table V, and are not TRINEXIS detection, latency, language, or
+  user results.
+- Updated the evidence-boundary checker, source-contract assertions, repository
+  audit, reference-verification notes, and docs to enforce that no external
+  benchmark value is hidden or reused as a project result.
+- Rebuilt PDF/DOCX/MD; no simulation, empirical result, screenshot, spoken
+  example, `v1.0.0` tag, release, or DOI was created.
+
 ## Unreleased — protocol-only paper revision on `arena/69777d37-tech-yolo`
 
 - Reframed the deliverable as a complete protocol and software-verification

@@ -30,6 +30,11 @@ effectiveness, or user-study results. The 68.1% synthetic figure is generated
 only by `tests/test_synthetic_regression.py` as a failable unit-test artifact;
 it is not an experiment result.
 
+A clearly cited `TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)`
+records verified scale facts from refs [2], [3], and [19]. These are
+bibliographic context only; no external benchmark value is entered into the
+preregistered measurement plan or presented as a TRINEXIS result.
+
 ## Files
 
 | File | Purpose |

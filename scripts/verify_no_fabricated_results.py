@@ -42,6 +42,8 @@ def main() -> int:
             "research question",
             "not submission-ready",
             "Zenodo DOI has not been minted",
+            "PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)",
+            "not entered into Table V",
         ):
             if required not in paper:
                 errors.append(f"manuscript missing evidence-boundary phrase: {required}")

@@ -176,6 +176,17 @@ BLOCKS = [
             ["Alqahtani et al. [19], 2024", "Edge accuracy–latency–energy benchmark", "YOLOv8, SSD, and EfficientDet Lite across heterogeneous edge devices", "Motivates separate timing instrumentation; its measurements are not reused as TRINEXIS results"],
         ],
     }),
+    ("p", "Published numeric context (not TRINEXIS results). The scale facts below are verifiable bibliographic facts from the cited sources, included only to characterize their scope. They are not TRINEXIS measurements, are not entered into Table V, and are not used to claim detection quality, latency, distance accuracy, multilingual comprehension, or user benefit. Ref. [19] is an edge accuracy-latency-energy benchmark under its own devices and protocol; none of its device-specific accuracy, latency, or energy numbers are reused here."),
+    ("table", {
+        "caption": "TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)",
+        "widths": [0.18, 0.34, 0.48],
+        "rows": [
+            ["Source", "Published numeric context", "Status in this report"],
+            ["Lin et al. [2], 2014", "Approximately 328,000 images, 2.5 million labeled instances, and 80 released categories in the 2014 COCO release", "Cited benchmark scale only; utils/coco.txt is a label list in this repository, not an evaluation of this app"],
+            ["Radford et al. [3], 2021", "400 million image-text pairs; zero-shot transfer over more than 30 datasets", "Cited pre-training/transfer scope only; CLIP is not the deployed detector here"],
+            ["Alqahtani et al. [19], 2024/2026", "Edge accuracy-latency-energy benchmark of YOLOv8, SSD, and EfficientDet Lite across heterogeneous edge devices", "Motivates separate timing instrumentation; no device-specific value is reused as a TRINEXIS result"],
+        ],
+    }),
     ("h2", "B. Assistive Interfaces, Speech, and Privacy"),
     ("p", "Remote sighted assistance has been studied through Be My Eyes [16], while Seeing AI [17] and AI scene-description applications [18] illustrate practical auditory presentation of visual information. These systems are relevant to the design space but do not validate TRINEXIS. The repository configures 72 language codes and 62 top-level speech resources. Ten language codes use an English template fallback in the UI; the remaining 72-language claim is unchecked. gTTS uses Google Translate's speech service [9], so raters should listen to sample audio and the author should listen to a few languages before any quality claim. Camera-based systems also raise privacy and face-recognition concerns [20], [21]. The optional face-recognition hook remains unavailable, and no consent, retention, or biometric-processing protocol is claimed."),
     ("h2", "C. Research Software and Reproducibility"),
@@ -300,7 +311,7 @@ BLOCKS = [
 
     ("h1", "VI. PROTOCOL INTERPRETATION AND ETHICS"),
     ("h2", "A. Interpretation"),
-    ("p", "The alert-aware policy makes the spoken shortlist independent of whether a designated object happens to be among the highest-confidence detections. Interval throttling separates detector cadence from camera frame rate; time-based heatmap decay and the unitless distance index remove two frame-rate- and calibration-dependent ambiguities. The Flask route tests establish control behavior under mocked dependencies, not live deployment success. Published detector literature is not comparable to this webcam pipeline because its datasets, prompts, splits, and hardware protocols differ. The protocol is designed to estimate the alert-delivery effect without presupposing its sign or magnitude."),
+    ("p", "The alert-aware policy makes the spoken shortlist independent of whether a designated object happens to be among the highest-confidence detections. Interval throttling separates detector cadence from camera frame rate; time-based heatmap decay and the unitless distance index remove two frame-rate- and calibration-dependent ambiguities. The Flask route tests establish control behavior under mocked dependencies, not live deployment success. Published detector literature is not comparable to this webcam pipeline because its datasets, prompts, splits, and hardware protocols differ. The protocol is designed to estimate the alert-delivery effect without presupposing its sign or magnitude. Table I-B is bibliographic context only; it is not a TRINEXIS result and is not entered into Table V."),
     ("h2", "B. Ethical and Practical Implications"),
     ("p", "Camera-based interfaces can expose bystanders and sensitive environments. Privacy, consent, retention, and biometric-processing policies must be defined before any real-world or assistive-use study [20], [21]. The AGPL-3.0 license [24] and dependency-license notice clarify redistribution obligations but do not substitute for an ethics review. The system should not be described as assistive technology for blind or low-vision users until a consented study demonstrates benefit."),
     ("h2", "C. Language Coverage and TTS"),

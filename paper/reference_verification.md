@@ -51,6 +51,9 @@ citation. No Zenodo DOI is claimed in the manuscript.
   were used for those fields.
 - The GLIP page-range discrepancy is recorded above rather than silently
   choosing one source.
+- Table I-B uses only verified scale/scope facts from [2], [3], and [19] as
+  clearly cited published context. No device-specific accuracy, latency, or
+  energy value from [19] is reused as a TRINEXIS result.
 - All 24 rows are ticked `[x]` after the 2026-11-10 recheck. Priority refs
   [11], [12], [16], [19], [20], and [21] were explicitly re-opened and their
   notes updated above.

@@ -146,7 +146,8 @@ def main() -> None:
             "No model inference, camera capture, labeled dataset, hardware "
             "timing campaign, distance calibration, translated-template "
             "rating, or human-participant evaluation was performed. All "
-            "empirical result cells are NO DATA."
+            "empirical result cells are NO DATA. Published numeric context is "
+            "cited as non-comparable related work, not as a TRINEXIS measurement."
         ),
         "repository_fixes": [
             "AGPL-3.0 LICENSE, README.md, pinned requirements.txt, CITATION.cff, codemeta.json, .env.example, THIRD_PARTY_LICENSES.md",
@@ -164,6 +165,7 @@ def main() -> None:
             "nearest-object-first baseline, 5-10 session replay harness, and guarded three-policy user-study worksheet",
             "hand-run live smoke-test checklist, dashboard/spoken-example verifier, and prereq inspector",
             "protocol-only paper reframing, preregistered measurement plan, one limitations paragraph, and Figure 2 untagged-snapshot correction",
+            "clearly cited published-context table using verified scale facts from [2], [3], [19]; no external benchmark value entered into TRINEXIS result cells",
             "arXiv/institutional-report guide notes, mechanical metadata check, and final-release gate",
             "early departmental ethics-route inquiry sent with a verifiable Gmail receipt; no approval claimed",
             "all 24 reference rows ticked after direct publisher/official-page recheck",

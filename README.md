@@ -12,7 +12,9 @@ logs, a relative distance index, a time-decayed heatmap, and session telemetry.
 > mandatory template. It is **not submission-ready**: no real webcam sessions,
 > empirical result tables, dashboard screenshot, spoken example, consented
 > study, `v1.0.0` release, or Zenodo DOI exists. The author has not yet
-> verified final numbers.
+> verified final numbers. Published numeric context from refs [2], [3], and
+> [19] is cited in the paper as non-comparable related work, not as TRINEXIS
+> results.
 
 ## Author
 

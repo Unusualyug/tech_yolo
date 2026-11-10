@@ -122,6 +122,13 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("No reply, approval, or waiver is claimed", read("experiments/USER_STUDY_PROTOCOL.md"))
         self.assertTrue((ROOT / "scripts/live_smoke_test.py").is_file())
         self.assertTrue((ROOT / "scripts/final_release_checklist.py").is_file())
+        manuscript = read("paper/updated_manuscript_content.py")
+        self.assertIn("TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)", manuscript)
+        self.assertIn("Published numeric context (not TRINEXIS results)", manuscript)
+        self.assertIn("not entered into Table V", manuscript)
+        built = read("paper/tech_yolo_updated_research_paper.md")
+        self.assertIn("TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)", built)
+        self.assertIn("not entered into Table V", built)
 
     def test_zenodo_doi_remains_pending(self):
         zenodo = json.loads(read("zenodo.json"))
