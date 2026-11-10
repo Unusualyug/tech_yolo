@@ -1,0 +1,8 @@
+# SHA-256 checksums of materialized Git LFS weight files.
+# Generated from the checked-in LFS pointer object identifiers.
+
+40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af  weights/clip/ViT-B-32.pt
+d5ffc1a674953a08e11a8d21e022781b1b23a19b730afc309290bd9fb5305b95  yolo11m.pt
+7bc158aa95c0ebfdd87f70f01653c1131b93e92522dbe15c228bcd742e773a24  yolo11x.pt
+f59b3d833e2ff32e194b5bb8e08d211dc7c5bdf144b90d2c8412c47ccfc83b36  yolov8n.pt
+9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792  yolov8s-worldv2.pt

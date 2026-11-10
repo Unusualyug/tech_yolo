@@ -2,8 +2,8 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "name": "TRINEXIS",
-  "description": "An interval-throttled open-vocabulary webcam system with alert-aware language-configured speech, session telemetry, and implementation verification.",
-  "version": "v0.2.0-updated",
+  "description": "An alert-aware, interval-throttled open-vocabulary webcam system with language-configured speech, session telemetry, and deterministic software verification.",
+  "version": "v0.3.0-standalone",
   "dateModified": "2026-11-10",
   "license": "https://spdx.org/licenses/AGPL-3.0-only.html",
   "programmingLanguage": "Python",
@@ -24,13 +24,13 @@
     "open-vocabulary detection",
     "YOLO-World",
     "Flask",
-    "speech interface",
+    "alert-aware narration",
     "research software",
-    "implementation verification"
+    "technical report"
   ],
   "referencePublication": {
-    "@type": "ScholarlyArticle",
-    "name": "TRINEXIS: An Interval-Throttled Open-Vocabulary Webcam System with Alert-Aware Speech and Implementation Verification",
+    "@type": "Report",
+    "name": "TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam System with Language-Configured Speech",
     "datePublished": "2026-11-10"
   }
 }

@@ -1,15 +1,20 @@
-# TRINEXIS v0.2.0-updated
+# TRINEXIS v0.3.0-standalone
 
-This release contains the repository-fix pass and the software-focused updated
-author manuscript. It is suitable as an arXiv preprint or technical report. It
-is **not** an empirical applied-vision paper.
+This release contains the standalone technical report and the repository after
+Step 1 text revisions and the feasible Step 2 archive/reference fixes.
 
-Highlights: AGPL-3.0 licensing, documentation, pinned requirements, unit tests,
-configurable camera/security settings, separate capture/inference counters,
-time-based heatmap decay, a non-metric distance index, alert-first speech
-selection, vector figures, and a deterministic before/after regression result.
+The paper now describes TRINEXIS directly, without review-response language,
+JOSS/SoftwareX venue discussion, repeated disclaimer lists, or an audit-style
+title. It states one clear contribution, one scope/limitation paragraph, and a
+short deterministic regression check whose 68.1% figure is explained by the
+4/6 uniform-rank probability setup.
 
-No labeled detection dataset, hardware timing campaign, known-distance
-calibration, translated-template rating, or consented user study was conducted.
-A Zenodo DOI is pending author authorization; this release is cited by its
-GitHub tag instead of a bare commit.
+All 24 references were opened and checked against publisher/DOI/official pages;
+`paper/reference_verification.md` records the sources and the GLIP page-range
+discrepancy. The Ultralytics LICENSE file is cited directly. `weights/download_weights.py` and
+`weights/weights_checksums.sha256` provide a reproducible weights fetch and
+SHA-256 verification path. `zenodo.json` and `ZENODO.md` prepare DOI minting,
+but no Zenodo DOI has been minted because author authorization is required.
+
+No labeled detection dataset, hardware timing campaign, distance calibration,
+translated-template rating, or consented user study was conducted.

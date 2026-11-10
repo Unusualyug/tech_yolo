@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "paper" / "artifacts" / "updated_repository_audit.json"
 SOURCE_BASELINE = "6a0405613171a5ed400a7339c3e0a8f6bb94b26d"
-RELEASE_TAG = "v0.2.0-updated"
+RELEASE_TAG = "v0.3.0-standalone"
 
 
 def sha256(path: Path) -> str:
@@ -73,6 +73,11 @@ def main() -> None:
         "paper/artifacts/fig1_system_architecture_updated.pdf",
         "paper/artifacts/fig2_implementation_verification.svg",
         "paper/artifacts/fig2_implementation_verification.pdf",
+        "paper/reference_verification.md",
+        "weights/download_weights.py",
+        "weights/weights_checksums.sha256",
+        "zenodo.json",
+        "ZENODO.md",
     ]:
         path = ROOT / rel
         if path.exists():
@@ -104,6 +109,9 @@ def main() -> None:
             "time-based heatmap decay and unitless relative distance index",
             "model allowlist for /set_model",
             "standard-library unit and source-contract tests",
+            "weights download script with SHA-256 LFS-pointer manifest",
+            "per-reference DOI/publisher verification log",
+            "prepared Zenodo metadata; DOI pending author authorization",
             "enlarged PNG plus standalone SVG and vector-PDF figures",
         ],
         "tests": run_tests(),

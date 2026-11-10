@@ -1,4 +1,4 @@
-# TRINEXIS: An Interval-Throttled Open-Vocabulary Webcam System with Alert-Aware Speech and Implementation Verification
+# TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam System with Language-Configured Speech
 
 **Authors and Affiliations**
 
@@ -9,32 +9,29 @@ ORCID: https://orcid.org/0009-0004-2930-4953
 
 ## Abstract
 
-Open-vocabulary detectors can be configured with text prompts, but an interactive prototype also needs deterministic control flow, bounded speech, and an honest account of what has and has not been evaluated. This paper presents TRINEXIS, a Flask-based web system that couples an interval-throttled YOLO-World detector, a browser dashboard, language-configured speech output, session telemetry, and an alert-aware narration policy. The repository-fix pass adds AGPL-3.0 licensing, documentation, pinned requirements, configurable camera and security settings, separate capture and inference counters, time-based heatmap decay, a non-metric distance index, and standard-library tests. The central software contribution ranks alert objects before truncating the spoken shortlist. In a seeded synthetic regression audit of 1,000 detection cases, the legacy ordering omitted the alert object in 68.1% of cases, whereas the revised selector omitted it in 0.0%. A tagged release and an implementation-verification appendix make the result reproducible. No labeled detection dataset, hardware timing campaign, distance calibration, translated-template rating, or human-participant study was conducted; therefore no detection-quality, latency, distance-error, robustness, or assistive-effectiveness result is claimed. The manuscript is positioned as a software/technical report and a baseline for a later empirical workshop paper.
+Open-vocabulary detectors can be configured with text prompts, but an interactive prototype also needs predictable control flow, bounded speech, and an explicit account of what has been evaluated. TRINEXIS is a Flask-based webcam system that couples an interval-throttled YOLO-World detector, a browser dashboard, language-configured speech output, session telemetry, and alert-aware narration. The system ranks user-designated alert objects before choosing the short spoken shortlist, uses wall-clock heatmap decay, reports a unitless relative distance index, and exposes configurable camera, security, and runtime settings. A deterministic synthetic regression check confirms that alert-first ranking preserves the configured alert object in cases where confidence-first shortlist truncation can omit it; the omission rate expected from the synthetic rank model shows that the check validates an ordering invariant rather than real-world detection behavior. The principal limitation is that no labeled detection dataset, hardware timing campaign, known-distance calibration, translated-template rating, or consented user study was conducted. This technical report therefore documents the system and its software verification without claiming detection quality, latency, distance error, multilingual comprehension, or assistive effectiveness.
 
-**Keywords / Index Terms:** open-vocabulary detection; alert-aware narration; research software; reproducible configuration; speech interface; implementation verification
+**Keywords / Index Terms:** open-vocabulary detection; alert-aware narration; research software; speech interface; interval throttling; technical report
 
 ## I. INTRODUCTION
 
-### A. Motivation and Scope
+### A. Motivation
 
-Object detection predicts bounding boxes and semantic labels for objects in an image. The YOLO family formulated detection as a single regression problem [1], and COCO-style benchmarks standardized evaluation over a fixed vocabulary of 80 released categories [2]. Vision-language pre-training then broadened the interface: CLIP enabled zero-shot transfer from natural-language supervision [3], Grounding DINO fused language and vision for open-set detection [4], and YOLO-World introduced a prompt-then-detect paradigm [5]. Ultralytics exposes that family through a set_classes interface [6]. These advances make it feasible to build interactive applications around user-selected object names.
+Object detection predicts bounding boxes and semantic labels for objects in an image. The YOLO family formulated detection as a single regression problem [1], and COCO-style benchmarks standardized evaluation over a fixed vocabulary of 80 released categories [2]. Vision-language pre-training broadened the interface: CLIP enabled zero-shot transfer from natural-language supervision [3], Grounding DINO fused language and vision for open-set detection [4], and YOLO-World introduced a prompt-then-detect paradigm [5]. Ultralytics exposes that family through a set_classes interface [6]. These advances make it feasible to build interactive applications around user-selected object names.
 
-TRINEXIS is a concrete integration of those components. Its maintained backend, app23.py, combines Flask control routes [7], OpenCV capture [8], Ultralytics YOLO [15], gTTS speech [9], a browser dashboard, detection logs, a heatmap, and session telemetry. The original manuscript treated a static source audit as the principal result. The present revision instead repairs the software, states one clear contribution, and reports a deterministic software regression result while preserving an explicit evidence boundary.
+TRINEXIS is a Flask-based webcam application that combines an interval-throttled YOLO-World detector, a browser dashboard, language-configured speech output, detection logs, a heatmap, and session telemetry. Its maintained backend, app23.py, uses Flask control routes [7], OpenCV capture [8], Ultralytics YOLO [15], and gTTS speech [9]. The design question is how to turn a configurable open-vocabulary detector into a bounded, testable interaction loop with predictable alert handling.
 
-### B. Problem and Contribution
+### B. Contribution
 
-The reviewer critique identified four decisive weaknesses: no empirical results, repository defects reported rather than fixed, known bugs documented rather than repaired, and no crisp novelty claim. The first weakness cannot be removed without new experiments; this paper does not simulate them. The remaining weaknesses are addressed directly. The selected contribution is alert-aware, language-configured scene narration in an interval-throttled open-vocabulary webcam pipeline: the system ranks user-designated alert objects before choosing the short spoken shortlist.
+The system's focus is alert-aware, language-configured scene narration in an interval-throttled open-vocabulary webcam pipeline. User-designated alert objects are ranked before the spoken shortlist is truncated. This ordering is isolated in a dependency-free policy module, verified by a seeded synthetic regression check, and kept separate from empirical detection or user-benefit claims.
 
-- A repaired, documented, and testable Flask/YOLO-World application with AGPL-3.0 licensing [25], pinned requirements, configurable camera/security settings, and vector figures.
-- An alert-aware speech selector that ranks alerts before shortlist truncation, with a seeded synthetic before/after regression audit.
-- A reproducible implementation-verification appendix, a tagged release [24], and a short scope statement that removes template padding.
-- An explicit boundary between verified software behavior and the detection, latency, distance, translation, and human-subject evidence that remains unavailable.
+- A documented Flask/YOLO-World application with AGPL-3.0 licensing [24], pinned requirements, configurable camera/security settings, and vector figures.
+- An alert-aware speech selector that ranks alerts before shortlist truncation, with a deterministic ordering-invariant check.
+- A tagged release [23], CITATION.cff, codemeta.json, a weights download/checksum script, and a short software-verification appendix.
 
-### C. Venue Positioning and Evidence Boundary
+### C. Scope and Limitations
 
-No target journal or conference was supplied. Consequently, this manuscript retains a generic single-column format and numeric citations; the current Guide for Authors and official template must be applied before any submission. As it stands, an arXiv preprint or technical report is the best fit. A JOSS submission requires an OSI-approved license, clear documentation, tests, feature completeness, and a sustained public development history [22]; SoftwareX requires its official short software-paper template, a README, a LICENSE file, and an open repository [23]. An applied-vision, HCI, or assistive-technology workshop paper becomes realistic only after the experiments in Table V are performed.
-
-No quantitative detection evaluation, baseline comparison, ablation, statistical test, robustness test, external validation, computational-cost measurement, or human-participant evaluation was performed. No superiority, detection accuracy, mean average precision, latency, distance error, multilingual comprehension, real-world effectiveness, clinical readiness, assistive benefit, deployment success, or user-study claim is made.
+This manuscript is a technical report for arXiv or an institutional repository; no journal or conference was selected. No labeled detection dataset, hardware timing campaign, known-distance calibration, translated-template rating, or consented user study was conducted; therefore no detection-quality, latency, distance-error, robustness, multilingual-comprehension, assistive-effectiveness, or user-study result is claimed. The generic single-column layout and numeric citations are fallbacks; any later journal or conference submission requires that venue's current Guide for Authors and official template.
 
 ## II. RELATED WORK / LITERATURE REVIEW
 
@@ -56,43 +53,43 @@ The original YOLO paper evaluated PASCAL VOC 2007/2012 and artwork-domain genera
 
 ### B. Assistive Interfaces, Speech, and Privacy
 
-Remote sighted assistance has been studied through Be My Eyes [16], while Seeing AI [17] and AI scene-description applications [18] illustrate practical auditory presentation of visual information. These systems are relevant to the design space but do not validate TRINEXIS. The repository configures 72 language codes and 62 top-level speech resources; the translations were not produced or checked under a documented protocol, so the title uses “language-configured” rather than “multilingual.” Camera-based systems also raise privacy and face-recognition concerns [20], [21]. The optional face-recognition hook remains unavailable, and no consent, retention, or biometric-processing protocol is claimed.
+Remote sighted assistance has been studied through Be My Eyes [16], while Seeing AI [17] and AI scene-description applications [18] illustrate practical auditory presentation of visual information. These systems are relevant to the design space but do not validate TRINEXIS. The repository configures 72 language codes and 62 top-level speech resources; because the translations were not produced or checked under a documented protocol, the title and text use “language-configured” rather than “multilingual.” Camera-based systems also raise privacy and face-recognition concerns [20], [21]. The optional face-recognition hook remains unavailable, and no consent, retention, or biometric-processing protocol is claimed.
 
 ### C. Research Software and Reproducibility
 
-Git LFS stores small pointer files in Git while large model content is held elsewhere [10]. The original audit cited a bare commit that did not contain the audit script. This revision instead cites a tagged GitHub release [24] and provides CITATION.cff, codemeta.json, dependency-license notes, and pinned manifests. A Zenodo DOI is pending author authorization and is not claimed. The static audit is retained only as an appendix-level implementation-verification record, not as the paper's principal finding.
+Git LFS stores small pointer files in Git while large model content is held elsewhere [10]. The software is distributed as a tagged GitHub release [23] with CITATION.cff, codemeta.json, dependency-license notes, pinned manifests, and a weights download script that verifies Git LFS object identifiers as SHA-256 checksums. The project adopts AGPL-3.0-only [24] because Ultralytics YOLO is distributed under AGPL-3.0 [22]. A Zenodo DOI has not been minted; the release URL is cited instead. The source census and software checks are retained as appendix-level verification records.
 
 ---
 
-## III. UPDATED SYSTEM DESIGN
+## III. SYSTEM DESIGN
 
 ### A. Architecture and Control Flow
 
-Figure 1 shows the repaired runtime and control flow. A browser client calls Flask control routes and displays a Motion JPEG stream. A configurable camera backend supplies frames to OpenCV. Detector calls are gated by an interval throttle, after which YOLO-World produces text-conditioned detection records. Those records feed visual overlays, a relative distance index, a time-decayed heatmap, session telemetry, and an alert-aware speech selector. Optional face recognition is shown as a dashed, unavailable path. There is no training or benchmark-evaluation path.
+Figure 1 shows the runtime and control flow. A browser client calls Flask control routes and displays a Motion JPEG stream. A configurable camera backend supplies frames to OpenCV. Detector calls are gated by an interval throttle, after which YOLO-World produces text-conditioned detection records. Those records feed visual overlays, a relative distance index, a time-decayed heatmap, session telemetry, and an alert-aware speech selector. Optional face recognition is shown as a dashed, unavailable path. There is no training or benchmark-evaluation path.
 
 ![Fig. 1](artifacts/fig1_system_architecture_updated.svg)
 
-*Fig. 1. Updated TRINEXIS system architecture. Solid arrows denote implemented runtime paths; the dashed arrow denotes an optional/unavailable face-recognition hook. Vector SVG/PDF versions are provided in the release artifacts.*
+*Fig. 1. TRINEXIS system architecture. Solid arrows denote implemented runtime paths; the dashed arrow denotes an optional/unavailable face-recognition hook. Vector SVG/PDF versions are provided in the release artifacts.*
 
 ### B. Interval Throttle and Alert-Aware Narration
 
-Let t be the current capture time, t_prev the previous detector invocation, and Δ the configured throttle interval. A detector call is admitted when
+Let t be the current capture time, t_prev the previous detector invocation, and Delta the configured throttle interval. A detector call is admitted when
 
 > `t - t_prev >= Delta.                                         (1)`
 
-The maintained default is Δ = 1.5 s and the spoken shortlist is limited to two objects. Let A be the set of user-designated alert names, c(o) the detector confidence, and d(o) the relative distance index. The updated selector sorts every detection record o by the ascending key
+The default is Delta = 1.5 s and the spoken shortlist is limited to two objects. Let A be the set of user-designated alert names, c(o) the detector confidence, and d(o) the relative distance index. The selector sorts every detection record o by the ascending key
 
 > `R(o) = (I_alert(o), -c(o), d(o)),                            (2)`
 
-and only then takes the first two records. In Eq. (2), I_alert(o) = 0 when o.name is in A and 1 otherwise; alert objects therefore receive priority regardless of whether they are among the two highest-confidence detections. The legacy implementation sorted by confidence, truncated to two, and only then applied alert-aware ranking inside the shortlist, which could drop a low-confidence alert object.
+and only then takes the first two records. In Eq. (2), I_alert(o) = 0 when o.name is in A and 1 otherwise; alert objects therefore receive priority regardless of whether they are among the two highest-confidence detections. A confidence-first shortlist followed by alert-aware reranking inside the shortlist would not provide this invariant.
 
 ### C. Time-Based Heatmap and Relative Distance Index
 
-The original heatmap multiplied the accumulator by 0.995 per annotated frame, making decay depend on camera frame rate. The revised accumulator uses elapsed wall-clock time dt and a configurable half-life tau:
+Eq. (3) replaces the older per-frame 0.995 multiplier, whose decay depends on camera frame rate, with elapsed wall-clock time dt and an adjustable half-life tau:
 
 > `H_t = 2^(-dt/tau) * H_(t-1) + sum_i C(c_i; 35).               (3)`
 
-In Eq. (3), H_t is the heatmap at time t, C(c_i; 35) is a filled circle of radius 35 pixels centered on detection box c_i, and tau defaults to 60 s. This makes the decay independent of frame rate. The distance overlay was also changed from a centimetre-labelled value to a unitless relative index
+In Eq. (3), H_t is the heatmap at time t, C(c_i; 35) is a filled circle of radius 35 pixels centered on detection box c_i, and tau defaults to 60 s. The 60 s value is an adjustable default chosen to retain visible activity for roughly one minute; it is not fitted to data. The distance overlay is a unitless, relative size-based index
 
 > `d_idx = (W * F) / max(w_px, 1),                               (4)`
 
@@ -102,27 +99,23 @@ where w_px is the observed box width, W = 60, and F = 360. W and F are heuristic
 
 Camera index, backend, resolution, host, port, optional API token, single-client mode, client timeout, session secret, and heatmap half-life are read from environment variables. The default bind address is 127.0.0.1 rather than 0.0.0.0. /set_model accepts only a checked-in model allowlist. Mutating control endpoints can require an X-API-Token or Bearer header, and single-client arbitration prevents a second browser from mutating shared state while the first session is active. Capture-frame and detector-invocation rates are reported separately.
 
-### E. Scope and Evidence Boundary
+**TABLE II. IMPLEMENTATION FEATURES AND VERIFICATION**
 
-This is a software-focused technical report. Sections that would otherwise describe training, baselines, hyperparameter sweeps, statistical evaluation, and ablations are replaced by this short scope statement and Table V. Those sections should be reinstated only with genuine experimental data. No target-venue template or citation style was supplied; the numeric citation style is a fallback.
-
-**TABLE II. REPOSITORY FIXES AND VERIFICATION**
-
-| Reviewer issue | Change in v0.2.0-updated | Verification |
+| Feature | Implementation | Verification |
 | --- | --- | --- |
-| Missing README, license, requirements, tests | Added AGPL-3.0 LICENSE [25], root README, pinned requirements.txt, CITATION.cff, codemeta.json, .env.example, and THIRD_PARTY_LICENSES.md | Source-contract tests and README instructions |
-| ACCURACY label bound to mean confidence | Renamed dashboard label to AVG CONFIDENCE | Source-contract test |
-| Alert objects dropped before reranking | Rank alerts before shortlist truncation via trinexis_core.select_speech_objects | Unit test and seeded synthetic before/after audit |
-| Global state shared across clients | Added single-client control arbitration with stale-session timeout | Pure-function unit test |
-| Unauthenticated 0.0.0.0 binding | Default host 127.0.0.1; optional API token on mutating control routes | Source-contract and pure-function tests |
-| Arbitrary /set_model string | Model allowlist with HTTP 400 on rejection | Unit test |
-| Frame-rate-dependent heatmap decay | Wall-clock exponential decay with configurable half-life | Unit test |
-| Centimetre-labelled distance heuristic | Unitless relative distance index with explicit non-calibration note | Unit test and source-contract test |
-| Windows-only CAP_DSHOW and camera index 1 | Configurable TRINEXIS_CAMERA_INDEX and TRINEXIS_CAMERA_BACKEND | Unit and source-contract tests |
-| Single FPS display | Separate capture_fps and inference_fps counters and dashboard displays | Source-contract test |
-| Small raster-only figures | Enlarged PNG plus standalone SVG and vector-PDF exports | make_updated_figures.py |
+| Open-source distribution | AGPL-3.0 LICENSE [24], README, pinned requirements, CITATION.cff, codemeta.json, and dependency-license notes | Source-contract tests and README instructions |
+| Confidence display | Dashboard reports AVG CONFIDENCE rather than ACCURACY | Source-contract test |
+| Alert-aware speech | Rank alerts before shortlist truncation via trinexis_core.select_speech_objects | Unit test and seeded synthetic regression check |
+| Client-state safety | Single-client control arbitration with stale-session timeout | Pure-function unit test |
+| Network defaults | Default host 127.0.0.1; optional API token on mutating control routes | Source-contract and pure-function tests |
+| Model loading | Allowlisted model filenames with HTTP 400 on rejection | Unit test |
+| Heatmap decay | Wall-clock exponential decay with adjustable half-life | Unit test |
+| Distance display | Unitless relative distance index with explicit non-calibration note | Unit and source-contract tests |
+| Camera portability | Configurable camera index and backend | Unit and source-contract tests |
+| Rate reporting | Separate capture_fps and inference_fps counters and dashboard displays | Source-contract test |
+| Figures | Enlarged PNG plus standalone SVG and vector-PDF exports | make_updated_figures.py |
 
-## IV. IMPLEMENTATION VERIFICATION
+## IV. SOFTWARE VERIFICATION
 
 ### A. Verification Environment
 
@@ -130,24 +123,24 @@ All checks were static or synthetic. The preparation environment used Python 3.1
 
 ![Fig. 2](artifacts/fig2_implementation_verification.svg)
 
-*Fig. 2. Implementation-verification workflow. Every step is static or synthetic; no model inference, camera capture, labeled dataset, or human data is used. Vector SVG/PDF versions are provided in the release artifacts.*
+*Fig. 2. Software-verification workflow. Every step is static or synthetic; no model inference, camera capture, labeled dataset, or human data is used. Vector SVG/PDF versions are provided in the release artifacts.*
 
-### B. Alert-Selection Before/After Result
+### B. Alert-Selection Regression Check
 
-The alert-selection audit generated 1,000 seeded synthetic detection cases. Each case contained six detection records, exactly one alert object, and a two-object speech shortlist. Confidences and distance indices were drawn from fixed ranges with seed 20261110. The legacy ordering omitted the alert object in 681 of 1000 cases (68.1%). The updated ordering omitted it in 0 of 1000 cases (0.0%), an absolute reduction of 68.1 percentage points. This is a deterministic software regression result, not a detection-quality or user-benefit measurement.
+The alert-selection check used 1,000 seeded synthetic detection cases, each with six records, one alert object, and a two-object speech shortlist. With six records and a top-2 shortlist, a uniformly ranked alert falls outside the shortlist with probability 4/6 (66.7%). The confidence-first ordering omitted the alert object in 681 of 1000 cases (68.1%), consistent with that probability setup; the alert-first ordering omitted it in 0 of 1000 cases (0.0%). This is a regression test of an ordering invariant. It does not show how often real detections contain alerts, whether a real user hears an alert, or whether the speech output is useful.
 
-**TABLE III. SEEDED SYNTHETIC ALERT-SELECTION REGRESSION**
+**TABLE III. SEEDED SYNTHETIC ALERT-SELECTION REGRESSION CHECK**
 
-| Metric | Legacy ordering | Updated ordering | Change |
+| Metric | Confidence-first | Alert-first | Change |
 | --- | --- | --- | --- |
 | Cases with a configured alert object | 1,000 | 1,000 | — |
 | Alert omissions from the two-object shortlist | 681 | 0 | −681 |
 | Omission rate | 68.1% | 0.0% | −68.1 pp |
-| Evidence type | Synthetic software regression | Synthetic software regression | No model inference |
+| Evidence type | Synthetic ordering check | Synthetic ordering check | No model inference |
 
 ### C. Unit and Source-Contract Tests
 
-The standard-library unittest suite contains 24 tests: 14 pure-policy tests and 10 source-contract tests. All 24 passed with zero failures and zero errors. The suite covers camera configuration, model allowlisting, alert-first ranking, legacy drop reproduction, time-based decay, relative distance index, rate calculation, token validation, single-client timeout, license/readme/requirements presence, corrected UI labels, configurable host/backend, and the absence of metric centimetre labels in the primary backend.
+The standard-library unittest suite contains 24 tests: 14 pure-policy tests and 10 source-contract tests. All 24 passed with zero failures and zero errors. The suite covers camera configuration, model allowlisting, alert-first ranking, confidence-first drop reproduction, time-based decay, relative distance index, rate calculation, token validation, single-client timeout, license/readme/requirements presence, corrected UI labels, configurable host/backend, and the absence of metric centimetre labels in the primary backend.
 
 **TABLE IV. TEST-SUITE SUMMARY**
 
@@ -159,39 +152,28 @@ The standard-library unittest suite contains 24 tests: 14 pure-policy tests and 
 
 ### D. Release and Reproducibility
 
-The revised software and manuscript are associated with GitHub release v0.2.0-updated [24], CITATION.cff, and codemeta.json. The bare commit citation from the earlier manuscript is removed. A Zenodo DOI has not been minted because that requires author authorization; the release URL is cited instead. Appendix A lists reproduction commands, and Appendix B lists the principal artifacts.
+The software and manuscript are associated with GitHub release v0.3.0-standalone [23], CITATION.cff, and codemeta.json. CITATION.cff and codemeta.json provide machine-readable metadata; weights/download_weights.py parses the checked-in Git LFS pointers and verifies the declared SHA-256 object identifiers after Git LFS materialization. A Zenodo DOI has not been minted because author authorization is required; the release URL is cited instead. Appendix A lists reproduction commands, and Appendix B lists the principal artifacts.
 
-**TABLE V. REQUIRED FUTURE EVIDENCE — PROTOCOLS, NOT RESULTS**
-
-| Evidence gap | Required protocol | Claim withheld until completed |
-| --- | --- | --- |
-| Detection quality | Labeled COCO/LVIS subset or self-annotated set; report mAP, precision, recall, and confusion summaries; compare 455-prompt and task-specific vocabularies | Detection accuracy, vocabulary superiority, robustness |
-| Confidence/vocabulary ablation | Evaluate 0.15, 0.25, and 0.35 thresholds under identical splits | Threshold recommendation |
-| Latency | Instrument capture, inference, TTS, playback, and rendering on declared CPU/GPU hardware; report median and 95th percentile | Runtime or edge suitability |
-| Distance calibration and speech | Measure 5–10 objects at known distances; consented speakers rate translated templates | MAE, metric distance, multilingual comprehension, user benefit |
-
-## V. DISCUSSION
-
-### A. What the Fixes Establish
-
-The revised release establishes that the prototype can be licensed, documented, configured, and tested without loading model weights. It also converts one documented defect into a measurable software result: alert-aware ranking before truncation eliminates alert omissions in the seeded synthetic cases. The expanded related work clarifies that published detector benchmarks are not comparable to this repository's throttled webcam pipeline. The corrected YOLO table entry, published Grounding DINO citation, normalized backend-resource counts, and reduced CRediT roles remove the textual inconsistencies identified in review.
-
-### B. Limitations
-
-The most important limitation is unchanged: no empirical performance result exists. The 455-prompt vocabulary and 0.15 confidence threshold are not justified by an ablation. The 72 language codes and 62 speech resources have no documented translation procedure or human check. The distance index is not calibrated, the heatmap half-life is a design choice rather than a fitted parameter, and single-client mode avoids cross-client mutation rather than providing full per-session isolation. The optional face-recognition hook remains absent. No authentication is enforced unless an API token is configured, and deployment behind a reverse proxy with HTTPS remains the user's responsibility.
-
-### C. Ethical and Practical Implications
-
-Camera-based interfaces can expose bystanders and sensitive environments. Privacy, consent, retention, and biometric-processing policies must be defined before any real-world or assistive-use study [20], [21]. The AGPL-3.0 license [25] and dependency-license notice clarify redistribution obligations but do not substitute for an ethics review. The system should not be described as assistive technology for blind or low-vision users until a consented study demonstrates benefit.
-
-## VI. CONCLUSION AND FUTURE WORK
-
-This revision presents TRINEXIS as a documented, testable, interval-throttled open-vocabulary webcam system with an alert-aware speech policy. It repairs the repository defects that could be fixed without new data, removes template padding, corrects inaccurate citations and labels, and reports one genuine deterministic software result. It does not claim empirical detection, latency, distance, translation, or user benefit. Future work should proceed in four steps:
+### E. Future Work
 
 - Evaluate detection quality on a labeled dataset and ablate vocabulary size and confidence thresholds.
 - Instrument capture, inference, speech, and rendering separately on declared CPU/GPU hardware.
 - Calibrate the distance proxy at known distances or retain the unitless index with its current disclaimer.
-- Obtain ethics approval for translated-template ratings and any assistive-use study, then upgrade the manuscript into a workshop paper.
+- Obtain ethics approval for translated-template ratings and any assistive-use study.
+
+## V. DISCUSSION
+
+### A. Interpretation
+
+TRINEXIS shows how an open-vocabulary detector can be wrapped in a bounded, testable interaction loop. Alert-first ranking makes the speech policy independent of whether an alert happens to be among the highest-confidence detections, while interval throttling separates detector cadence from camera frame rate. Time-based heatmap decay and the unitless distance index remove two frame-rate- and calibration-dependent ambiguities. The published detector literature is not comparable to this webcam pipeline because its datasets, prompts, splits, and hardware protocols differ.
+
+### B. Ethical and Practical Implications
+
+Camera-based interfaces can expose bystanders and sensitive environments. Privacy, consent, retention, and biometric-processing policies must be defined before any real-world or assistive-use study [20], [21]. The AGPL-3.0 license [24] and dependency-license notice clarify redistribution obligations but do not substitute for an ethics review. The system should not be described as assistive technology for blind or low-vision users until a consented study demonstrates benefit.
+
+## VI. CONCLUSION AND FUTURE WORK
+
+TRINEXIS is a documented, configurable, interval-throttled open-vocabulary webcam system with alert-aware, language-configured speech. Its software verification establishes the alert-ordering invariant and the behavior of the configuration, security, and display policies. The next steps are detection-quality evaluation, latency instrumentation, distance calibration or continued use of the unitless index, and ethics-approved speech/user studies. Those experiments would support a separate applied-vision or HCI workshop paper.
 
 ## DECLARATIONS
 
@@ -205,11 +187,11 @@ Yug G. Lakhani: conceptualization, methodology, software, formal analysis, inves
 
 ### C. AI-Tool Disclosure
 
-Arena.ai Agent Mode was used for source auditing, figure generation, repository-fix scripting, and manuscript formatting. The author is responsible for the final manuscript and for verifying all declarations before submission.
+Arena.ai Agent Mode was used for source auditing, figure generation, repository scripting, and manuscript formatting. The author is responsible for the final manuscript and for verifying every number and declaration against the target venue's policy.
 
 ### D. Data and Code Availability
 
-The software and manuscript are available from GitHub release v0.2.0-updated [24] under AGPL-3.0-only [25]. Model weights are Git LFS pointers and must be fetched separately [10]. No labeled dataset, experimental log, or valid Zenodo DOI is claimed. Dependency licenses are documented in THIRD_PARTY_LICENSES.md.
+The software and manuscript are available from GitHub release v0.3.0-standalone [23] under AGPL-3.0-only [24]. Ultralytics' AGPL-3.0 license is cited directly [22]. Model weights are Git LFS pointers and are fetched and checked with weights/download_weights.py [10]. No labeled dataset, experimental log, or valid Zenodo DOI is claimed. Dependency licenses are documented in THIRD_PARTY_LICENSES.md.
 
 ---
 
@@ -235,44 +217,42 @@ The software and manuscript are available from GitHub release v0.2.0-updated [24
 
 [10] Git LFS Project, “Git LFS Specification: The Pointer,” accessed Nov. 10, 2026. [Online]. Available: https://github.com/git-lfs/git-lfs/blob/main/docs/spec.md
 
-[11] M. Minderer et al., “Simple Open-Vocabulary Object Detection with Vision Transformers,” in Proc. Eur. Conf. Comput. Vis. (ECCV), 2022, doi: 10.1007/978-3-031-20080-9_42.
+[11] M. Minderer et al., “Simple Open-Vocabulary Object Detection,” in Computer Vision – ECCV 2022, LNCS, 2022, pp. 728–755, doi: 10.1007/978-3-031-20080-9_42.
 
-[12] L. H. Li et al., “Grounded Language-Image Pre-Training,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR), 2022, pp. 10965–10975, doi: 10.1109/CVPR52688.2022.01069.
+[12] L. H. Li et al., “Grounded Language-Image Pre-Training,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR), 2022, pp. 10955–10965, doi: 10.1109/CVPR52688.2022.01069.
 
 [13] X. Zhou, R. Girdhar, A. Joulin, P. Krähenbühl, and I. Misra, “Detecting Twenty-Thousand Classes Using Image-Level Supervision,” in Computer Vision – ECCV 2022, LNCS vol. 13669, 2022, pp. 350–368, doi: 10.1007/978-3-031-20077-9_21.
 
-[14] A. Wang, L. Liu, H. Chen, Z. Lin, J. Han, and G. Ding, “YOLOE: Real-Time Seeing Anything,” arXiv:2503.07465, 2025.
+[14] A. Wang, L. Liu, H. Chen, Z. Lin, J. Han, and G. Ding, “YOLOE: Real-Time Seeing Anything,” arXiv:2503.07465, 2025, doi: 10.48550/arXiv.2503.07465.
 
 [15] Ultralytics, “Ultralytics YOLO,” GitHub repository, accessed Nov. 10, 2026. [Online]. Available: https://github.com/ultralytics/ultralytics
 
-[16] M. Avila, K. Wolf, A. Brock, and N. Henze, “Remote Assistance for Blind Users in Daily Life: A Survey about Be My Eyes,” in Proc. 9th ACM Int. Conf. Pervasive Technol. Related Assistive Environ. (PETRA), 2016, Article 85, pp. 1–2, doi: 10.1145/2910674.2935839.
+[16] M. Avila, K. Wolf, A. Brock, and N. Henze, “Remote Assistance for Blind Users in Daily Life: A Survey about Be My Eyes,” in Proc. 9th ACM Int. Conf. Pervasive Technol. Related Assistive Environ. (PETRA), 2016, Article 85, 2 pages, doi: 10.1145/2910674.2935839.
 
-[17] Microsoft, “Seeing AI,” accessed Nov. 10, 2026. [Online]. Available: https://www.microsoft.com/en-us/ai/seeing-ai
+[17] Microsoft, “Seeing AI,” accessed Nov. 10, 2026. [Online]. Available: https://www.seeingai.com/
 
-[18] R. E. Gonzalez Penuela, J. Collins, C. L. Bennett, and S. Azenkot, “Investigating Use Cases of AI-Powered Scene Description Applications for Blind and Low Vision People,” in Proc. CHI Conf. Human Factors Comput. Syst. (CHI), 2024, doi: 10.1145/3613904.3642211.
+[18] R. E. Gonzalez Penuela, J. Collins, C. L. Bennett, and S. Azenkot, “Investigating Use Cases of AI-Powered Scene Description Applications for Blind and Low Vision People,” in Proc. CHI Conf. Human Factors Comput. Syst. (CHI), 2024, Article 901, pp. 1–21, doi: 10.1145/3613904.3642211.
 
-[19] D. K. Alqahtani, M. A. Cheema, M. A. Rodriguez, and A. N. Toosi, “A Comprehensive Evaluation of Deep Learning Object Detection Models on Heterogeneous Edge Devices,” arXiv:2409.16808, 2024.
+[19] D. K. Alqahtani, M. A. Cheema, M. A. Rodriguez, and A. N. Toosi, “A Comprehensive Evaluation of Deep Learning Object Detection Models on Heterogeneous Edge Devices,” arXiv:2409.16808, v1 2024, revised 2026, doi: 10.48550/arXiv.2409.16808.
 
-[20] I. D. Raji, T. Gebru, M. Mitchell, J. Buolamwini, J. Lee, and E. Denton, “Saving Face: Investigating the Ethical Concerns of Facial Recognition Auditing,” in Proc. AAAI/ACM Conf. AI, Ethics, Soc. (AIES), 2020, pp. 145–151, doi: 10.1145/3375627.3375820.
+[20] I. D. Raji, T. Gebru, M. Mitchell, J. Buolamwini, J. Lee, and R. Denton, “Saving Face: Investigating the Ethical Concerns of Facial Recognition Auditing,” in Proc. AAAI/ACM Conf. AI, Ethics, Soc. (AIES), 2020, pp. 145–151, doi: 10.1145/3375627.3375820.
 
-[21] M. R. Hasan, R. Guest, and F. Deravi, “Presentation-level Privacy Protection Techniques for Automated Face Recognition—A Survey,” ACM Comput. Surv., vol. 55, no. 13s, Article 286, 2023, doi: 10.1145/3583135.
+[21] M. R. Hasan, R. Guest, and F. Deravi, “Presentation-level Privacy Protection Techniques for Automated Face Recognition—A Survey,” ACM Comput. Surv., vol. 55, no. 13s, Article 286, pp. 1–27, 2023, doi: 10.1145/3583135.
 
-[22] Journal of Open Source Software, “Submitting a paper to JOSS,” openjournals/joss GitHub documentation, accessed Nov. 10, 2026. [Online]. Available: https://github.com/openjournals/joss/blob/main/docs/submitting.md
+[22] Ultralytics, “LICENSE,” GitHub repository, AGPL-3.0, accessed Nov. 10, 2026. [Online]. Available: https://github.com/ultralytics/ultralytics/blob/main/LICENSE
 
-[23] Elsevier, “SoftwareX Guide for Authors,” accessed Nov. 10, 2026. [Online]. Available: https://www.elsevier.com/journals/softwarex/2352-7110/guide-for-authors
+[23] Unusualyug, “tech_yolo release v0.3.0-standalone,” GitHub, 2026. [Online]. Available: https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone
 
-[24] Unusualyug, “tech_yolo release v0.2.0-updated,” GitHub, 2026. [Online]. Available: https://github.com/Unusualyug/tech_yolo/releases/tag/v0.2.0-updated
-
-[25] Free Software Foundation, “GNU Affero General Public License, Version 3,” 2007. [Online]. Available: https://www.gnu.org/licenses/agpl-3.0.html
+[24] Free Software Foundation, “GNU Affero General Public License, Version 3,” 2007. [Online]. Available: https://www.gnu.org/licenses/agpl-3.0.txt
 
 ## APPENDIX A. REPRODUCTION COMMANDS
 
 ```text
 git clone https://github.com/Unusualyug/tech_yolo.git
 cd tech_yolo
-git checkout v0.2.0-updated
+git checkout v0.3.0-standalone
 python3 -m pip install -r requirements.txt
-git lfs install && git lfs pull
+python3 weights/download_weights.py --fetch --verify
 python3 experiments/alert_selection_audit.py
 python3 -m unittest discover -s tests -v
 python3 -m pip install -r paper/requirements-paper.txt
@@ -282,8 +262,11 @@ python3 paper/build_updated_manuscript.py
 
 ## APPENDIX B. PRINCIPAL ARTIFACTS
 
-- paper/tech_yolo_updated_research_paper.pdf, .docx, and .md: updated author manuscript.
-- paper/artifacts/alert_selection_audit.json: seeded synthetic before/after alert-selection result.
+- paper/tech_yolo_updated_research_paper.pdf, .docx, and .md: standalone technical report.
+- paper/artifacts/alert_selection_audit.json: seeded synthetic alert-selection regression check.
 - paper/artifacts/fig1_system_architecture_updated.{png,svg,pdf} and fig2_implementation_verification.{png,svg,pdf}: figure exports.
 - paper/artifacts/updated_repository_audit.json: machine-readable release/test summary.
-- trinexis_core.py, tests/, experiments/, CITATION.cff, codemeta.json, README.md, LICENSE, requirements.txt, and THIRD_PARTY_LICENSES.md: repository-fix artifacts.
+- weights/download_weights.py and weights/weights_checksums.sha256: Git LFS pointer parser and SHA-256 manifest.
+- zenodo.json and ZENODO.md: prepared Zenodo metadata and DOI-minting instructions.
+- paper/reference_verification.md: per-reference DOI/publisher verification log.
+- trinexis_core.py, tests/, experiments/, CITATION.cff, codemeta.json, README.md, LICENSE, requirements.txt, and THIRD_PARTY_LICENSES.md: software artifacts.

@@ -76,7 +76,7 @@ class SourceContractTests(unittest.TestCase):
         self.assertIn("AGPL-3.0-only", cff)
         meta = json.loads(read("codemeta.json"))
         self.assertEqual(meta["@type"], "SoftwareSourceCode")
-        self.assertEqual(meta["version"], "v0.2.0-updated")
+        self.assertEqual(meta["version"], "v0.3.0-standalone")
 
     def test_alert_selection_audit_exists_and_has_zero_updated_drops(self):
         data = json.loads(read("paper/artifacts/alert_selection_audit.json"))

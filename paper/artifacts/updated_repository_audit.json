@@ -1,7 +1,7 @@
 {
   "audit_date": "2026-11-10",
-  "release_tag": "v0.2.0-updated",
-  "release_url": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.2.0-updated",
+  "release_tag": "v0.3.0-standalone",
+  "release_url": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone",
   "source_baseline_commit": "6a0405613171a5ed400a7339c3e0a8f6bb94b26d",
   "zenodo_doi": null,
   "zenodo_status": "pending author authorization",
@@ -16,6 +16,9 @@
     "time-based heatmap decay and unitless relative distance index",
     "model allowlist for /set_model",
     "standard-library unit and source-contract tests",
+    "weights download script with SHA-256 LFS-pointer manifest",
+    "per-reference DOI/publisher verification log",
+    "prepared Zenodo metadata; DOI pending author authorization",
     "enlarged PNG plus standalone SVG and vector-PDF figures"
   ],
   "tests": {
@@ -43,7 +46,7 @@
     "evidence_type": "deterministic_software_regression_test",
     "disclaimer": "Synthetic detection records only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
   },
-  "file_count": 64,
+  "file_count": 70,
   "files": [
     ".env.example",
     ".gitattributes",
@@ -54,6 +57,7 @@
     "README.md",
     "RELEASE_NOTES.md",
     "THIRD_PARTY_LICENSES.md",
+    "ZENODO.md",
     "app.py",
     "app23.py",
     "camera_test.py",
@@ -71,6 +75,7 @@
     "paper/artifacts/fig2_implementation_verification.svg",
     "paper/artifacts/fig2_static_audit_workflow.png",
     "paper/artifacts/repository_audit.json",
+    "paper/artifacts/updated_repository_audit.json",
     "paper/audit_repository.py",
     "paper/audit_updated_repository.py",
     "paper/build_manuscript.py",
@@ -79,6 +84,7 @@
     "paper/make_figures.py",
     "paper/make_updated_figures.py",
     "paper/manuscript_content.py",
+    "paper/reference_verification.md",
     "paper/requirements-paper.txt",
     "paper/tech_yolo_final_research_paper.docx",
     "paper/tech_yolo_final_research_paper.md",
@@ -105,23 +111,26 @@
     "trinexis_core.py",
     "utils/coco.txt",
     "weights/clip/ViT-B-32.pt",
+    "weights/download_weights.py",
+    "weights/weights_checksums.sha256",
     "yolo11m.pt",
     "yolo11x.pt",
     "yolov8n.pt",
-    "yolov8s-worldv2.pt"
+    "yolov8s-worldv2.pt",
+    "zenodo.json"
   ],
   "artifact_checksums": {
     "paper/tech_yolo_updated_research_paper.pdf": {
-      "bytes": 35546,
-      "sha256": "bbc92ec0f15d3bc61db3920cf847b27820ca9ae6be3a7a345cb768fbdb1322c1"
+      "bytes": 32177,
+      "sha256": "9921edce7a3a82cb2287f80bd56c4f4bccfb801fe6b1e290772efed87a618cb4"
     },
     "paper/tech_yolo_updated_research_paper.docx": {
-      "bytes": 145995,
-      "sha256": "59aaeb1eb5c7950893e310bdf10e16be4000fea3fb79f8ea44d5640ba51c6742"
+      "bytes": 144409,
+      "sha256": "f3d83aa4fa64b20f5c3deefe49d1a3a3a69d633afc2506a04213c77c9c124a54"
     },
     "paper/tech_yolo_updated_research_paper.md": {
-      "bytes": 28622,
-      "sha256": "83fd985e405fe1118026fe9e35848bd0cd43300461ba1b80c6a42ef0332222b4"
+      "bytes": 25711,
+      "sha256": "b1278d44d8e126687bec3c0a3f46f5358632ef4b9a7640cc72fde1fededd216b"
     },
     "paper/artifacts/alert_selection_audit.json": {
       "bytes": 618,
@@ -142,6 +151,26 @@
     "paper/artifacts/fig2_implementation_verification.pdf": {
       "bytes": 2825,
       "sha256": "f9aa6219844e7a53d1bd9bef11eaccf2a2a70677818aa0d2b3f0feb15088bea6"
+    },
+    "paper/reference_verification.md": {
+      "bytes": 6259,
+      "sha256": "4941bd8c73dc6abc7d1da20b3f5fc6e0f9c4903f1733c3b8f794e698b156f4ab"
+    },
+    "weights/download_weights.py": {
+      "bytes": 3183,
+      "sha256": "3a31b4ae38645026c2548aac0fb68302ded8139a98c3883faf0ef6d090e624cf"
+    },
+    "weights/weights_checksums.sha256": {
+      "bytes": 530,
+      "sha256": "0757ff9e1b17d7639f0a1065596d1d48f50b8b5d15dcadf6539189a1b80e5d77"
+    },
+    "zenodo.json": {
+      "bytes": 1515,
+      "sha256": "7a6b9977ef4b374c889999cb5cf985db61f4b4df25e97a34b42951fba7bfeddc"
+    },
+    "ZENODO.md": {
+      "bytes": 873,
+      "sha256": "ab3942fa36f35b17159e17742c13f6dabcf99c7f673ff5ae47a1ab854fd6f3ac"
     }
   }
 }

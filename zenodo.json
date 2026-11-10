@@ -1,0 +1,31 @@
+{
+  "title": "TRINEXIS: An Alert-Aware, Interval-Throttled Open-Vocabulary Webcam System with Language-Configured Speech",
+  "upload_type": "software",
+  "publication_date": "2026-11-10",
+  "version": "v0.3.0-standalone",
+  "description": "Repository-fixed TRINEXIS software and standalone technical report. The paper documents an alert-aware, interval-throttled open-vocabulary webcam pipeline with language-configured speech, deterministic software verification, AGPL-3.0 licensing, and a weights checksum script. No empirical detection, latency, distance-calibration, or user-study result is claimed.",
+  "creators": [
+    {
+      "name": "Lakhani, Yug G.",
+      "affiliation": "Department of Computer Engineering, Gyanmanjari Innovative University, Bhavnagar, Gujarat, India",
+      "orcid": "0009-0004-2930-4953"
+    }
+  ],
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "open-vocabulary detection",
+    "YOLO-World",
+    "Flask",
+    "alert-aware narration",
+    "research software",
+    "technical report"
+  ],
+  "notes": "Zenodo DOI pending author authorization. Connect the GitHub repository to Zenodo, enable the repository, and publish the v0.3.0-standalone release to mint the DOI. Replace the GitHub release URL in the manuscript, CITATION.cff, codemeta.json, and zenodo.json with the resulting DOI.",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.3.0-standalone",
+      "relation": "isIdenticalTo",
+      "scheme": "url"
+    }
+  ]
+}
