@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
 from trinexis_core import (  # noqa: E402
     control_request_status,
     legacy_select_speech_objects,
+    nearest_select_speech_objects,
     select_speech_objects,
 )
 
@@ -30,6 +31,15 @@ class AlertPolicyRegressionTests(unittest.TestCase):
     def test_confidence_first_mutation_can_drop_designated_object(self):
         selected = legacy_select_speech_objects(FIXTURE, {"keys"}, 2)
         self.assertNotIn("keys", [item["name"] for item in selected])
+        nearest = nearest_select_speech_objects(
+            [
+                {"name": "keys", "confidence": 0.20, "distance": 9.0},
+                {"name": "chair", "confidence": 0.99, "distance": 1.0},
+                {"name": "table", "confidence": 0.98, "distance": 2.0},
+            ],
+            2,
+        )
+        self.assertEqual(["chair", "table"], [item["name"] for item in nearest])
 
     def test_regression_check_can_fail_on_a_broken_ranking(self):
         def broken_selector(objects, alerts, limit):

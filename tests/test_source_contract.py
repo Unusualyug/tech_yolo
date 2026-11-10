@@ -20,7 +20,11 @@ class SourceContractTests(unittest.TestCase):
         text = read("README.md")
         self.assertIn("AGPL-3.0-only", text)
         self.assertIn("git lfs pull", text)
-        self.assertIn("no empirical detection-quality", text.lower())
+        self.assertIn("no real webcam sessions", text.lower())
+        self.assertIn("empirical result tables", text.lower())
+        self.assertIn("not submission-ready", text.lower())
+        self.assertIn("the release contains no annotated dataset", text.lower())
+        self.assertIn("human-participant evaluation", text.lower())
 
     def test_runtime_requirements_are_pinned(self):
         lines = [
@@ -103,6 +107,21 @@ class SourceContractTests(unittest.TestCase):
         status = read("FIX_STATUS.md")
         self.assertIn("pending", status.lower())
         self.assertIn("NO DATA", status)
+        venue = read("paper/venue_guide_notes.md")
+        self.assertIn("arXiv / institutional report", venue)
+        self.assertIn("text-to-text generative AI", venue)
+        self.assertIn("Yug G. Lakhani (1)", venue)
+        self.assertIn("nearest_select_speech_objects", read("trinexis_core.py"))
+        self.assertIn("nearest_first", read("experiments/alert_replay.py"))
+        self.assertTrue((ROOT / "experiments/LIVE_SMOKE_TEST.md").is_file())
+        self.assertTrue((ROOT / "experiments/SPOKEN_IO_EXAMPLE.template.md").is_file())
+        self.assertTrue((ROOT / "experiments/USER_STUDY_PROTOCOL.md").is_file())
+        receipt = read("experiments/ethics_inquiry_receipt.md")
+        self.assertIn("sent inquiry only", receipt)
+        self.assertIn("1a1c4db01f9cbe1f", receipt)
+        self.assertIn("No reply, approval, or waiver is claimed", read("experiments/USER_STUDY_PROTOCOL.md"))
+        self.assertTrue((ROOT / "scripts/live_smoke_test.py").is_file())
+        self.assertTrue((ROOT / "scripts/final_release_checklist.py").is_file())
 
     def test_zenodo_doi_remains_pending(self):
         zenodo = json.loads(read("zenodo.json"))

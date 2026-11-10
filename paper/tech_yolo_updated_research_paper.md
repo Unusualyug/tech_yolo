@@ -9,7 +9,7 @@ ORCID: https://orcid.org/0009-0004-2930-4953
 
 ## Abstract
 
-Open-vocabulary webcam systems must decide which detected objects to speak when output is short and time-limited. This report is framed around an alert-aware narration policy and its measured effect on alert delivery, which a future experiment must establish rather than assume. The policy ranks user-designated alert objects before truncating the spoken shortlist; a confidence-first baseline truncates by detector confidence first. The research question is whether alert-first narration makes users notice a designated object faster or more often than confidence-first narration. TRINEXIS implements the policy in an interval-throttled, language-configured webcam system and adds optional real-log instrumentation, a frozen alert manifest, Flask route tests, and continuous integration. Experiments A-D specify hardware timing, labeled detection evaluation, a vocabulary/confidence grid, real-log alert replay, and checked-language ratings; all empirical result cells remain NO DATA. The report therefore does not claim a measured user benefit, detection quality, latency, distance accuracy, multilingual comprehension, or assistive effectiveness. Its contribution is the policy, its failable software checks, and a preregistrable protocol for measuring alert delivery, not a description of a Flask application.
+Open-vocabulary webcam systems must decide which detected objects to speak when output is short and time-limited. This report frames an alert-aware narration policy and a protocol for measuring its effect on alert delivery; that effect remains unmeasured. The policy ranks user-designated alert objects before truncating the spoken shortlist. Confidence-first and nearest-object-first baselines provide two explicit comparison orderings. The research question is whether alert-first narration makes users notice a designated object faster or more often than confidence-first narration. TRINEXIS implements the policy in an interval-throttled, language-configured webcam system and adds optional real-log instrumentation, a frozen alert manifest, a 5-10 session replay harness, Flask route tests, and continuous integration. Experiments A-D specify hardware timing, labeled detection evaluation, a vocabulary/confidence grid, real-log alert replay, and checked-language ratings; all empirical result cells remain NO DATA. The report does not claim a measured user benefit, detection quality, latency, distance accuracy, multilingual comprehension, or assistive effectiveness. Its contribution is the policy, its failable software checks, and a preregistrable protocol that reports whatever alert-first effect is observed, including a null or negative one, not a description of a Flask application.
 
 **Keywords / Index Terms:** alert-aware narration; open-vocabulary detection; research software; speech interface; empirical protocol; interval throttling; technical report
 
@@ -27,14 +27,14 @@ TRINEXIS is the research instrument used to implement the policy: an interval-th
 
 The contribution is an alert-aware narration policy and a protocol for measuring its effect on alert delivery, not a Flask app or a general webcam-application description. User-designated alert objects are ranked before the spoken shortlist is truncated. The ordering is isolated in a dependency-free policy module, checked by mutation-sensitive unit tests, instrumented for real-log replay, and deliberately kept separate from empirical detection or user-benefit claims.
 
-- A policy and research question: alert-first versus confidence-first narration for a predesignated object, with delivery and noticing treated as distinct endpoints.
+- A policy and research question: alert-first, confidence-first, and nearest-object-first narration for a predesignated object, with delivery and noticing treated as distinct endpoints.
 - A maintained implementation with AGPL-3.0 licensing [24], configurable camera/security settings, optional real-log timing and speech-event recorders, and a frozen alert-manifest mode.
 - Real Flask test-client route tests, deterministic policy tests, continuous integration, and a source-level evidence-boundary check.
 - Preregistrable Experiments A-D with hardware/data/rating manifests, runnable harnesses, and blank NO DATA result templates.
 
 ### C. Scope and Limitations
 
-This manuscript is a standalone technical report with experiment protocols and blank empirical results; it is not submission-ready. No labeled detection dataset, hardware timing campaign, known-distance calibration, translated-template rating, consented user study, dashboard screenshot, or spoken input-to-output example was completed. No official venue template, current Guide for Authors, or citation style was supplied/read; generic single-column layout and numeric citations remain fallbacks. Funding and competing-interest statements require author confirmation, AI-tool disclosure must be rechecked against venue policy, and the author must personally verify every number. No detection-quality, latency, distance-error, robustness, multilingual-comprehension, assistive-effectiveness, or user-benefit result is claimed.
+This manuscript is a standalone technical report with experiment protocols and blank empirical results; it is not submission-ready. No labeled detection dataset, hardware timing campaign, known-distance calibration, translated-template rating, consented user study, dashboard screenshot, or spoken input-to-output example was completed. The author selected arXiv/institutional-report formatting; the current arXiv Submission Guidelines, moderation, metadata, and content-type pages were read on 10 Nov 2026 and recorded in paper/venue_guide_notes.md. arXiv has no mandatory venue template, so the generic single-column layout and numeric citations are retained. The author confirmed no external funding, no competing interests, and the CRediT roles actually performed; the AI-tool disclosure was checked against arXiv's current text-to-text generative-AI policy. The author must still personally verify every number after experiments. No detection-quality, latency, distance-error, robustness, multilingual-comprehension, assistive-effectiveness, or user-benefit result is claimed.
 
 ## II. RELATED WORK / LITERATURE REVIEW
 
@@ -145,7 +145,7 @@ The seeded 1,000-case synthetic check is generated only by tests/test_synthetic_
 
 ### C. Route, Policy, and Source-Contract Tests
 
-The standard-library unittest suite contains 93 tests: 43 Flask route tests, 37 policy/harness/telemetry tests, and 13 source-contract tests. The exact CI statement is: 43 route tests plus 37 policy tests, run in CI. Route tests are reported separately from source-text tests. They exercise all 23 routes' status codes, JSON-object validation, clamping, API-token 401 behavior, unsupported-scheme/read-only 403 behavior, Bearer authentication, single-client 409 behavior, frozen alert manifests, and language-support metadata. Camera, NumPy, detector, and TTS imports are mocked with unittest.mock; no live runtime is validated by these counts. Policy tests cover narration ranking, mutation sensitivity, control status, telemetry arithmetic, language fallback, experiment-harness self-checks, and the seeded synthetic unit test. Continuous integration runs the suite on every push and pull request.
+The standard-library unittest suite contains 93 tests: 43 + 37 + 13 = 93, namely 43 Flask route tests, 37 policy/harness/telemetry tests, and 13 source-contract tests. The exact CI statement is: 43 route tests plus 37 policy tests, run in CI. Route tests are reported separately from source-text tests. They exercise all 23 routes' status codes, JSON-object validation, clamping, API-token 401 behavior, unsupported-scheme/read-only 403 behavior, Bearer authentication, single-client 409 behavior, frozen alert manifests, and language-support metadata. Camera, NumPy, detector, and TTS imports are mocked with unittest.mock; no live runtime is validated by these counts. Policy tests cover narration ranking, mutation sensitivity, control status, telemetry arithmetic, language fallback, experiment-harness self-checks, and the seeded synthetic unit test. Continuous integration runs the suite on every push and pull request.
 
 **TABLE IV. TEST-SUITE SUMMARY**
 
@@ -165,7 +165,7 @@ The prior immutable software release is GitHub release v0.3.0-standalone [23]. T
 - Run Experiments A-D on declared hardware, labeled data, real logs, and checked languages; report negative results as-is.
 - Obtain consent and institutional ethics approval before any user-noticing study.
 - Calibrate the distance proxy at known distances or retain the unitless index with its current disclaimer.
-- Add a dashboard screenshot, one spoken input-to-output example, and venue-policy/author-declaration checks before any submission.
+- Add a dashboard screenshot and one spoken input-to-output example from a real hand-run smoke test; venue-policy and author-declaration checks are recorded, but author verification of final numbers remains.
 
 ## V. EMPIRICAL PROTOCOLS AND BLANK RESULTS
 
@@ -175,7 +175,9 @@ All empirical cells are NO DATA. Before collection, the author must freeze hardw
 
 ### B. Experiments A-D
 
-Experiment A collects at least 500 camera frames per setting at 416, 640, and 832 input sizes on declared CPU/GPU/RAM/OS, Python, camera, audio, and TTS-backend configuration. It reports median and p95 for capture, inference, TTS synthesis, playback, and rendering. Experiment B evaluates 200-300 labeled COCO, LVIS, or own images with pycocotools or Ultralytics val, reporting precision, recall, mAP@0.5, and speed; its grid is {455, 20, 50, 80} prompts x {0.15, 0.25, 0.35}. Experiment C replays real detection logs through alert-first and confidence-first orderings with predeclared alert objects and reports delivery rate plus mean alert-to-speech delay. Experiment D samples 5-10 languages with native or reliable bilingual raters on 10 announcements each, rated 1-5 for correctness and naturalness; only checked languages may be reported, the remaining 72-language claims are unchecked, and raters should listen to gTTS/Google Translate speech samples. Negative or worse results are reportable.
+Experiment A collects at least 500 camera frames per setting at 416, 640, and 832 input sizes on declared CPU/GPU/RAM/OS, Python, camera, audio, and TTS-backend configuration. It reports median and p95 for capture, inference, TTS synthesis, playback, and rendering. Experiment B evaluates 200-300 labeled COCO, LVIS, or own images with pycocotools or Ultralytics val, reporting precision, recall, mAP@0.5, and speed; its grid is {455, 20, 50, 80} prompts x {0.15, 0.25, 0.35}. Experiment C declares alert objects in advance, runs 5-10 real webcam sessions with TRINEXIS_EVENT_LOG, and replays the same detection frames through alert-first, confidence-first, and nearest-object-first orderings. It reports delivery rate and mean alert-to-speech delay exactly as observed even if alert-first helps less than hoped. Experiment D samples 5-10 languages with native or reliable bilingual raters on 10 announcements each, rated 1-5 for correctness and naturalness; only checked languages may be reported, the remaining 72-language claims are unchecked, and raters should listen to gTTS/Google Translate speech samples. Negative or worse results are reportable.
+
+The C harness is experiments/multi_session_replay.py. It rejects fewer than 5 or more than 10 sessions, explicitly synthetic rows, unmatched alert-manifest hashes, and missing speech-event logs. Its blank result cells are NO DATA; no session has been supplied. The optional E harness, experiments/user_study.py, generates only a blank counterbalanced worksheet and refuses to summarize without an institutional ethics approval identifier, documented consent, 8-12 real participants, all three conditions per participant, and numeric outcomes.
 
 ### C. Blank Result Table
 
@@ -188,11 +190,11 @@ Experiment A collects at least 500 camera frames per setting at 416, 640, and 83
 | B. Grid | Twelve vocabulary/confidence cells | Frozen {455, 20, 50, 80} prompts x {0.15, 0.25, 0.35} | NO DATA |
 | C. Alert replay | Delivery rate; mean alert-to-speech delay | Real /export_logs and speech events; predeclared alert manifest | NO DATA |
 | D. Language | Mean correctness/naturalness | 5-10 checked languages x 10 announcements; 1-5 ratings; listen to samples | NO DATA |
-| E. User noticing | Notice rate; time-to-notice | Consent and institutional ethics approval; optional 8-12 person within-subject study | NO DATA |
+| E. User noticing | Notice rate; time-to-notice | Consent and institutional ethics approval; three-policy 8-12 person within-subject study | NO DATA |
 
 ### D. What Replay Does Not Establish
 
-Experiment C measures alert delivery from logs, not whether a person notices a designated object faster or more often. Answering the user-facing research question requires a separate consented, ethics-approved study with preregistered outcomes. No such approval, participant, or user benefit is claimed. The dashboard screenshot and spoken input-to-output example are also pending. A workshop or journal paper should be prepared only after these empirical steps are complete.
+Experiment C measures alert delivery from logs, not whether a person notices a designated object faster or more often. A nearest-object-first comparison clarifies the ordering question but cannot substitute for a consented, ethics-approved user study with preregistered notice rate and time-to-notice outcomes. No such approval, participant, or user benefit is claimed. The dashboard screenshot and spoken input-to-output example are also pending. A final arXiv/institutional research article should be prepared only after these empirical steps are complete.
 
 ## VI. DISCUSSION
 
@@ -216,19 +218,19 @@ This report defines an alert-aware narration policy, implements it in a configur
 
 ### A. Funding and Competing Interests
 
-Author confirmation is pending; no approved funding or competing-interest statement is made in this working-tree draft. The author must verify these declarations before submission.
+The author confirmed no external funding and no competing interests on 10 Nov 2026. The author must re-verify these declarations before final submission.
 
 ### B. Author Contributions (CRediT)
 
-Draft CRediT assignment for author confirmation: Yug G. Lakhani—conceptualization, software, and writing—original draft. Methodology, formal analysis, investigation, validation, data curation, and review/editing must be matched to work actually performed after the empirical studies. No validation dataset or curated research data were used in this report.
+The author confirmed the roles actually performed: Yug G. Lakhani—conceptualization, software, and writing—original draft. Methodology, investigation, and formal analysis will be added only after those experiments are actually performed; validation, data curation, and review/editing must likewise match real work. No validation dataset or curated research data were used in this report.
 
 ### C. AI-Tool Disclosure
 
-Arena.ai Agent Mode was used for source auditing, harness/test scripting, figure generation, repository scripting, and manuscript formatting. The author is responsible for the final manuscript, for rechecking this disclosure against the target venue's current AI-tool policy, and for verifying every number and declaration. No institutional ethics approval is claimed.
+Arena.ai Agent Mode, a text-to-text generative AI tool, was used for source auditing, harness/test scripting, figure generation, repository scripting, and manuscript formatting. This disclosure was checked against the current arXiv moderation policy, which requires significant text-to-text generative-AI use to be reported, places full responsibility on the named author, and does not permit an AI language tool to be listed as an author. The author must verify every number, reference, and declaration before submission. No institutional ethics approval is claimed.
 
 ### D. Data and Code Availability
 
-The prior immutable software release is available from GitHub release v0.3.0-standalone [23] under AGPL-3.0-only [24]; Ultralytics' AGPL-3.0 license is cited directly [22]. The unreleased working-tree revision on arena/69777d37-tech-yolo contains the reframed paper, experiment protocols, instrumentation, route tests, CI, and language-fallback UI; it is not part of that release. Model weights are Git LFS pointers and are fetched and checked with weights/download_weights.py [10]. No labeled dataset, experimental log, or valid Zenodo DOI is claimed. Zenodo DOI has not been minted because author authorization and the final GitHub/Zenodo release are pending; a DOI is permanent for the exact version. After that final release, insert the DOI into CITATION.cff, README.md, and this Data and Code Availability section, then rebuild the manuscript. Dependency licenses are documented in THIRD_PARTY_LICENSES.md. The generic layout and numeric citations remain fallbacks because no official venue template, current Guide for Authors, or citation style was supplied/read; this manuscript is not submission-ready.
+The prior immutable software release is available from GitHub release v0.3.0-standalone [23] under AGPL-3.0-only [24]; Ultralytics' AGPL-3.0 license is cited directly [22]. The unreleased working-tree revision on arena/69777d37-tech-yolo contains the reframed paper, three-policy experiment protocols, instrumentation, route tests, CI, and language-fallback UI; it is not part of that release. Model weights are Git LFS pointers and are fetched and checked with weights/download_weights.py [10]. No labeled dataset, experimental log, or valid Zenodo DOI is claimed. Zenodo DOI has not been minted because the final GitHub/Zenodo release must come last; the author authorized that sequence but has not yet connected Zenodo or approved the frozen v1.0.0 archive. After that final release, insert the DOI into CITATION.cff, README.md, Appendix A, and this Data and Code Availability section, then rebuild the manuscript. Dependency licenses are documented in THIRD_PARTY_LICENSES.md. The author selected arXiv/institutional-report formatting; official current arXiv policies were read and recorded in paper/venue_guide_notes.md, and no mandatory venue template exists, so the generic single-column PDF and numeric citations are retained. This manuscript is not submission-ready.
 
 ---
 
@@ -299,8 +301,15 @@ python3 experiments/detection_eval.py --self-check
 python3 experiments/vocab_confidence_grid.py --self-check
 python3 experiments/alert_replay.py --self-check
 python3 experiments/language_eval.py --self-check
+python3 experiments/multi_session_replay.py --self-check
+python3 experiments/user_study.py --self-check
+python3 scripts/live_smoke_test.py --self-check
+python3 scripts/check_arxiv_metadata.py --check
+python3 scripts/final_release_checklist.py --self-check
 python3 scripts/verify_no_fabricated_results.py
 # Live studies only; CI does not install these or open hardware:
+python3 scripts/live_smoke_test.py --check-prereqs
+python3 scripts/live_smoke_test.py --verify-evidence
 python3 -m pip install -r requirements.txt
 python3 weights/download_weights.py --fetch --verify
 python3 -m pip install -r paper/requirements-paper.txt
@@ -322,5 +331,6 @@ python3 paper/audit_updated_repository.py
 - .github/workflows/ci.yml, requirements-ci.txt, scripts/report_test_counts.py, and scripts/verify_no_fabricated_results.py: CI and evidence-boundary checks.
 - weights/download_weights.py and weights/weights_checksums.sha256: Git LFS pointer parser and SHA-256 manifest.
 - zenodo.json and ZENODO.md: prepared Zenodo metadata and final-release DOI-minting instructions.
-- paper/reference_verification.md: per-reference DOI/publisher verification log.
+- paper/reference_verification.md: per-reference DOI/publisher verification log with all 24 rows ticked after recheck.
+- paper/venue_guide_notes.md, experiments/LIVE_SMOKE_TEST.md, experiments/SPOKEN_IO_EXAMPLE.template.md, experiments/USER_STUDY_PROTOCOL.md, experiments/ethics_inquiry_receipt.md, experiments/session_manifest.template.json, experiments/user_study_worksheet.template.csv, experiments/multi_session_replay.py, experiments/user_study.py, scripts/live_smoke_test.py, scripts/check_arxiv_metadata.py, and scripts/final_release_checklist.py: venue, live-evidence, three-policy, ethics, and final-release preparation artifacts.
 - FIX_STATUS.md, trinexis_core.py, trinexis_telemetry.py, trinexis_language.py, CITATION.cff, codemeta.json, README.md, LICENSE, requirements.txt, and THIRD_PARTY_LICENSES.md: software and status artifacts.

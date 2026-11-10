@@ -15,11 +15,14 @@ must come **last**.
    labeled data, logs, and raters are supplied.
 3. Optional user-noticing work requires consent and institutional ethics
    approval first.
-4. The dashboard screenshot, spoken input→output example, venue's current
-   Guide for Authors, AI-tool-policy recheck, funding/competing-interest
-   confirmation, and author's personal number verification are pending.
-5. No official venue template, citation style, or current Guide for Authors was
-   supplied/read; the manuscript is **not submission-ready**.
+4. The dashboard screenshot, spoken input→output example, real 5–10 session
+   replay, and author's personal number verification are pending.
+5. The author selected arXiv/institutional-report formatting; current official
+   arXiv pages were read in `paper/venue_guide_notes.md` and no mandatory
+   template exists. AI-tool policy and author funding/competing-interest/
+   CRediT decisions were checked and recorded. The author has authorized the
+   final DOI sequence but has not connected Zenodo or approved a frozen
+   `v1.0.0` archive; the manuscript is **not submission-ready**.
 
 ## Exact minting order after all of the above are complete
 
@@ -31,11 +34,12 @@ must come **last**.
    integration.
 4. Enable and publish the final GitHub release in Zenodo. Zenodo creates the
    deposit and mints the DOI.
-5. Insert the resulting DOI in **all three required locations**:
+5. Insert the resulting DOI in **all required locations**:
    - `CITATION.cff` (`doi` and the preferred-citation URL);
    - `README.md` (Citation section);
-   - `paper/updated_manuscript_content.py` → Data and Code Availability, then
-     rebuild `paper/tech_yolo_updated_research_paper.{pdf,docx,md}`.
+   - `paper/updated_manuscript_content.py` → Appendix A and Data and Code
+     Availability, then rebuild
+     `paper/tech_yolo_updated_research_paper.{pdf,docx,md}`.
 6. Also update `codemeta.json`, `zenodo.json`, and this file's status so the
    metadata does not describe a draft. Verify the DOI resolves to the exact
    final release.
@@ -43,6 +47,9 @@ must come **last**.
    number and declaration.
 
 `zenodo.json` contains prepared deposit metadata with
-`version: "PENDING_FINAL_RELEASE"` and `notes: "DOI pending..."`. Until the DOI
-exists, cite the immutable prior GitHub release URL [23] for the prior release
-only; do not claim that the unreleased fixes are part of that DOI.
+`version: "PENDING_FINAL_RELEASE"` and `notes: "DOI pending..."`.
+`scripts/final_release_checklist.py --check` mechanically refuses a release
+while empirical data, hand-run evidence, status prose, or final author
+verification is unresolved. Until the DOI exists, cite the immutable prior
+GitHub release URL [23] for the prior release only; do not claim that the
+unreleased fixes are part of that DOI.

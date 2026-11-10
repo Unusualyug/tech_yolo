@@ -1,0 +1,1 @@
+participant_slot,participant_id,condition_order,policy,designated_object,trial_started_at,consent_confirmed,ethics_approval_id,noticed,time_to_notice_ms,censored_at_timeout,audio_or_log_reference,notes

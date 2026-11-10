@@ -48,6 +48,23 @@ def main() -> int:
     else:
         errors.append("rebuilt manuscript Markdown is missing")
 
+    summary_path = ROOT / "paper" / "artifacts" / "test_summary.json"
+    if not summary_path.exists():
+        errors.append("test_summary.json is missing")
+    else:
+        summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        expected_counts = {
+            "route_tests": 43,
+            "policy_tests": 37,
+            "source_contract_tests": 13,
+            "total_tests": 93,
+        }
+        for key, expected in expected_counts.items():
+            if summary.get(key) != expected:
+                errors.append(f"test count {key} is {summary.get(key)!r}, expected {expected}")
+        if summary.get("exact_report_phrase") != "43 route tests plus 37 policy tests, run in CI":
+            errors.append("test summary exact CI phrase is stale")
+
     zenodo = json.loads((ROOT / "zenodo.json").read_text(encoding="utf-8"))
     if "DOI pending" not in zenodo.get("notes", ""):
         errors.append("zenodo.json no longer says DOI pending")
@@ -63,6 +80,16 @@ def main() -> int:
         errors.append("FIX_STATUS.md is missing")
     elif "pending" not in FIX_STATUS.read_text(encoding="utf-8").lower():
         errors.append("FIX_STATUS.md does not identify pending empirical work")
+
+    protocol_path = ROOT / "experiments" / "USER_STUDY_PROTOCOL.md"
+    if not protocol_path.exists():
+        errors.append("experiments/USER_STUDY_PROTOCOL.md is missing")
+    else:
+        protocol = protocol_path.read_text(encoding="utf-8").lower()
+        if "no reply, approval, or waiver is claimed" not in protocol:
+            errors.append("user-study protocol no longer says no approval/waiver exists")
+        if re.search(r"ethics approval (?:received|granted|obtained)", protocol):
+            errors.append("user-study protocol claims institutional ethics approval")
 
     if errors:
         print("EVIDENCE BOUNDARY CHECK FAILED", file=sys.stderr)

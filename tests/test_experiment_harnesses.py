@@ -18,6 +18,8 @@ from experiments import (  # noqa: E402
     detection_eval,
     language_eval,
     latency_benchmark,
+    multi_session_replay,
+    user_study,
     vocab_confidence_grid,
 )
 
@@ -30,6 +32,8 @@ class HarnessSelfCheckTests(unittest.TestCase):
             vocab_confidence_grid,
             alert_replay,
             language_eval,
+            multi_session_replay,
+            user_study,
         ):
             with self.subTest(module=module.__name__):
                 self.assertEqual(common.SELF_CHECK, module.self_check()["status"])
@@ -67,8 +71,18 @@ class HarnessSelfCheckTests(unittest.TestCase):
     def test_alert_replay_blank_template_has_no_delivery_or_delay(self):
         result = alert_replay.blank_result()
         self.assertEqual(common.NO_DATA, result["status"])
-        self.assertEqual(3, len(result["cells"]))
-        self.assertTrue(all(cell.get("mean_alert_to_speech_ms") is None for cell in result["cells"][:2]))
+        self.assertEqual(4, len(result["cells"]))
+        self.assertEqual(
+            ["alert_first", "confidence_first", "nearest_first"],
+            [cell.get("policy") for cell in result["cells"][:3]],
+        )
+        self.assertTrue(all(cell.get("mean_alert_to_speech_ms") is None for cell in result["cells"][:3]))
+        multi = multi_session_replay.blank_result()
+        self.assertEqual(4, len(multi["cells"]))
+        self.assertTrue(all(cell["status"] == common.NO_DATA for cell in multi["cells"]))
+        study = user_study.blank_result()
+        self.assertEqual(3, len(study["cells"]))
+        self.assertEqual("nearest_first", study["cells"][2].get("policy"))
 
     def test_alert_replay_rejects_explicitly_synthetic_logs(self):
         with tempfile.TemporaryDirectory() as directory:

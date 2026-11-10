@@ -86,6 +86,26 @@ def legacy_select_speech_objects(
     return sorted(shortlist, key=lambda obj: _rank_key(obj, alerts))
 
 
+def nearest_select_speech_objects(
+    objects: Sequence[Mapping[str, object]],
+    limit: int,
+) -> list[Mapping[str, object]]:
+    """Rank by the smallest unitless relative distance index first.
+
+    ``distance`` is the repository's relative size-based index, not a calibrated
+    metric distance. Objects without that field sort last. Name breaks ties so
+    the baseline is deterministic without pretending to measure confidence.
+    """
+    n = max(0, int(limit))
+    return sorted(
+        objects,
+        key=lambda obj: (
+            float(obj.get("distance", float("inf"))),
+            str(obj.get("name", "")),
+        ),
+    )[:n]
+
+
 def time_decay_factor(elapsed_seconds: float, half_life_s: float) -> float:
     """Frame-rate-independent exponential decay for the heatmap."""
     half_life = float(half_life_s)

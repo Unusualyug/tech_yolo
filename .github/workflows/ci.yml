@@ -29,6 +29,13 @@ jobs:
           python experiments/detection_eval.py --self-check
           python experiments/vocab_confidence_grid.py --self-check
           python experiments/alert_replay.py --self-check
+          python experiments/multi_session_replay.py --self-check
+          python experiments/user_study.py --self-check
           python experiments/language_eval.py --self-check
+      - name: Verify preparation gates (no live run, release, or DOI action)
+        run: |
+          python scripts/live_smoke_test.py --self-check
+          python scripts/check_arxiv_metadata.py --check
+          python scripts/final_release_checklist.py --self-check
       - name: Verify evidence boundary
         run: python scripts/verify_no_fabricated_results.py

@@ -23,10 +23,24 @@
 - Clarified that the final GitHub/Zenodo release must come last and that the
   DOI must then be inserted into `CITATION.cff`, `README.md`, and the paper's
   Data and Code Availability section. No DOI, tag, or release was created.
-- Kept the manuscript **not submission-ready**: no official venue template,
-  current Guide for Authors, citation style, author declaration confirmation,
-  AI-policy recheck, dashboard screenshot, spoken input→output example, or
-  author verification of every number exists.
+- Added a nearest-object-first comparison policy, 5–10 real-session replay
+  aggregator, guarded three-policy within-subject user-study worksheet, blank
+  spoken-I/O template, hand-run live smoke-test description, arXiv metadata
+  checker, and final-release gate. These are guardrails, not results.
+- Sent the early ethics-route inquiry on 2026-11-10 to the official
+  `hod@gmiu.edu.in` address; see `experiments/ethics_inquiry_receipt.md` and
+  Gmail message `1a1c4db01f9cbe1f`. No reply, approval, or waiver is claimed.
+- Reopened all 24 official DOI/publisher/project pages, ticked every row in
+  `paper/reference_verification.md`, and read current arXiv submission,
+  moderation, metadata, and content-type pages; see `paper/venue_guide_notes.md`.
+  The author selected arXiv/institutional report, which has no mandatory
+  official template, and confirmed no external funding, no competing interests,
+  and the CRediT roles actually performed. The arXiv-aware AI-tool disclosure
+  was written; methodology/investigation/formal analysis remain pending.
+- Kept the manuscript **not submission-ready**: no real webcam sessions,
+  empirical tables, dashboard screenshot, spoken input→output example,
+  consented user study, `v1.0.0` release, DOI, or author verification of final
+  numbers exists.
 
 ## v0.3.0-standalone — 2026-11-10
 

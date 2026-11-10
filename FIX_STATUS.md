@@ -58,8 +58,10 @@ result has been invented. The rebuilt manuscript keeps all empirical cells at
 - Complete Experiment C to measure alert delivery; complete optional
   Experiment E only after consent and institutional ethics approval to answer
   the noticing/benefit part.
-- Supply an official venue template, current Guide for Authors, and citation
-  style before claiming submission readiness. None was supplied/read.
+- The author selected arXiv/institutional-report formatting. Current official
+  submission, moderation, metadata, and content-type pages were read in
+  `paper/venue_guide_notes.md`; arXiv has no mandatory template. Recheck only
+  if the venue changes.
 
 ## 3. The synthetic ordering test could not fail
 
@@ -162,29 +164,90 @@ result has been invented. The rebuilt manuscript keeps all empirical cells at
 - `python3 -m unittest discover -s tests -v`: **93 tests OK**, 0 failures,
   0 errors; `43 route tests plus 37 policy tests, run in CI`, plus 13
   source-contract tests.
-- All five experiment harness software self-checks passed; no empirical data
+- All seven experiment/harness software self-checks plus the live-prereq,
+  arXiv-metadata, and final-release gate self-checks passed; no empirical data
   was produced.
 - `scripts/verify_no_fabricated_results.py`: **EVIDENCE BOUNDARY CHECK OK**.
-- Rebuilt paper: 12-page PDF, 5 tables, 2 figures, 174-word abstract, and
+- Rebuilt paper: 13-page PDF, 5 tables, 2 figures, 183-word abstract, and
   citations [1]–[24]. `paper/artifacts/updated_repository_audit.json` records
-  99 files, 93 tests, and `zenodo_doi: null`.
-- `git diff --check` passed. No new tag, GitHub release, Zenodo DOI, or email
-  was created for this unreleased revision.
+  110 files, 93 tests, and `zenodo_doi: null`.
+- `git diff --check` passed. No new tag, GitHub release, Zenodo DOI, or paper
+  email was created for this unreleased revision. A separate ethics-route
+  inquiry was sent; see `experiments/ethics_inquiry_receipt.md`.
+
+## Additional publication-blocker triage (2026-11-10)
+
+The user asked for action on nine blockers in the order C→A→B, real app and
+evidence, D/E, ethics, paper rewrite, references/declarations, tag/DOI, and
+venue formatting. Connected Drive, Sheets, Notion, and Gmail were searched: the
+four Drive `datasets` folders are empty, the screenshots are exam lists and
+posters, `R_paper_.docx` is an unrelated fracture-detection paper, no rater
+sheet/session log/venue template/ethics approval is present, and no Gmail
+attachment contains `TRINEXIS_EVENT_LOG` data. The sandbox has no `/dev/video*`,
+Git LFS, hydrated weights, `cv2`, `numpy`, `ultralytics`, `gtts`, `flask`, or
+`pycocotools`. Editing text cannot manufacture these results.
+
+**Actions completed without inventing evidence**
+
+- Author decisions recorded: arXiv/institutional report, no external funding,
+  no competing interests, CRediT roles actually performed, and Zenodo/DOI
+  authorization only after final results.
+- All 24 reference rows were ticked `[x]` after reopening official DOI/
+  publisher/project pages; refs 11, 12, 16, 19, 20, and 21 were rechecked
+  directly. `paper/venue_guide_notes.md` records the current arXiv policies.
+- Added `nearest_select_speech_objects` and a nearest-object-first baseline;
+  `alert_replay.py` now replays three policies. Added a 5–10 session aggregator
+  that rejects synthetic/incomplete sessions and reports negative effects as-is.
+- Added a guarded three-policy user-study worksheet/summarizer, a blank spoken
+  input→output template, and a hand-run live smoke-test description.
+- Added `scripts/live_smoke_test.py`, `scripts/check_arxiv_metadata.py`, and
+  `scripts/final_release_checklist.py` to check prerequisites, arXiv metadata,
+  and final-release order without clicking or minting anything.
+- An early ethics-route inquiry was **sent** on 2026-11-10 to the official
+  departmental `hod@gmiu.edu.in` address (Gmail message
+  `1a1c4db01f9cbe1f`, thread `1a1c4dad79d27fcf`); see
+  `experiments/ethics_inquiry_receipt.md`. The message explicitly says no
+  recruitment or participant data collection will begin before written
+  institutional approval or a documented formal waiver. An inquiry is **not**
+  approval.
+
+**Hard blockers still pending**
+
+- Supply 5–10 real webcam sessions with frozen alert manifest, `/export_logs`,
+  and `TRINEXIS_EVENT_LOG`; then run C first. No logs have been uploaded.
+- Supply declared hardware and 500+ frames at 416/640/832 for A; a 200–300
+  labeled image report split, separate tuning split, and frozen prompt grid for
+  B; and 5–10 checked-language rater sheets for D.
+- Run the real app once with weights/webcam, save the dashboard screenshot and
+  real detections-in / spoken-sentence-out example. The sandbox has no camera.
+- Obtain institutional ethics approval and consent before recruiting 8–12
+  participants for E; no approval exists.
+- After real results, author must verify numbers, rewrite title/abstract and
+  Section V/VI, fill tables, remove status prose, and personally approve the
+  final frozen version.
+- Author must connect GitHub to Zenodo, publish `v1.0.0`, mint the DOI, and
+  update paper/README/`CITATION.cff`/Appendix A. No tag, release, or DOI exists.
+- Vercel is off; it is not needed for these local experiments. If a live web
+  preview is later required, turn Vercel on first.
 
 ## Overall status
 
 | Item | Status |
 |---|---|
 | Instrumentation, protocols, blank results | implemented |
-| Real Flask route tests and CI workflow | implemented |
+| Real Flask route tests and CI workflow | implemented; 43 + 37 + 13 = 93 |
+| Three-policy replay, 5–10 session aggregator, user-study guard | implemented |
+| Real-app prerequisite checker and blank evidence templates | implemented |
 | Paper reframing and language-fallback UI/docs | implemented |
-| Final answer with this how-to-fix explanation | this document |
-| Empirical A–D results | pending real hardware/data/raters |
-| Optional user noticing study | pending consent and institutional ethics approval |
-| Dashboard screenshot and spoken input→output example | pending |
-| Zenodo DOI | pending author authorization and final release |
-| Official venue template / Guide for Authors / citation style | pending; not supplied/read |
-| AI-tool disclosure policy recheck | pending |
-| Funding / competing-interest author confirmation | pending |
+| Reference verification | all 24 ticked after source recheck |
+| Target venue / author guide | arXiv / institutional report; current pages read, no mandatory template |
+| Funding, competing interests, CRediT roles actually performed | author-confirmed |
+| AI-tool disclosure against arXiv policy | rechecked and written |
+| Ethics-route inquiry | sent 2026-11-10 to `hod@gmiu.edu.in`; Gmail `1a1c4db01f9cbe1f`; no reply, approval, or waiver claimed |
+| Empirical C→A→B results | pending real webcam sessions, hardware, and dataset |
+| D language ratings and E user study | pending raters / consent / institutional ethics approval |
+| Dashboard screenshot and spoken input→output example | pending real hand-run smoke test |
+| Title/abstract/Results/Discussion rewrite after results | pending |
 | Author's personal verification of every number | pending |
+| `v1.0.0`, final GitHub release, Zenodo connection, DOI | pending final results and author clicks |
 | Submission-ready | no |

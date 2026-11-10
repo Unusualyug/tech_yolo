@@ -99,34 +99,38 @@ python3 experiments/vocab_confidence_grid.py --run \
 its dataset classes are not arbitrary open-vocabulary prompts; custom-prompt
 cells require frozen predictions evaluated with the pycocotools adapter.
 
-## Experiment C — alert replay and the research question
+## Experiment C — 5–10 real sessions, three orderings
 
 The paper's research question is: **Does alert-first narration make users
 notice a designated object faster or more often than confidence-first
 narration?** A replay of detection logs can measure alert *delivery* and delay,
 not user noticing or benefit.
 
-Choose alert objects **in advance** in `alert_manifest.json`. Setting
-`TRINEXIS_ALERT_MANIFEST` freezes `/set_alerts`, writes a manifest hash into
-every detection record, and prevents post-hoc alert selection. Replay the same
-real `/export_logs` frames through alert-first and confidence-first ordering,
-subject to the declared speech cooldown, and report delivery rate and mean
-alert-to-speech delay. Complete the example from real speech-enqueue events.
+Choose alert objects **in advance** in `alert_manifest.json`; examples include
+`person` and `knife`. Setting `TRINEXIS_ALERT_MANIFEST` freezes `/set_alerts`,
+writes a manifest hash into every detection record, and prevents post-hoc
+alert selection. Run **5–10 real webcam sessions** with `TRINEXIS_EVENT_LOG`
+enabled. Save each `/export_logs` JSON and speech-event JSONL separately, then
+declare those sessions in `session_manifest.json` before replay. The same
+frames are replayed through **alert-first**, **confidence-first**, and
+**nearest-object-first** ordering, subject to the declared speech cooldown.
+Report delivery rate and mean alert-to-speech delay exactly as observed, even
+if alert-first helps less than hoped.
 
 ```bash
 python3 experiments/alert_replay.py --self-check
-python3 experiments/alert_replay.py --emit-blank \
-  --output experiments/results/alert_replay_blank.json
-python3 experiments/alert_replay.py --run \
-  --alert-manifest experiments/alert_manifest.json \
-  --detection-log experiments/results/export_logs.json \
-  --event-log experiments/results/speech_events.jsonl \
-  --output experiments/results/alert_replay_results.json
+python3 experiments/multi_session_replay.py --self-check
+python3 experiments/multi_session_replay.py --run \
+  --session-manifest experiments/session_manifest.json \
+  --output experiments/results/multi_session_replay_results.json
 ```
 
-Explicitly synthetic/fixture rows are rejected. The 68.1% synthetic check is
-retained only as a `tests/` unit/regression test that can fail under a broken
-selector.
+`multi_session_replay.py` rejects fewer than 5 or more than 10 sessions,
+explicitly synthetic/fixture rows, missing event logs, and unmatched alert
+manifest hashes. The 68.1% synthetic check remains only a `tests/` unit/
+regression test that can fail under a broken selector. A single-session
+`alert_replay.py --run` remains available for debugging but is not the
+citable 5–10 session result.
 
 ## Experiment D — checked-language speech ratings
 
@@ -154,33 +158,77 @@ python3 experiments/language_eval.py --summarize \
 The language list above is an **example**, not a verified sample. Do not report
 comprehension, translation quality, or assistive benefit from template counts.
 
-## Experiment E — optional user noticing study (pending consent/ethics)
+## Experiment E — optional three-policy user noticing study (pending consent/ethics)
 
 To answer the noticing part of the research question, obtain **consent and
-institutional ethics approval first**. A possible within-subject design uses
-8–12 consented participants, a predesignated object, randomized
-alert-first/confidence-first conditions, and pre-registered outcomes: notice
-rate and time-to-notice. No ethics approval, participant, or user-study result
-is claimed here. `RESULTS_TEMPLATE.md` keeps those cells blank.
+institutional ethics approval first**. The frozen protocol in
+`USER_STUDY_PROTOCOL.md` uses 8–12 consented participants, a predesignated
+object, counterbalanced alert-first/confidence-first/nearest-object-first
+conditions, and preregistered outcomes: notice rate and time-to-notice. An
+an early department inquiry was **sent** on 2026-11-10 to `hod@gmiu.edu.in`;
+see `ethics_inquiry_receipt.md` (Gmail message `1a1c4db01f9cbe1f`). An inquiry
+is not approval. No reply, approval, participant, or user-study result is
+claimed here.
+`RESULTS_TEMPLATE.md` keeps those cells blank.
+
+```bash
+python3 experiments/user_study.py --self-check
+# Only after approval and consent, generate a blank worksheet, then fill real rows:
+python3 experiments/user_study.py --emit-worksheet --participants 8 \
+  --worksheet experiments/results/user_study_worksheet.csv
+python3 experiments/user_study.py --summarize \
+  --worksheet experiments/results/user_study_worksheet.csv \
+  --output experiments/results/user_study_results.json
+```
+
+The summarizer refuses blank consent, missing ethics identifiers, fewer than
+8 or more than 12 real participant IDs, incomplete within-subject conditions,
+and nonnumeric outcomes. It does not make an assistive-benefit claim.
+
+## Real-app smoke test and missing figures
+
+`LIVE_SMOKE_TEST.md` is the hand-run description. It requires a real webcam,
+hydrated model weights, runtime dependencies, a browser, audio output, frozen
+manifests, `TRINEXIS_LATENCY_LOG`, and `TRINEXIS_EVENT_LOG`. The author must
+save an unedited dashboard screenshot and a real detections-in / spoken-
+sentence-out example; `SPOKEN_IO_EXAMPLE.template.md` is blank and is not
+evidence. The 93 mocked Flask test-client tests do **not** satisfy this step.
+
+```bash
+python3 scripts/live_smoke_test.py --self-check
+python3 scripts/live_smoke_test.py --check-prereqs
+python3 scripts/live_smoke_test.py --verify-evidence
+```
+
+`--check-prereqs` and `--verify-evidence` are intended to fail honestly until
+the real run and evidence files exist. No screenshot or spoken example has been
+generated in this repository.
 
 ## Blank results and CI
 
 `RESULTS_TEMPLATE.md` contains every citable result cell with `NO DATA`. The
 GitHub Actions workflow `.github/workflows/ci.yml` runs on every push and pull
-request. It executes `43 route tests plus 37 policy tests, run in CI`. CI uses `requirements-ci.txt` (Flask
-only) because route tests mock camera, NumPy, detector, and TTS imports with
-`unittest.mock`; it does not validate live hardware or model accuracy.
+request. It executes the exact `43 + 37 + 13 = 93` test inventory, reported as
+`43 route tests plus 37 policy tests, run in CI`, plus 13 source-contract
+tests. CI uses `requirements-ci.txt` (Flask only) because route tests mock
+camera, NumPy, detector, and TTS imports with `unittest.mock`; it does not
+validate live hardware or model accuracy.
 
 ## Still required before submission
 
-- Run A–D on real hardware/data; optionally run E only after consent/ethics.
-- Add a dashboard screenshot and one spoken input→output example.
-- Recheck the target venue's current Guide for Authors and AI-tool disclosure
-  policy; no official template or Guide for Authors was supplied/read.
-- Confirm funding and competing-interest statements with the author; match
-  CRediT to work actually done.
-- Have the author personally verify every number and declaration.
-- Make the **final** GitHub release, then mint the Zenodo DOI for that exact
-  version and insert it into `CITATION.cff`, `README.md`, and the paper's Data
-  and Code Availability section. Until then, this manuscript is **not
-  submission-ready**.
+- Run C first with 5–10 real sessions, then A, B, and optionally D/E, on real
+  hardware/data; run E only after consent and institutional ethics approval.
+- Add the real dashboard screenshot and one spoken input→output example.
+- The author selected arXiv/institutional-report formatting; current official
+  submission, moderation, metadata, and content-type pages were opened and
+  recorded in `paper/venue_guide_notes.md`. arXiv has no mandatory venue
+  template. Recheck the venue policy only if the venue changes.
+- Funding, competing interests, and the CRediT roles actually performed were
+  author-confirmed on 2026-11-10. Add methodology, investigation, and formal
+  analysis only after those experiments are performed.
+- Have the author personally verify every number and declaration after results.
+- Make the **final** `v1.0.0` GitHub release, then connect Zenodo, publish the
+  exact immutable version, mint its DOI, and insert the DOI into
+  `CITATION.cff`, `README.md`, Appendix A, and the paper's Data and Code
+  Availability section. `scripts/final_release_checklist.py --check` gates
+  that order. Until then, this manuscript is **not submission-ready**.

@@ -1,0 +1,6 @@
+{
+  "declared_at": null,
+  "alert_manifest": "experiments/alert_manifest.json",
+  "sessions": [],
+  "instructions": "Declare this manifest before collection. Add 5 to 10 real session objects, each with session_id, detection_log, and event_log paths. Do not add synthetic, fixture, or simulated rows."
+}

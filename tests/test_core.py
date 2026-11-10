@@ -9,6 +9,7 @@ from trinexis_core import (  # noqa: E402
     ALLOWED_MODELS,
     camera_config,
     legacy_select_speech_objects,
+    nearest_select_speech_objects,
     normalize_model_name,
     rate_per_second,
     relative_distance_index,
@@ -59,6 +60,9 @@ class CorePolicyTests(unittest.TestCase):
         ]
         selected = legacy_select_speech_objects(objects, {"person"}, 2)
         self.assertNotIn("person", [o["name"] for o in selected])
+        nearest = nearest_select_speech_objects(objects, 2)
+        self.assertEqual(["cup", "chair"], [o["name"] for o in nearest])
+        self.assertNotIn("person", [o["name"] for o in nearest])
 
     def test_time_decay_factor_is_half_at_one_half_life(self):
         self.assertAlmostEqual(time_decay_factor(60.0, 60.0), 0.5)

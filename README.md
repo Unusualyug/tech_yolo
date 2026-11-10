@@ -6,10 +6,13 @@ logs, a relative distance index, a time-decayed heatmap, and session telemetry.
 
 > **Status:** standalone technical report with empirical protocols and blank
 > `NO DATA` results. The manuscript is
-> `paper/tech_yolo_updated_research_paper.pdf`. It is **not submission-ready**:
-> no official venue template, current Guide for Authors, or citation style was
-> supplied/read. No empirical detection-quality, latency, distance-error,
-> translation-rating, robustness, or user-study result is claimed.
+> `paper/tech_yolo_updated_research_paper.pdf`. The author selected
+> arXiv/institutional-report formatting; current official arXiv guides were
+> read and recorded in `paper/venue_guide_notes.md`, and arXiv has no
+> mandatory template. It is **not submission-ready**: no real webcam sessions,
+> empirical result tables, dashboard screenshot, spoken example, consented
+> study, `v1.0.0` release, or Zenodo DOI exists. The author has not yet
+> verified final numbers.
 
 ## Author
 
@@ -42,17 +45,25 @@ Bhavnagar, Gujarat, India
   more often than confidence-first narration?*
 - Added Experiments A–D protocols, optional runtime instrumentation, blank
   `NO DATA` result templates, and manifest templates under `experiments/`.
+- Added nearest-object-first replay, a 5–10 real-session aggregator, a guarded
+  three-policy within-subject study worksheet, blank real-app evidence
+  templates, arXiv metadata/release gate checks, and an all-24-reference
+  verification recheck.
 - Added real Flask test-client tests for all 23 routes with mocked
   camera/detector/TTS imports, plus GitHub Actions CI on every push and pull
-  request. `paper/artifacts/test_summary.json` reports
-  `43 route tests plus 37 policy tests, run in CI`.
+  request. `paper/artifacts/test_summary.json` reports `43 + 37 + 13 = 93`
+  and the exact CI phrase `43 route tests plus 37 policy tests, run in CI`.
 - Added English fallback documentation to `/get_languages` and the UI. The 72
   language codes are **unchecked**; the ten languages without a top-level
   template use the English fallback. gTTS uses Google Translate's speech
   service; listen to sample audio and a few languages before any claim.
-- See `FIX_STATUS.md` for the six-item critique, what was implemented, and how
-  to finish each item. No new release/tag or Zenodo DOI was created for these
-  unreleased changes.
+- The author confirmed no external funding, no competing interests, and the
+  CRediT roles actually performed: conceptualization, software, and writing—
+  original draft. Methodology, investigation, and formal analysis will be
+  added only after those experiments.
+- See `FIX_STATUS.md` for the six-item critique, publication-blocker triage,
+  and exact remaining order. No new `v1.0.0` release/tag or Zenodo DOI was
+  created for these unreleased changes.
 
 ## Evidence boundary
 
@@ -120,7 +131,12 @@ python3 experiments/latency_benchmark.py --self-check
 python3 experiments/detection_eval.py --self-check
 python3 experiments/vocab_confidence_grid.py --self-check
 python3 experiments/alert_replay.py --self-check
+python3 experiments/multi_session_replay.py --self-check
+python3 experiments/user_study.py --self-check
 python3 experiments/language_eval.py --self-check
+python3 scripts/live_smoke_test.py --self-check
+python3 scripts/check_arxiv_metadata.py --check
+python3 scripts/final_release_checklist.py --self-check
 python3 scripts/verify_no_fabricated_results.py
 python3 paper/audit_updated_repository.py
 ```

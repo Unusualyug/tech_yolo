@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Experiment C: replay real webcam detection logs under two narration policies.
+"""Experiment C: replay real webcam detection logs under three narration policies.
 
 Alert objects must be declared in a manifest before collection. The maintained
 app freezes those objects when ``TRINEXIS_ALERT_MANIFEST`` is set and writes
 timestamped detection and speech-enqueue events when ``TRINEXIS_EVENT_LOG`` is
-set. This script replays the real frames through alert-first and
-confidence-first ordering and reports delivery/delay without inventing data.
+set. This script replays the same real frames through alert-first,
+confidence-first, and nearest-object-first ordering. It reports delivery/delay
+as observed, including negative or disappointing effects, without inventing
+data.
 """
 from __future__ import annotations
 
@@ -25,7 +27,13 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     import common  # type: ignore
 
-from trinexis_core import legacy_select_speech_objects, select_speech_objects
+from trinexis_core import (
+    legacy_select_speech_objects,
+    nearest_select_speech_objects,
+    select_speech_objects,
+)
+
+POLICIES = ("alert_first", "confidence_first", "nearest_first")
 
 
 def manifest_digest(manifest: Mapping[str, Any]) -> str:
@@ -86,8 +94,8 @@ def replay_policy(
     cooldown_s: float = 4.5,
 ) -> dict[str, Any]:
     """Replay frames through one ordering policy. No result is fabricated."""
-    if policy not in {"alert_first", "confidence_first"}:
-        raise ValueError("policy must be alert_first or confidence_first")
+    if policy not in POLICIES:
+        raise ValueError("policy must be one of " + ", ".join(POLICIES))
     alert_set = set(alerts)
     first_seen = first_seen_by_alert(frames, alert_set)
     delivered: dict[str, float] = {}
@@ -104,11 +112,12 @@ def replay_policy(
         if not objects:
             continue
         opportunities += 1
-        selector = (
-            select_speech_objects if policy == "alert_first"
-            else legacy_select_speech_objects
-        )
-        selected = selector(objects, alert_set, limit)
+        if policy == "alert_first":
+            selected = select_speech_objects(objects, alert_set, limit)
+        elif policy == "confidence_first":
+            selected = legacy_select_speech_objects(objects, alert_set, limit)
+        else:
+            selected = nearest_select_speech_objects(objects, limit)
         for obj in selected:
             name = str(obj.get("name", ""))
             if name in alert_set and name not in delivered:
@@ -181,15 +190,18 @@ def blank_result() -> dict[str, Any]:
         [
             common.blank_cell(policy="alert_first", alert_objects_delivered=None, mean_alert_to_speech_ms=None),
             common.blank_cell(policy="confidence_first", alert_objects_delivered=None, mean_alert_to_speech_ms=None),
+            common.blank_cell(policy="nearest_first", alert_objects_delivered=None, mean_alert_to_speech_ms=None),
             common.blank_cell(source="real_speech_event_log", mean_observed_alert_to_speech_ms=None),
         ],
         protocol=(
             "Choose alert objects in advance and freeze them with "
             "TRINEXIS_ALERT_MANIFEST. Export real /export_logs detections and "
-            "TRINEXIS_EVENT_LOG speech-enqueue events. Replay both orderings "
-            "on the same frames; report delivery rate and mean alert-to-speech "
-            "delay. Replay measures alert delivery, not whether a user notices "
-            "the object; that requires a separate consented study."
+            "TRINEXIS_EVENT_LOG speech-enqueue events. Replay all three "
+            "orderings on the same frames; report delivery rate and mean "
+            "alert-to-speech delay exactly as observed, even if alert-first "
+            "helps less than hoped. Replay measures alert delivery, not "
+            "whether a user notices the object; that requires a separate "
+            "consented study."
         ),
     )
 
@@ -199,17 +211,20 @@ def self_check() -> dict[str, Any]:
     frames = [{
         "timestamp_unix": 1.0,
         "objects": [
-            {"name": "keys", "confidence": 0.20, "distance": 1.0},
+            {"name": "keys", "confidence": 0.20, "distance": 9.0},
             {"name": "chair", "confidence": 0.99, "distance": 1.0},
-            {"name": "table", "confidence": 0.98, "distance": 1.0},
+            {"name": "table", "confidence": 0.98, "distance": 2.0},
         ],
     }]
     alerts = {"keys"}
     alert_first = replay_policy(frames, alerts, "alert_first", cooldown_s=0.0)
     confidence_first = replay_policy(frames, alerts, "confidence_first", cooldown_s=0.0)
+    nearest_first = replay_policy(frames, alerts, "nearest_first", cooldown_s=0.0)
     assert alert_first["alert_objects_delivered"] == 1
     assert confidence_first["alert_objects_delivered"] == 0
+    assert nearest_first["alert_objects_delivered"] == 0
     assert all(cell["status"] == common.NO_DATA for cell in blank_result()["cells"])
+    assert len(POLICIES) == 3
     return {"status": common.SELF_CHECK, "scope": "in-memory replay fixture"}
 
 
@@ -254,8 +269,8 @@ def run_replay(args: argparse.Namespace) -> dict[str, Any]:
 
     first_seen = first_seen_by_alert(frames, alerts)
     policies = [
-        replay_policy(frames, alerts, "alert_first", args.limit, args.cooldown),
-        replay_policy(frames, alerts, "confidence_first", args.limit, args.cooldown),
+        replay_policy(frames, alerts, policy, args.limit, args.cooldown)
+        for policy in POLICIES
     ]
     observed = observed_event_delays(events, frames, alerts, digest)
     if observed["manifest_hash_mismatch"]:
@@ -266,7 +281,9 @@ def run_replay(args: argparse.Namespace) -> dict[str, Any]:
         "experiment": "C-alert-replay",
         "status": status,
         "warning": (
-            "Negative results are reportable. Replay does not establish user noticing or benefit."
+            "Report the observed values exactly, including a smaller or "
+            "negative alert-first effect. Replay does not establish user "
+            "noticing or benefit."
             if status == common.MEASURED
             else "No empirical replay result is reported from incomplete/unmatched data."
         ),

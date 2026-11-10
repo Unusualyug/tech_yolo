@@ -23,6 +23,11 @@
     "GitHub Actions CI on every push and pull request",
     "optional JSONL latency and speech-event instrumentation",
     "Experiments A-D protocols, blank NO DATA result templates, and manifest templates",
+    "nearest-object-first baseline, 5-10 session replay harness, and guarded three-policy user-study worksheet",
+    "hand-run live smoke-test checklist, dashboard/spoken-example verifier, and prereq inspector",
+    "arXiv/institutional-report guide notes, mechanical metadata check, and final-release gate",
+    "early departmental ethics-route inquiry sent with a verifiable Gmail receipt; no approval claimed",
+    "all 24 reference rows ticked after direct publisher/official-page recheck",
     "language-fallback metadata/UI and explicit unchecked-language status",
     "weights download script with SHA-256 LFS-pointer manifest",
     "per-reference DOI/publisher verification log",
@@ -32,9 +37,9 @@
   "experiment_protocols": [
     "A: 500+ frames at 416/640/832 on declared hardware; median/p95 by stage",
     "B: 200-300 labeled images; precision/recall/mAP@0.5/speed; frozen prompt grid",
-    "C: real detection/speech logs; predeclared alerts; alert-first vs confidence-first replay",
+    "C: 5-10 real sessions; predeclared alerts; alert-first/confidence-first/nearest-object-first replay",
     "D: 5-10 checked languages x 10 announcements; 1-5 correctness/naturalness ratings",
-    "E: optional 8-12 person user-noticing study pending consent and institutional ethics approval"
+    "E: optional 8-12 person three-policy user-noticing study pending consent and institutional ethics approval"
   ],
   "tests": {
     "command": "python3 -m unittest discover -s tests -v",
@@ -82,7 +87,7 @@
     "evidence_type": "unit_test_artifact",
     "disclaimer": "Synthetic detection records in a tests/ unit test only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
   },
-  "file_count": 99,
+  "file_count": 110,
   "files": [
     ".env.example",
     ".gitattributes",
@@ -100,19 +105,26 @@
     "app23.py",
     "camera_test.py",
     "codemeta.json",
+    "experiments/LIVE_SMOKE_TEST.md",
     "experiments/README.md",
     "experiments/RESULTS_TEMPLATE.md",
+    "experiments/SPOKEN_IO_EXAMPLE.template.md",
+    "experiments/USER_STUDY_PROTOCOL.md",
     "experiments/__init__.py",
     "experiments/alert_manifest.template.json",
     "experiments/alert_replay.py",
-    "experiments/alert_selection_audit.py",
     "experiments/common.py",
     "experiments/dataset_manifest.template.json",
     "experiments/detection_eval.py",
+    "experiments/ethics_inquiry_receipt.md",
     "experiments/hardware_manifest.template.json",
     "experiments/language_eval.py",
     "experiments/latency_benchmark.py",
+    "experiments/multi_session_replay.py",
     "experiments/results/.gitkeep",
+    "experiments/session_manifest.template.json",
+    "experiments/user_study.py",
+    "experiments/user_study_worksheet.template.csv",
     "experiments/vocab_confidence_grid.py",
     "experiments/vocab_manifest.template.json",
     "paper/README.md",
@@ -145,8 +157,12 @@
     "paper/tech_yolo_updated_research_paper.md",
     "paper/tech_yolo_updated_research_paper.pdf",
     "paper/updated_manuscript_content.py",
+    "paper/venue_guide_notes.md",
     "requirements-ci.txt",
     "requirements.txt",
+    "scripts/check_arxiv_metadata.py",
+    "scripts/final_release_checklist.py",
+    "scripts/live_smoke_test.py",
     "scripts/report_test_counts.py",
     "scripts/verify_no_fabricated_results.py",
     "speech.mp3",
@@ -186,16 +202,16 @@
   ],
   "artifact_checksums": {
     "paper/tech_yolo_updated_research_paper.pdf": {
-      "bytes": 41598,
-      "sha256": "c3db7371811106fc76efcec38dee347fd05b17cd5c3ff0d9ed5bf58231597741"
+      "bytes": 43824,
+      "sha256": "f0636013cb39b85594843d2e07f9ff74bcd436d12f5917f8a75dda5dd71065fc"
     },
     "paper/tech_yolo_updated_research_paper.docx": {
-      "bytes": 148361,
-      "sha256": "6c041c36a82510c8dc7f3875fd7cae0c478a5c53a613e0b031994c6ab7ef0590"
+      "bytes": 149242,
+      "sha256": "67a421cb588237558b0bd47efb5c3f3b877cdc7e08603ea33aa19046e656cedd"
     },
     "paper/tech_yolo_updated_research_paper.md": {
-      "bytes": 35356,
-      "sha256": "6e75f3fe7ff2ee8efe578486ca7990328803288cd0f9b89d46251375995d0963"
+      "bytes": 37888,
+      "sha256": "dd77ba739ef0fe659f41dfb57ace56a8f4580735b76e6b5562ec6ab1f84afcd6"
     },
     "paper/artifacts/alert_selection_audit.json": {
       "bytes": 669,
@@ -222,24 +238,28 @@
       "sha256": "f9aa6219844e7a53d1bd9bef11eaccf2a2a70677818aa0d2b3f0feb15088bea6"
     },
     "paper/reference_verification.md": {
-      "bytes": 6259,
-      "sha256": "4941bd8c73dc6abc7d1da20b3f5fc6e0f9c4903f1733c3b8f794e698b156f4ab"
+      "bytes": 7888,
+      "sha256": "bad9e46c1f0445fb0e163bf0c418c331db4d00339ee2508b26a0e872dd0d9be7"
+    },
+    "paper/venue_guide_notes.md": {
+      "bytes": 4765,
+      "sha256": "21b165d3605dec412b74822b8624a6f335185bd30c7bab4cb6ea25717bc7c169"
     },
     "paper/updated_manuscript_content.py": {
-      "bytes": 40178,
-      "sha256": "a61f2d1102d7485d67b8feaeb08c1c54e70e724f2f7b9a1f6bda6112b33709d2"
+      "bytes": 42844,
+      "sha256": "3767956467e4306b56f94286910d5856f4060fde44b47c8d99be8ada31428c0d"
     },
     "paper/README.md": {
-      "bytes": 4745,
-      "sha256": "ab3cd4b5603ecba618301d848f3fae820875c4d83aa10e2fc104bd1e966995b7"
+      "bytes": 6205,
+      "sha256": "177f593a6ea533f33c8006739d9401baee816546aea2d391629cd878b6f08e9a"
     },
     "FIX_STATUS.md": {
-      "bytes": 9534,
-      "sha256": "8ef81f19c536bfb0229f1164dc49fd820e48c361eb778a4ba83703d3b38e2fd6"
+      "bytes": 13714,
+      "sha256": "0acf2e988a950fa09bc40dd0fd0e31f791e1e66d7fe3125fd8ce4385a4941210"
     },
     "README.md": {
-      "bytes": 8370,
-      "sha256": "a763ff5b357801f1b557a287d58c268847cbaf9f6729b485f1223baa18bdf850"
+      "bytes": 9365,
+      "sha256": "20adeca9b5ee45dc332bff95ddca102ceef878c1ef7430815fa82c3fa265426e"
     },
     "CITATION.cff": {
       "bytes": 1327,
@@ -250,8 +270,8 @@
       "sha256": "1af0708d79ceddf13ef8ee16a8bef6d16932a8b344e400014d8efaf3efb13a24"
     },
     "CHANGELOG.md": {
-      "bytes": 3470,
-      "sha256": "a8c4e9094af28380556be43d0a633d3eac7326f09fa0479a8f26096f722ebf60"
+      "bytes": 4494,
+      "sha256": "f65f80d6f2e47f062d5a7cb9179bb4d1a27b7d00152874ab9f9a3d18e69fc36c"
     },
     "RELEASE_NOTES.md": {
       "bytes": 1504,
@@ -266,16 +286,16 @@
       "sha256": "192ab21f0aff8be61a8dad89fbc0ba6085f609aa21c5cf53cb73d695dd44559a"
     },
     ".github/workflows/ci.yml": {
-      "bytes": 1353,
-      "sha256": "d50b313c633eaaaefffc264e4f9bd3cd7b9357b63eec0f4d423ad6344bc55cd6"
+      "bytes": 1746,
+      "sha256": "f9c5ba2a33b31242581040980ce0c94313ac3ccf8cb792318bab93566b269914"
     },
     "scripts/report_test_counts.py": {
       "bytes": 3533,
       "sha256": "aa32808acbd501f5c2b4c5a36cc56aac194b78536c4bebfce817e05449308d61"
     },
     "scripts/verify_no_fabricated_results.py": {
-      "bytes": 2828,
-      "sha256": "13b5c8ece3193c7557fdb388c82d85259ec3ac8d247ba0ac93709d3ee1103b66"
+      "bytes": 4185,
+      "sha256": "ede7c6825f28b7fa9f65733ba1824ca726d84f6ae6c2f02953c4243f29a4898a"
     },
     "tests/test_routes.py": {
       "bytes": 13929,
@@ -290,12 +310,36 @@
       "sha256": "1a668f5900905f24c6ca68bb5a79b04c0b9425c479fb86514000af622c6152d0"
     },
     "experiments/README.md": {
-      "bytes": 9354,
-      "sha256": "f15655e488f873f4c494dc08273ee936daa0df937442e10b01cc3b90092c36a3"
+      "bytes": 12006,
+      "sha256": "6d51193169a160944620cc2a2f5be14418bce59a4611b41f835c9c60ff7941d7"
     },
     "experiments/RESULTS_TEMPLATE.md": {
-      "bytes": 5033,
-      "sha256": "4bd0c5492b801e61d1ccab5984719509d007ec14fa30530a4cf1acbd2b571e38"
+      "bytes": 6367,
+      "sha256": "170c32266e2a1380352b132e1448c0b5da3dda22beaa257c2c88a73e18abea63"
+    },
+    "experiments/LIVE_SMOKE_TEST.md": {
+      "bytes": 3906,
+      "sha256": "162c4cf18e699bb8651498cdb08fad8b6665f0c86752bbb3d32070e208922a24"
+    },
+    "experiments/SPOKEN_IO_EXAMPLE.template.md": {
+      "bytes": 1218,
+      "sha256": "012699820d98e083f051c1df6e94160b5d76af1ff37e5b98cc3e585a272301e8"
+    },
+    "experiments/USER_STUDY_PROTOCOL.md": {
+      "bytes": 3615,
+      "sha256": "ad207304f28df4d10ea614ef2be8eff302a0e02778e9b9669101493caa28f229"
+    },
+    "experiments/ethics_inquiry_receipt.md": {
+      "bytes": 2535,
+      "sha256": "fddd6be0ba950946cf419ca697be72dd4e9c9fb1d5612e693f5d07afce403757"
+    },
+    "experiments/session_manifest.template.json": {
+      "bytes": 303,
+      "sha256": "a9942ed480100e49b0ea57c706a6c2c5793fe80a4b263087c0eb988d02dc48ef"
+    },
+    "experiments/user_study_worksheet.template.csv": {
+      "bytes": 202,
+      "sha256": "f61f52783db8dd4b7b42408949fffb5709fbf1f2223b36e266cbc2ba7361d981"
     },
     "experiments/latency_benchmark.py": {
       "bytes": 6538,
@@ -310,16 +354,36 @@
       "sha256": "6de161e74ef19c7d6989e596081e545825bd69bbaac8f31caace2295e1bc4eff"
     },
     "experiments/alert_replay.py": {
-      "bytes": 12572,
-      "sha256": "24f4446aebe36751a2ee57b94f9fbe669e09baa581ba13fcd60981ac02e65796"
+      "bytes": 13269,
+      "sha256": "c7dd3434661a6c9b6688fa4d1d803239ce43b34258f1766150e6e75e173987c5"
+    },
+    "experiments/multi_session_replay.py": {
+      "bytes": 12989,
+      "sha256": "b7ae5db906d093919186777d153b091e6d371da914a03cb35b5cfb057014f010"
+    },
+    "experiments/user_study.py": {
+      "bytes": 9888,
+      "sha256": "26fbba3e082c1badad62f2c396849dcdbb061ac1459d1cdb5cb5ae18397cdbaa"
     },
     "experiments/language_eval.py": {
       "bytes": 6866,
       "sha256": "4dc7f8860da982f2ab2c4d53b604dcff40c33ab7747c8d7b048db298a4bdc47a"
     },
+    "scripts/live_smoke_test.py": {
+      "bytes": 11288,
+      "sha256": "70b9c8c940da625d176e8ceb53f7acb35d9f9eab4abf53f774dfe84dbaf5cb84"
+    },
+    "scripts/check_arxiv_metadata.py": {
+      "bytes": 4664,
+      "sha256": "426e71ba3e415de9d73221ec13ba36c06d5222f58a26a9063e1b5e545c51eee2"
+    },
+    "scripts/final_release_checklist.py": {
+      "bytes": 6844,
+      "sha256": "0197f397d7b5197a53c879f8a7386d3b0594e76059ac9153aa6b6ad219a1808a"
+    },
     "trinexis_core.py": {
-      "bytes": 6363,
-      "sha256": "52a5d59e92e0c3666e1a505460ff19e6ca8ea155b637ea811ade179ea1c0686f"
+      "bytes": 7009,
+      "sha256": "67001c003c385a49b6119eb4831b13e7812a42dee5cb52351670f34d5f148283"
     },
     "trinexis_telemetry.py": {
       "bytes": 5167,
@@ -342,8 +406,8 @@
       "sha256": "dfc09f82e4ef8bd54b58224b461ba5bbe42fd6c7b44c18867c0b356a1aec8aad"
     },
     "ZENODO.md": {
-      "bytes": 2501,
-      "sha256": "118a6fbf9215ef9d79e8c162ee4249d78659e0590cb070227b5f24c433b3de36"
+      "bytes": 2914,
+      "sha256": "f9e8351b1684a4396763ea11c3f64e9b0a293529878d1ac9e15b745fa889d536"
     }
   }
 }
