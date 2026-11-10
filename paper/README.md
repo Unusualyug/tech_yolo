@@ -1,26 +1,26 @@
-# Standalone TRINEXIS technical report
+# TRINEXIS protocol and software-verification report
 
 The main deliverable is `tech_yolo_updated_research_paper.pdf`. Editable
 Markdown and DOCX versions use the same basename. Figures are provided as PNG,
 SVG, and standalone vector PDF.
 
-Current working-tree title:
+Current title:
 
-> *TRINEXIS: An Alert-Aware Narration Policy and a Protocol for Measuring Its
-> Effect on Alert Delivery*
+> *TRINEXIS: An Alert-Aware Narration Policy, Preregistered Measurement
+> Protocol, and Software Verification*
 
 ## Purpose and evidence boundary
 
-This is a **standalone technical report** with empirical protocols and blank
-`NO DATA` results. It is framed around an alert-aware narration policy and the
+This is a **complete protocol and software-verification report**. It frames an
+alert-aware narration policy and a preregistered measurement plan around the
 research question *Does alert-first narration make users notice a designated
-object faster or more often than confidence-first narration?* The author
-selected arXiv/institutional-report formatting; current official submission,
-moderation, metadata, and content-type pages were read and recorded in
-`venue_guide_notes.md`, and arXiv has no mandatory venue template. The report
-is **not submission-ready**: empirical cells remain `NO DATA`, no real-app
-screenshot/spoken example exists, no final release or DOI exists, and the
-author has not verified final numbers.
+object faster or more often than confidence-first narration?* The paper does
+not report empirical outcomes. The author selected arXiv/institutional-report
+formatting; current official submission, moderation, metadata, and
+content-type pages were read and recorded in `venue_guide_notes.md`, and arXiv
+has no mandatory venue template. A single limitations paragraph states the
+evidence boundary; no real-app screenshot/spoken example, final release, or DOI
+exists.
 
 It documents the maintained Flask/YOLO-World webcam system, the policy,
 real-log instrumentation, 23-route Flask test-client tests, CI, language
@@ -34,19 +34,19 @@ it is not an experiment result.
 
 | File | Purpose |
 |---|---|
-| `updated_manuscript_content.py` | Structured manuscript source: title, abstract, Sections I–VII, tables, figures, references, declarations, appendices. |
+| `updated_manuscript_content.py` | Structured protocol/report source: title, abstract, Sections I–VII, tables, figures, references, declarations, appendices. |
 | `build_updated_manuscript.py` | Renders PDF, DOCX, and Markdown. |
 | `make_updated_figures.py` | Produces enlarged PNG/SVG/PDF figures. |
-| `audit_updated_repository.py` | Writes a machine-readable file census, test summary, and checksums for the unreleased working tree. |
+| `audit_updated_repository.py` | Writes a machine-readable file census, test summary, and checksums for the current repository snapshot. |
 | `artifacts/alert_selection_audit.json` | `tests/` unit-test artifact for the seeded synthetic alert-ordering regression. |
 | `artifacts/test_summary.json` | Route/policy/source-contract test counts and exact CI report phrase. |
 | `artifacts/updated_repository_audit.json` | Repository/test/artifact audit. |
 | `artifacts/fig1_system_architecture_updated.{png,svg,pdf}` | System architecture. |
 | `artifacts/fig2_implementation_verification.{png,svg,pdf}` | Software-verification workflow. |
-| `../experiments/README.md`, `../experiments/RESULTS_TEMPLATE.md` | Empirical protocols and blank `NO DATA` result cells. |
+| `../experiments/README.md`, `../experiments/RESULTS_TEMPLATE.md` | Preregistered measurement protocols and unfilled result templates. |
 | `../experiments/LIVE_SMOKE_TEST.md`, `../experiments/SPOKEN_IO_EXAMPLE.template.md` | Hand-run real-app checklist and blank real detections-in / spoken-sentence-out evidence template. |
 | `../experiments/USER_STUDY_PROTOCOL.md`, `../experiments/ethics_inquiry_receipt.md` | Three-policy within-subject protocol, early sent ethics inquiry, and no-approval boundary. |
-| `../FIX_STATUS.md` | Six-item critique, publication-blocker triage, implemented fixes, and how to finish. |
+| `../FIX_STATUS.md` | Critique triage, publication-blocker actions, honest protocol-only revision, and remaining empirical work. |
 | `../weights/download_weights.py` | Git LFS weights fetch and SHA-256 verification. |
 | `../weights/weights_checksums.sha256` | Expected SHA-256 object identifiers. |
 | `../zenodo.json`, `../ZENODO.md` | Prepared DOI metadata; no DOI minted. |
@@ -80,26 +80,28 @@ tests without installing detector/camera/TTS packages.
 
 ## Submission notes
 
-1. Run C first with 5–10 real sessions and frozen alert manifest, then A, B,
-   and optionally D/E in the order in `FIX_STATUS.md`. Run E only after
-   consent and institutional ethics approval.
-2. Add the real dashboard screenshot and one spoken input→output example from
-   the hand-run smoke test.
-3. The author confirmed no external funding, no competing interests, and
-   CRediT roles actually performed; add methodology, investigation, and formal
-   analysis only after those experiments happen.
-4. The AI-tool disclosure was checked against the current arXiv text-to-text
-   generative-AI policy. Recheck only if the venue changes.
-5. The current arXiv author pages were read; no official template is required.
-   Keep the generic single-column layout and numeric citations.
-6. After results, rewrite the title/abstract, Section V/VI, tables, and
-   discussion; have the author personally verify every number.
-7. Freeze the final `v1.0.0` paper/code, publish the GitHub release, connect
+1. Execute the preregistered plan in the order C→A→B, then D/E if resources
+   and approvals exist: 5–10 real sessions first, declared hardware and 500+
+   frames for A, a labeled report split for B, checked-language raters for D,
+   and consent/ethics approval before E.
+2. Replace the protocol's measurement plan with real values and rewrite the
+   title/abstract, Methods, Results, Discussion, and conclusion around those
+   values.
+3. Add a real dashboard screenshot and one spoken input→output example from a
+   hand-run smoke test.
+4. The author confirmed no external funding, no competing interests, and only
+   the CRediT roles actually performed. Add methodology, investigation, and
+   formal analysis only if those experiments are actually performed.
+5. The AI-tool disclosure was checked against the current arXiv text-to-text
+   generative-AI policy; recheck only if the venue changes. The current arXiv
+   author pages were read and no official template is required, so the generic
+   single-column layout and numeric citations are retained.
+6. Freeze the final `v1.0.0` paper/code, publish the GitHub release, connect
    Zenodo, and mint the DOI with explicit author approval. A DOI is permanent
-   for the exact version, so do not mint it from `v0.3.0-standalone` or an
-   unreleased working tree. `scripts/final_release_checklist.py --check` gates
+   for the exact version. `scripts/final_release_checklist.py --check` gates
    the order.
-8. Insert the DOI into `CITATION.cff`, `README.md`, Appendix A, and the paper's
-   Data and Code Availability section; rebuild the manuscript and audit.
+7. Insert the DOI into `CITATION.cff`, `README.md`, and the paper's Data and
+   Code Availability section; rebuild the manuscript and audit.
 
-Until the steps above are complete, the manuscript is not submission-ready.
+Until real results and the final release exist, this remains a protocol-only
+report rather than an empirical article.

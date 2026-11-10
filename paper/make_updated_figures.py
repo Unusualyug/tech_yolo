@@ -52,7 +52,7 @@ FIG2 = {
         {"id": "core", "x": 480, "y": 80, "w": 180, "h": 90, "label": ["trinexis_core", "pure helpers"]},
         {"id": "tests", "x": 700, "y": 80, "w": 180, "h": 90, "label": ["unittest", "suite"]},
         {"id": "audit", "x": 260, "y": 280, "w": 180, "h": 90, "label": ["Seeded alert", "audit"]},
-        {"id": "release", "x": 480, "y": 280, "w": 180, "h": 90, "label": ["Tagged", "release"]},
+        {"id": "snapshot", "x": 480, "y": 280, "w": 180, "h": 90, "label": ["Untagged", "snapshot"]},
         {"id": "paper", "x": 700, "y": 280, "w": 180, "h": 90, "label": ["Updated", "manuscript"]},
     ],
     "edges": [
@@ -60,13 +60,13 @@ FIG2 = {
         ("fixes", "core", "solid"),
         ("core", "tests", "solid"),
         ("core", "audit", "solid"),
-        ("audit", "release", "solid"),
-        ("release", "paper", "solid"),
+        ("audit", "snapshot", "solid"),
+        ("snapshot", "paper", "solid"),
         ("tests", "paper", "solid"),
     ],
     "notes": [
         "All verification is static or synthetic: no model inference, camera capture, dataset, or human data.",
-        "The tagged release and manuscript are reproducible from checked-in scripts and metadata.",
+        "The untagged snapshot and manuscript are reproducible from checked-in scripts; no final tag or DOI exists.",
     ],
 }
 

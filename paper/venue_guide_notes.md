@@ -4,8 +4,8 @@
 **Decision:** The author selected **arXiv / institutional technical report**.
 No workshop, journal, or JOSS-specific template is to be applied. The current
 generic single-column PDF with numeric citations is retained.
-**Current paper status:** **not submission-ready**; empirical cells are
-`NO DATA`, no final release or Zenodo DOI exists.
+**Current paper status:** **not submission-ready**; the preregistered
+measurement plan is unfilled, and no final release or Zenodo DOI exists.
 
 ## Official pages opened
 
@@ -43,10 +43,10 @@ its Submission Guidelines list accepted formats and preparation rules instead.
   The agent cannot click these author-only submission steps.
 - The content-type policy says research articles should be complete final
   drafts and that proposals for future research are typically not accepted.
-  The current protocol-only report with blank `NO DATA` cells therefore remains
-  **not submission-ready** until Experiments C→A→B, the live-app evidence, and
-  any completed D/E work are reported. The title and abstract must be rewritten
-  around real findings at that point.
+  The current protocol-only report with an unfilled preregistered measurement
+  plan therefore remains **not submission-ready** until Experiments C→A→B, the
+  live-app evidence, and any completed D/E work are reported. The title and
+  abstract must be rewritten around real findings at that point.
 
 ## AI-tool policy recheck
 
@@ -85,7 +85,8 @@ current policy before submission.
 - Keep the distance index unitless and uncalibrated; do not convert it into
   metric distance without calibration.
 - Final `v1.0.0` tagging, GitHub release publication, Zenodo connection, DOI
-  minting, and DOI insertion into the paper, README, `CITATION.cff`, and
-  Appendix A must occur **last**, after final results and author verification.
+  minting, and DOI insertion into the paper's Data and Code Availability,
+  README, and `CITATION.cff` must occur **last**, after final results and
+  author verification.
   The author authorized that sequence but has not yet connected Zenodo or
   approved a final immutable release. No DOI exists.

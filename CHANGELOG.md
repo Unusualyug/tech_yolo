@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased — protocol-only paper revision on `arena/69777d37-tech-yolo`
+
+- Reframed the deliverable as a complete protocol and software-verification
+  report: *TRINEXIS: An Alert-Aware Narration Policy, Preregistered Measurement
+  Protocol, and Software Verification*. No external results were borrowed or
+  presented as TRINEXIS measurements.
+- Replaced the blank-results framing with a preregistered measurement plan,
+  collapsed repeated draft/status wording into one limitations paragraph, and
+  removed the mutable branch name, working-tree prose, and future-DOI
+  insertion instructions from the manuscript.
+- Fixed Figure 2: the misleading "Tagged release" box is now an "Untagged
+  snapshot" box with an explicit no-final-tag/no-DOI note.
+- Kept all empirical values unfilled, no fabricated screenshot or spoken
+  example, no `v1.0.0` tag, no release, and no Zenodo DOI.
+
 ## Unreleased — evidence-protocol and test revision on `arena/69777d37-tech-yolo`
 
 - Reframed the manuscript around an alert-aware narration policy, a testable

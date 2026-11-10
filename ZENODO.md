@@ -37,9 +37,8 @@ must come **last**.
 5. Insert the resulting DOI in **all required locations**:
    - `CITATION.cff` (`doi` and the preferred-citation URL);
    - `README.md` (Citation section);
-   - `paper/updated_manuscript_content.py` → Appendix A and Data and Code
-     Availability, then rebuild
-     `paper/tech_yolo_updated_research_paper.{pdf,docx,md}`.
+   - `paper/updated_manuscript_content.py` → Data and Code Availability, then
+     rebuild `paper/tech_yolo_updated_research_paper.{pdf,docx,md}`.
 6. Also update `codemeta.json`, `zenodo.json`, and this file's status so the
    metadata does not describe a draft. Verify the DOI resolves to the exact
    final release.

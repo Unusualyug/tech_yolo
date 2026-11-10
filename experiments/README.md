@@ -229,6 +229,6 @@ validate live hardware or model accuracy.
 - Have the author personally verify every number and declaration after results.
 - Make the **final** `v1.0.0` GitHub release, then connect Zenodo, publish the
   exact immutable version, mint its DOI, and insert the DOI into
-  `CITATION.cff`, `README.md`, Appendix A, and the paper's Data and Code
-  Availability section. `scripts/final_release_checklist.py --check` gates
-  that order. Until then, this manuscript is **not submission-ready**.
+  `CITATION.cff`, `README.md`, and the paper's Data and Code Availability
+  section. `scripts/final_release_checklist.py --check` gates that order.
+  Until then, this manuscript is **not submission-ready**.

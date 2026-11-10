@@ -19,9 +19,9 @@
 <rect x="260" y="280" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
 <text x="350.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="350.0" dy="0">Seeded alert</tspan><tspan x="350.0" dy="24">audit</tspan></text>
 <rect x="480" y="280" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
-<text x="570.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="570.0" dy="0">Tagged</tspan><tspan x="570.0" dy="24">release</tspan></text>
+<text x="570.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="570.0" dy="0">Untagged</tspan><tspan x="570.0" dy="24">snapshot</tspan></text>
 <rect x="700" y="280" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
 <text x="790.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="790.0" dy="0">Updated</tspan><tspan x="790.0" dy="24">manuscript</tspan></text>
 <text x="30" y="490" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">All verification is static or synthetic: no model inference, camera capture, dataset, or human data.</text>
-<text x="30" y="512" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">The tagged release and manuscript are reproducible from checked-in scripts and metadata.</text>
+<text x="30" y="512" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">The untagged snapshot and manuscript are reproducible from checked-in scripts; no final tag or DOI exists.</text>
 </svg>

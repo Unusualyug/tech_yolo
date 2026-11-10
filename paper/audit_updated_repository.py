@@ -163,6 +163,7 @@ def main() -> None:
             "Experiments A-D protocols, blank NO DATA result templates, and manifest templates",
             "nearest-object-first baseline, 5-10 session replay harness, and guarded three-policy user-study worksheet",
             "hand-run live smoke-test checklist, dashboard/spoken-example verifier, and prereq inspector",
+            "protocol-only paper reframing, preregistered measurement plan, one limitations paragraph, and Figure 2 untagged-snapshot correction",
             "arXiv/institutional-report guide notes, mechanical metadata check, and final-release gate",
             "early departmental ethics-route inquiry sent with a verifiable Gmail receipt; no approval claimed",
             "all 24 reference rows ticked after direct publisher/official-page recheck",

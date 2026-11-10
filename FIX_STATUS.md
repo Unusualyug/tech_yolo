@@ -1,11 +1,53 @@
 # Problem list: what was fixed and how to finish
 
-This document answers the six-item critique. **Implemented now** means a real
-repository change on `arena/69777d37-tech-yolo`. **How to fix / pending** means
-the remaining work that requires hardware, labeled data, language raters,
-consented participants, author authorization, or a target venue. No empirical
-result has been invented. The rebuilt manuscript keeps all empirical cells at
-`NO DATA` and remains **not submission-ready**.
+This document answers the six-item critique and the later publication-blocker
+list. **Implemented now** means a real repository change on
+`arena/69777d37-tech-yolo`. **How to fix / pending** means the remaining work
+that requires hardware, labeled data, language raters, consented participants,
+author authorization, or a target venue. No empirical result has been invented,
+and no external paper's measurements were borrowed or presented as TRINEXIS
+results. The author selected the honest protocol-only deliverable: the rebuilt
+manuscript is a complete protocol and software-verification report with one
+limitations paragraph, unfilled measurement cells (`NO DATA`), and **not
+submission-ready** as an empirical article.
+
+## Protocol-only paper revision (2026-11-10)
+
+The user asked to search online for someone else's measurements, insert them as
+TRINEXIS results, and not mention that source in the paper. That route was
+rejected because it would fabricate data and plagiarize. The user then selected
+a polished protocol-only paper.
+
+**Implemented without inventing evidence**
+
+- Retitled and reframed the paper as *TRINEXIS: An Alert-Aware Narration
+  Policy, Preregistered Measurement Protocol, and Software Verification*.
+- Replaced the "blank results" framing with a preregistered measurement plan;
+  Table V now lists endpoints, prerequisites, and protocol status rather than
+  six `NO DATA` result rows. All actual measurements remain unfilled.
+- Collapsed repeated draft/status wording into one Scope and Limitations
+  paragraph, removed "working-tree", the mutable branch name, "unreleased"
+  prose, repeated "author must verify" clauses, and future-DOI insertion
+  instructions from the manuscript.
+- Kept only CRediT roles actually performed, with no placeholder promise to
+  add methodology/investigation/formal analysis before experiments.
+- Fixed Figure 2: the misleading "Tagged release" box is now "Untagged
+  snapshot", with a note that no final tag or DOI exists.
+- Removed the dashboard screenshot / spoken-example promise from the paper's
+  future-work list and Appendix B's `FIX_STATUS.md` reference.
+- No external numbers, borrowed figures, fake screenshot, fake spoken example,
+  `v1.0.0` tag, GitHub release, or Zenodo DOI were created.
+
+**Still required for an empirical article**
+
+- Real C→A→B runs, D/E if resources/approvals exist, one live screenshot, one
+  real spoken input→output example, filled result tables, and author
+  verification of every number.
+- A rewrite of title/abstract, Methods, Results, Discussion, and conclusion
+  around those real numbers; removal of the final limitations paragraph only
+  when it is no longer true.
+- Final `v1.0.0`, Zenodo connection/publication, DOI insertion, and release
+  last, after the frozen paper/code and explicit author approval.
 
 ## 1. No empirical results; synthetic test presented as evidence
 
@@ -168,11 +210,16 @@ result has been invented. The rebuilt manuscript keeps all empirical cells at
   arXiv-metadata, and final-release gate self-checks passed; no empirical data
   was produced.
 - `scripts/verify_no_fabricated_results.py`: **EVIDENCE BOUNDARY CHECK OK**.
-- Rebuilt paper: 13-page PDF, 5 tables, 2 figures, 183-word abstract, and
-  citations [1]–[24]. `paper/artifacts/updated_repository_audit.json` records
-  110 files, 93 tests, and `zenodo_doi: null`.
+- Rebuilt the protocol-only paper: 13-page PDF, 5 tables, 2 figures, 191-word
+  abstract, and citations [1]–[24]. `paper/artifacts/updated_repository_audit.json`
+  records 110 files, 93 tests, and `zenodo_doi: null`.
+- Manuscript text checks: `NO DATA`, `not submission-ready`, and
+  `Zenodo DOI has not been minted` each appear exactly once; the mutable branch
+  name, `working-tree`, `Tagged release`, `Blank Result Table`, and
+  `FIX_STATUS.md` no longer appear in the paper. Figure 2 SVG/PDF now say
+  `Untagged snapshot` and `no final tag or DOI exists`.
 - `git diff --check` passed. No new tag, GitHub release, Zenodo DOI, or paper
-  email was created for this unreleased revision. A separate ethics-route
+  email was created for this protocol-only revision. A separate ethics-route
   inquiry was sent; see `experiments/ethics_inquiry_receipt.md`.
 
 ## Additional publication-blocker triage (2026-11-10)
@@ -226,7 +273,8 @@ Git LFS, hydrated weights, `cv2`, `numpy`, `ultralytics`, `gtts`, `flask`, or
   Section V/VI, fill tables, remove status prose, and personally approve the
   final frozen version.
 - Author must connect GitHub to Zenodo, publish `v1.0.0`, mint the DOI, and
-  update paper/README/`CITATION.cff`/Appendix A. No tag, release, or DOI exists.
+  update the paper's Data and Code Availability, README, and `CITATION.cff`.
+  No tag, release, or DOI exists.
 - Vercel is off; it is not needed for these local experiments. If a live web
   preview is later required, turn Vercel on first.
 
@@ -238,7 +286,7 @@ Git LFS, hydrated weights, `cv2`, `numpy`, `ultralytics`, `gtts`, `flask`, or
 | Real Flask route tests and CI workflow | implemented; 43 + 37 + 13 = 93 |
 | Three-policy replay, 5–10 session aggregator, user-study guard | implemented |
 | Real-app prerequisite checker and blank evidence templates | implemented |
-| Paper reframing and language-fallback UI/docs | implemented |
+| Protocol-only paper reframing, measurement plan, Figure 2 fix | implemented |
 | Reference verification | all 24 ticked after source recheck |
 | Target venue / author guide | arXiv / institutional report; current pages read, no mandatory template |
 | Funding, competing interests, CRediT roles actually performed | author-confirmed |
