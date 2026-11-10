@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#080d12"
+    >
+
+    <title>
+        TRINEXIS — Intelligent Vision Platform
+    </title>
+
+
+    <!-- =====================================================
+         GOOGLE FONTS
+         ===================================================== -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- =====================================================
+         FONT AWESOME
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    >
+
+
+    <!-- =====================================================
+         IMPORTANT:
+         Flask static path
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- =====================================================
+         TOP NAVIGATION
+         ===================================================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+
+                <img
+                    src="{{ url_for('static', filename='unnamed.png') }}"
+                    alt="GMIU"
+                >
+
+            </div>
+
+
+            <div class="brand-text">
+
+                <div class="brand-name">
+                    TRINEXIS
+                </div>
+
+                <div class="brand-subtitle">
+                    INTELLIGENT VISION PLATFORM
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="system-info">
+
+            <div
+                class="system-status"
+                id="status-chip"
+            >
+
+                <span class="status-dot"></span>
+
+                <span id="status-text">
+                    STANDBY
+                </span>
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <span
+                class="mono"
+                id="uptime"
+            >
+                00:00:00
+            </span>
+
+
+            <div class="divider"></div>
+
+
+            <span
+                class="mono"
+                id="fps-val"
+            >
+                0 FPS
+            </span>
+
+        </div>
+
+
+        <div class="top-actions">
+
+            <button
+                class="icon-button"
+                onclick="snapshot()"
+                title="Capture"
+            >
+
+                <i class="fa-solid fa-camera"></i>
+
+            </button>
+
+
+            <button
+                class="icon-button"
+                onclick="showHeatmap()"
+                title="Heatmap"
+            >
+
+                <i class="fa-solid fa-fire"></i>
+
+            </button>
+
+
+            <button
+                class="icon-button"
+                onclick="goFull()"
+                title="Fullscreen"
+            >
+
+                <i class="fa-solid fa-expand"></i>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main-layout">
+
+
+        <!-- =================================================
+             LEFT SIDE
+             ================================================= -->
+
+        <section class="vision-area">
+
+
+            <div class="page-heading">
+
+                <div>
+
+                    <div class="eyebrow">
+                        LIVE ENVIRONMENT
+                    </div>
+
+                    <h1>
+                        Vision Monitor
+                    </h1>
+
+                </div>
+
+
+                <div class="model-badge">
+
+                    <span></span>
+
+                    <span id="model-name">
+                        yolov8s-worldv2
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CAMERA
+                 ================================================= -->
+
+            <div class="camera-card">
+
+
+                <div class="camera-header">
+
+                    <div class="camera-title">
+
+                        <span class="live-dot"></span>
+
+                        <span>
+                            CAMERA 01
+                        </span>
+
+                        <small id="camera-meta">
+                            640 × 360
+                        </small>
+
+                    </div>
+
+
+                    <div class="camera-actions">
+
+                        <button
+                            onclick="snapshot()"
+                        >
+
+                            <i class="fa-solid fa-camera"></i>
+
+                            Capture
+
+                        </button>
+
+
+                        <button
+                            onclick="showHeatmap()"
+                        >
+
+                            <i class="fa-solid fa-fire"></i>
+
+                            Heatmap
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     VIDEO
+                     ================================================= -->
+
+                <div
+                    class="camera-view"
+                    id="vid-frame"
+                >
+
+                    <div class="camera-grid"></div>
+
+
+                    <img
+                        id="feed"
+                        src="{{ url_for('video_feed') }}"
+                        alt="TRINEXIS Camera"
+                    >
+
+
+                    <div class="camera-status top-left">
+
+                        <span class="record-dot"></span>
+
+                        <span id="stage-state">
+                            STANDBY
+                        </span>
+
+                    </div>
+
+
+                    <div class="camera-status top-right mono">
+
+                        <span id="stage-fps">
+                            0 FPS
+                        </span>
+
+                        <span>/</span>
+
+                        <span id="stage-classes">
+                            0 CLASSES
+                        </span>
+
+                    </div>
+
+
+                    <div class="camera-footer-label mono">
+
+                        TRINEXIS VISION CORE
+
+                    </div>
+
+
+                    <div class="camera-corner tl"></div>
+                    <div class="camera-corner tr"></div>
+                    <div class="camera-corner bl"></div>
+                    <div class="camera-corner br"></div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     METRICS
+                     ================================================= -->
+
+                <div class="metrics">
+
+
+                    <div class="metric">
+
+                        <div class="metric-icon green">
+
+                            <i class="fa-solid fa-crosshairs"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small>
+                                DETECTIONS
+                            </small>
+
+                            <strong id="b-total">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="metric">
+
+                        <div class="metric-icon cyan">
+
+                            <i class="fa-solid fa-layer-group"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small>
+                                UNIQUE
+                            </small>
+
+                            <strong id="b-unique">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="metric">
+
+                        <div class="metric-icon purple">
+
+                            <i class="fa-solid fa-bullseye"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small>
+                                CONFIDENCE
+                            </small>
+
+                            <strong id="b-conf">
+                                0%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="metric">
+
+                        <div class="metric-icon orange">
+
+                            <i class="fa-solid fa-clock"></i>
+
+                        </div>
+
+                        <div>
+
+                            <small>
+                                LAST EVENT
+                            </small>
+
+                            <strong id="b-last">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 INSIGHTS
+                 ================================================= -->
+
+            <div class="insight-grid">
+
+
+                <div class="insight-card scene-card">
+
+                    <div class="insight-heading">
+
+                        <span class="eyebrow">
+                            CURRENT SCENE
+                        </span>
+
+                        <span class="pulse"></span>
+
+                    </div>
+
+
+                    <div
+                        class="scene-main"
+                        id="scene-summary"
+                    >
+                        No active detections
+                    </div>
+
+
+                    <div
+                        class="scene-description"
+                        id="scene-sub"
+                    >
+                        Start detection to analyze the environment.
+                    </div>
+
+                </div>
+
+
+
+                <div class="insight-card">
+
+                    <div class="insight-heading">
+
+                        <span class="eyebrow">
+                            VOICE OUTPUT
+                        </span>
+
+                        <span
+                            class="voice-state"
+                            id="voice-state"
+                        >
+                            ON
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="speech-preview"
+                        id="speech-preview"
+                    >
+                        Concise scene announcements enabled.
+                    </div>
+
+
+                    <button
+                        class="text-button"
+                        onclick="toggleSpeech()"
+                    >
+
+                        <i class="fa-solid fa-volume-high"></i>
+
+                        Toggle voice
+
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             RIGHT COMMAND CENTER
+             ================================================= -->
+
+        <aside class="command-center">
+
+
+            <div class="command-heading">
+
+                <div>
+
+                    <div class="eyebrow">
+                        COMMAND CENTER
+                    </div>
+
+                    <h2>
+                        Control & Intelligence
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="icon-button small"
+                    onclick="clearLogs()"
+                >
+
+                    <i class="fa-solid fa-rotate-right"></i>
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 START / STOP
+                 ================================================= -->
+
+            <div class="run-controls">
+
+                <button
+                    class="start-button"
+                    id="start-btn"
+                    onclick="startDet()"
+                >
+
+                    <i class="fa-solid fa-play"></i>
+
+                    Start Detection
+
+                </button>
+
+
+                <button
+                    class="stop-button"
+                    id="stop-btn"
+                    onclick="stopDet()"
+                >
+
+                    <i class="fa-solid fa-stop"></i>
+
+                    Stop
+
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CONFIGURATION
+                 ================================================= -->
+
+            <div class="control-card">
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <div class="eyebrow">
+                            CONFIGURATION
+                        </div>
+
+                        <h3>
+                            Detection Profile
+                        </h3>
+
+                    </div>
+
+                    <i class="fa-solid fa-sliders"></i>
+
+                </div>
+
+
+
+                <!-- MODEL -->
+
+                <label class="field">
+
+                    <span>
+                        MODEL
+                    </span>
+
+                    <div class="select-container">
+
+                        <select
+                            id="sel-model"
+                            onchange="setModel()"
+                        >
+
+                            <option
+                                value="yolov8s-worldv2.pt"
+                                selected
+                            >
+                                YOLO World v2 · Small
+                            </option>
+
+                            <option value="yolov8n.pt">
+                                YOLOv8 · Nano
+                            </option>
+
+                            <option value="yolov8s.pt">
+                                YOLOv8 · Small
+                            </option>
+
+                            <option value="yolov8m.pt">
+                                YOLOv8 · Medium
+                            </option>
+
+                            <option value="yolo11m.pt">
+                                YOLO11 · Medium
+                            </option>
+
+                            <option value="yolo11l.pt">
+                                YOLO11 · Large
+                            </option>
+
+                            <option value="yolo11x.pt">
+                                YOLO11 · XLarge
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </label>
+
+
+
+                <!-- LANGUAGE -->
+
+                <label class="field">
+
+                    <span>
+                        SPEECH LANGUAGE
+                    </span>
+
+                    <div class="select-container">
+
+                        <select
+                            id="sel-lang"
+                            onchange="setLang()"
+                        >
+
+                            <option value="English">
+                                Loading languages…
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <small>
+                        70+ Indian & international languages
+                    </small>
+
+                </label>
+
+
+
+                <!-- CONFIDENCE + INTERVAL -->
+
+                <div class="two-column">
+
+
+                    <label class="field">
+
+                        <span>
+                            CONFIDENCE
+                        </span>
+
+                        <div class="select-container">
+
+                            <select
+                                id="sel-conf"
+                                onchange="setConf()"
+                            >
+
+                                <option value="0.15">
+                                    15%
+                                </option>
+
+                                <option
+                                    value="0.25"
+                                    selected
+                                >
+                                    25%
+                                </option>
+
+                                <option value="0.35">
+                                    35%
+                                </option>
+
+                                <option value="0.45">
+                                    45%
+                                </option>
+
+                                <option value="0.55">
+                                    55%
+                                </option>
+
+                                <option value="0.65">
+                                    65%
+                                </option>
+
+                                <option value="0.75">
+                                    75%
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </label>
+
+
+
+                    <label class="field">
+
+                        <span>
+                            INTERVAL
+                        </span>
+
+                        <div class="select-container">
+
+                            <select
+                                id="sel-int"
+                                onchange="setInt()"
+                            >
+
+                                <option value="0.5">
+                                    0.5 sec
+                                </option>
+
+                                <option
+                                    value="1"
+                                    selected
+                                >
+                                    1 sec
+                                </option>
+
+                                <option value="1.5">
+                                    1.5 sec
+                                </option>
+
+                                <option value="2">
+                                    2 sec
+                                </option>
+
+                                <option value="3">
+                                    3 sec
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </label>
+
+
+                </div>
+
+
+
+                <!-- RESOLUTION + VOICE -->
+
+                <div class="two-column">
+
+
+                    <label class="field">
+
+                        <span>
+                            RESOLUTION
+                        </span>
+
+                        <div class="select-container">
+
+                            <select
+                                id="sel-res"
+                                onchange="setRes()"
+                            >
+
+                                <option value="416">
+                                    416 px
+                                </option>
+
+                                <option
+                                    value="640"
+                                    selected
+                                >
+                                    640 px
+                                </option>
+
+                                <option value="832">
+                                    832 px
+                                </option>
+
+                                <option value="1280">
+                                    1280 px
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </label>
+
+
+
+                    <div class="field">
+
+                        <span>
+                            VOICE
+                        </span>
+
+
+                        <button
+                            class="voice-toggle active"
+                            id="tgl-speech"
+                            onclick="toggleSpeech()"
+                        >
+
+                            <span class="toggle">
+
+                                <span></span>
+
+                            </span>
+
+
+                            <span id="voice-toggle-label">
+                                Enabled
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SMART ALERTS
+                 ================================================= -->
+
+            <div class="control-card">
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <div class="eyebrow">
+                            SMART ALERTS
+                        </div>
+
+                        <h3>
+                            Priority Objects
+                        </h3>
+
+                    </div>
+
+
+                    <button
+                        class="load-button"
+                        onclick="loadClasses()"
+                    >
+                        Load
+                    </button>
+
+                </div>
+
+
+                <p class="card-description">
+
+                    Prioritize important objects for
+                    detection and speech.
+
+                </p>
+
+
+                <div
+                    class="alert-tags"
+                    id="alert-tags"
+                >
+
+                    <span class="empty-inline">
+                        Loading classes…
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ANALYTICS TABS
+                 ================================================= -->
+
+            <div class="tabs">
+
+                <button
+                    class="tab active"
+                    onclick="switchPanel('analytics', this)"
+                >
+                    Analytics
+                </button>
+
+
+                <button
+                    class="tab"
+                    onclick="switchPanel('logs', this)"
+                >
+                    Event Log
+                </button>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ANALYTICS
+                 ================================================= -->
+
+            <div
+                class="panel active"
+                id="panel-analytics"
+            >
+
+
+                <div class="stat-grid">
+
+
+                    <div class="small-stat">
+
+                        <span>
+                            OBJECTS
+                        </span>
+
+                        <strong id="s-total">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="small-stat">
+
+                        <span>
+                            CLASSES
+                        </span>
+
+                        <strong id="s-unique">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="small-stat">
+
+                        <span>
+                            FRAMES
+                        </span>
+
+                        <strong id="s-frames">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="small-stat">
+
+                        <span>
+                            ACCURACY
+                        </span>
+
+                        <strong id="s-conf">
+                            0%
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- TIMELINE -->
+
+                <div class="chart-card">
+
+                    <div class="chart-heading">
+
+                        <span>
+                            Detection Activity
+                        </span>
+
+                        <span class="mono">
+                            LIVE
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="timeline"
+                        id="timeline-chart"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- FREQUENCY -->
+
+                <div class="chart-card">
+
+                    <div class="chart-heading">
+
+                        <span>
+                            Most Detected
+                        </span>
+
+                        <span class="mono">
+                            TOP 6
+                        </span>
+
+                    </div>
+
+
+                    <div
+                        class="frequency"
+                        id="freq-list"
+                    >
+
+                        <div class="empty-state">
+                            Waiting for detection data
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 EVENT LOG
+                 ================================================= -->
+
+            <div
+                class="panel"
+                id="panel-logs"
+            >
+
+
+                <div class="log-heading">
+
+                    <span class="eyebrow">
+                        RECENT EVENTS
+                    </span>
+
+
+                    <div>
+
+                        <button
+                            class="text-button"
+                            onclick="exportLogs()"
+                        >
+                            Export
+                        </button>
+
+
+                        <button
+                            class="text-button danger"
+                            onclick="clearLogs()"
+                        >
+                            Clear
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="log-list"
+                    id="log-list"
+                >
+
+                    <div class="empty-state">
+                        No events recorded yet.
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </aside>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     HEATMAP MODAL
+     ========================================================= -->
+
+<div
+    class="modal"
+    id="modal"
+    onclick="closeModal(event)"
+>
+
+    <div
+        class="modal-card"
+        onclick="event.stopPropagation()"
+    >
+
+        <div class="modal-header">
+
+            <div>
+
+                <div class="eyebrow">
+                    SPATIAL ANALYSIS
+                </div>
+
+                <h2>
+                    Detection Heatmap
+                </h2>
+
+            </div>
+
+
+            <button
+                class="icon-button"
+                onclick="hideHeatmap()"
+            >
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="heatmap">
+
+            <img
+                id="heatmap-img"
+                src=""
+                alt="Detection heatmap"
+            >
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     TOAST
+     ========================================================= -->
+
+<div
+    class="toast"
+    id="toast"
+>
+
+    <i class="fa-solid fa-check"></i>
+
+    <span id="toast-msg">
+        Ready
+    </span>
+
+</div>
+
+
+
+<!-- =========================================================
+     IMPORTANT:
+     Flask static JS
+     ========================================================= -->
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+
+</body>
+
+</html>
