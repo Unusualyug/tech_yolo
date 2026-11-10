@@ -27,6 +27,7 @@
     "hand-run live smoke-test checklist, dashboard/spoken-example verifier, and prereq inspector",
     "protocol-only paper reframing, preregistered measurement plan, one limitations paragraph, and Figure 2 untagged-snapshot correction",
     "clearly cited published-context table using verified scale facts from [2], [3], [19]; no external benchmark value entered into TRINEXIS result cells",
+    "sandbox-only harness self-check/blank-template transcript; no empirical result, screenshot, spoken example, or DOI created",
     "arXiv/institutional-report guide notes, mechanical metadata check, and final-release gate",
     "early departmental ethics-route inquiry sent with a verifiable Gmail receipt; no approval claimed",
     "all 24 reference rows ticked after direct publisher/official-page recheck",
@@ -256,8 +257,8 @@
       "sha256": "75cf9b67aa51f2744610e3a76fc1d2d5865c48c83676b1772100c51357d46392"
     },
     "FIX_STATUS.md": {
-      "bytes": 17042,
-      "sha256": "3de16038069770560edbc9fcaae93f6af7aa61f7dec393dca49c34a0de369c8c"
+      "bytes": 17261,
+      "sha256": "2d1789bd2520e72136502e6c72e7dd072c391287f40408c6695d338212ed4bfd"
     },
     "README.md": {
       "bytes": 9503,
@@ -272,8 +273,8 @@
       "sha256": "1af0708d79ceddf13ef8ee16a8bef6d16932a8b344e400014d8efaf3efb13a24"
     },
     "CHANGELOG.md": {
-      "bytes": 6095,
-      "sha256": "21417031204e0124bc3009c275d1f3eb29e34b914ac1bfd0af6014af9e199736"
+      "bytes": 6665,
+      "sha256": "0dce49cb1ab9a09488bd177907abb23c5817a0ca5dc442f4308f424e126bb5d5"
     },
     "RELEASE_NOTES.md": {
       "bytes": 1504,

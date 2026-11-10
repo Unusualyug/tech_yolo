@@ -230,6 +230,9 @@ a polished protocol-only paper.
 - `git diff --check` passed. No new tag, GitHub release, Zenodo DOI, or paper
   email was created for this protocol-only revision. A separate ethics-route
   inquiry was sent; see `experiments/ethics_inquiry_receipt.md`.
+- `paper/artifacts/sandbox_harness_outputs.txt` captures sandbox-only
+  self-checks, blank templates, and refused real-run attempts. It is ignored by
+  Git and creates no measured result, screenshot, or spoken example.
 
 ## Additional publication-blocker triage (2026-11-10)
 

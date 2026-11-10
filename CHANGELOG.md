@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — sandbox harness output transcript
+
+- Captured all seven experiment harness self-checks, blank/plan/worksheet
+  templates, refused real-run attempts, live-smoke gates, and final-release
+  gate in `paper/artifacts/sandbox_harness_outputs.txt`.
+- Clearly labeled as software-only; no empirical C/A/B/D/E result, dashboard
+  screenshot, spoken input-output example, dataset, participant, ethics
+  approval, `v1.0.0` tag, release, or DOI was created.
+- Added the local transcript to `.gitignore` so the repository audit remains
+  at 110 tracked/new files.
+
 ## Unreleased — cited published-context addition
 
 - Added `TABLE I-B. PUBLISHED CONTEXT (NOT TRINEXIS MEASUREMENTS)` to Section II

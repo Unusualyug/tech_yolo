@@ -19,5 +19,6 @@ experiments/results/*.jsonl
 *.log
 speech_trinexis_*.mp3
 
-# Generated local Step 0/1 sandbox transcript (not paper source)
+# Generated local sandbox transcripts (software-only, not paper source)
 paper/artifacts/step0_step1_sandbox_output.txt
+paper/artifacts/sandbox_harness_outputs.txt

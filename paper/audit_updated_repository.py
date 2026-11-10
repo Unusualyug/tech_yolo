@@ -166,6 +166,7 @@ def main() -> None:
             "hand-run live smoke-test checklist, dashboard/spoken-example verifier, and prereq inspector",
             "protocol-only paper reframing, preregistered measurement plan, one limitations paragraph, and Figure 2 untagged-snapshot correction",
             "clearly cited published-context table using verified scale facts from [2], [3], [19]; no external benchmark value entered into TRINEXIS result cells",
+            "sandbox-only harness self-check/blank-template transcript; no empirical result, screenshot, spoken example, or DOI created",
             "arXiv/institutional-report guide notes, mechanical metadata check, and final-release gate",
             "early departmental ethics-route inquiry sent with a verifiable Gmail receipt; no approval claimed",
             "all 24 reference rows ticked after direct publisher/official-page recheck",
