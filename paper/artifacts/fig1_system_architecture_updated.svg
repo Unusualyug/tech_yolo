@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#334155"/></marker></defs>
+<rect width="1000" height="560" fill="white"/>
+<line x1="210.0" y1="105.0" x2="250.0" y2="105.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="430.0" y1="105.0" x2="470.0" y2="105.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="650.0" y1="105.0" x2="690.0" y2="105.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="690.0" y1="135.7" x2="430.0" y2="224.3" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="430.0" y1="255.0" x2="470.0" y2="255.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="650.0" y1="255.0" x2="690.0" y2="255.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="690.0" y1="285.7" x2="430.0" y2="374.3" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="430.0" y1="405.0" x2="470.0" y2="405.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="780.0" y1="300.0" x2="780.0" y2="360.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="210.0" y1="405.0" x2="250.0" y2="405.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="6 5"/>
+<rect x="30" y="60" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="120.0" y="99.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="120.0" dy="0">Browser</tspan><tspan x="120.0" dy="24">dashboard</tspan></text>
+<rect x="250" y="60" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="340.0" y="99.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="340.0" dy="0">Flask control</tspan><tspan x="340.0" dy="24">REST + session</tspan></text>
+<rect x="470" y="60" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="560.0" y="99.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="560.0" dy="0">Configurable</tspan><tspan x="560.0" dy="24">camera</tspan></text>
+<rect x="690" y="60" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="780.0" y="99.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="780.0" dy="0">OpenCV</tspan><tspan x="780.0" dy="24">capture</tspan></text>
+<rect x="250" y="210" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="340.0" y="249.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="340.0" dy="0">Interval</tspan><tspan x="340.0" dy="24">throttle</tspan></text>
+<rect x="470" y="210" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="560.0" y="249.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="560.0" dy="0">YOLO-World</tspan><tspan x="560.0" dy="24">text prompts</tspan></text>
+<rect x="690" y="210" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="780.0" y="249.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="780.0" dy="0">Detection</tspan><tspan x="780.0" dy="24">records</tspan></text>
+<rect x="30" y="360" width="180" height="90" rx="10" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.5"/>
+<text x="120.0" y="399.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="120.0" dy="0">Optional face</tspan><tspan x="120.0" dy="24">hook (absent)</tspan></text>
+<rect x="250" y="360" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="340.0" y="399.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="340.0" dy="0">Alert-aware</tspan><tspan x="340.0" dy="24">selector</tspan></text>
+<rect x="470" y="360" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="560.0" y="399.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="560.0" dy="0">Language-</tspan><tspan x="560.0" dy="24">configured TTS</tspan></text>
+<rect x="690" y="360" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="780.0" y="399.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="780.0" dy="0">Telemetry</tspan><tspan x="780.0" dy="24">heatmap / logs</tspan></text>
+<text x="30" y="490" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">Solid arrows: implemented runtime paths. Dashed arrow: optional/unavailable face-recognition hook.</text>
+<text x="30" y="512" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">No training, benchmark-evaluation, or human-participant path is shown.</text>
+</svg>

@@ -851,7 +851,7 @@ function updateHeader(
 
         $("fps-val")
             .textContent =
-            `${stats.fps || 0} FPS`;
+            `${stats.capture_fps || 0} CAPTURE FPS`;
 
     }
 
@@ -860,7 +860,7 @@ function updateHeader(
 
         $("stage-fps")
             .textContent =
-            `${stats.fps || 0} FPS`;
+            `${stats.inference_fps || 0} INFER/s`;
 
     }
 

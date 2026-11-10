@@ -1,0 +1,36 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "TRINEXIS",
+  "description": "An interval-throttled open-vocabulary webcam system with alert-aware language-configured speech, session telemetry, and implementation verification.",
+  "version": "v0.2.0-updated",
+  "dateModified": "2026-11-10",
+  "license": "https://spdx.org/licenses/AGPL-3.0-only.html",
+  "programmingLanguage": "Python",
+  "codeRepository": "https://github.com/Unusualyug/tech_yolo",
+  "author": [
+    {
+      "@type": "Person",
+      "givenName": "Yug G.",
+      "familyName": "Lakhani",
+      "@id": "https://orcid.org/0009-0004-2930-4953",
+      "affiliation": {
+        "@type": "Organization",
+        "name": "Gyanmanjari Innovative University"
+      }
+    }
+  ],
+  "keywords": [
+    "open-vocabulary detection",
+    "YOLO-World",
+    "Flask",
+    "speech interface",
+    "research software",
+    "implementation verification"
+  ],
+  "referencePublication": {
+    "@type": "ScholarlyArticle",
+    "name": "TRINEXIS: An Interval-Throttled Open-Vocabulary Webcam System with Alert-Aware Speech and Implementation Verification",
+    "datePublished": "2026-11-10"
+  }
+}

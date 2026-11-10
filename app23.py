@@ -4,13 +4,8 @@
 #
 # Flask + YOLO-World + Webcam + Face Recognition + TTS
 #
-# IMPORTANT:
-# This version uses ONLY the external USB webcam.
-#
-# Change:
-#     WEBCAM_INDEX = 1
-#
-# to 0 / 2 / 3 if Windows assigns your USB webcam another index.
+# Camera index and backend are configurable with TRINEXIS_CAMERA_INDEX and
+# TRINEXIS_CAMERA_BACKEND. See README.md and .env.example.
 # ============================================================
 
 
@@ -27,6 +22,7 @@ import random
 import json
 import os
 import io
+import uuid
 
 import numpy as np
 
@@ -37,12 +33,24 @@ from flask import (
     jsonify,
     request,
     send_file,
+    session,
 )
 
 from ultralytics import YOLO
 from datetime import datetime
 from gtts import gTTS
 from collections import defaultdict
+from trinexis_core import (
+    ALLOWED_MODELS,
+    camera_config,
+    normalize_model_name,
+    rate_per_second,
+    relative_distance_index,
+    select_speech_objects,
+    single_client_check,
+    time_decay_factor,
+    validate_control_request,
+)
 
 
 # ============================================================
@@ -50,29 +58,77 @@ from collections import defaultdict
 # ============================================================
 
 app = Flask(__name__)
+app.secret_key = os.environ.get(
+    "TRINEXIS_SECRET_KEY",
+    os.urandom(24).hex()
+)
+
+API_TOKEN = os.environ.get("TRINEXIS_API_TOKEN", "").strip()
+SINGLE_CLIENT_MODE = os.environ.get("TRINEXIS_SINGLE_CLIENT", "1") == "1"
+SINGLE_CLIENT_TIMEOUT_S = float(os.environ.get("TRINEXIS_CLIENT_TIMEOUT_S", "60"))
+ACTIVE_CLIENT_ID = None
+ACTIVE_CLIENT_LAST_SEEN = 0.0
+client_lock = threading.Lock()
+
+
+@app.before_request
+def enforce_control_policy():
+    """Apply optional token auth and single-client control arbitration."""
+    global ACTIVE_CLIENT_ID
+    global ACTIVE_CLIENT_LAST_SEEN
+
+    if request.method == "GET" or request.path.startswith("/static/"):
+        return None
+
+    if not validate_control_request(API_TOKEN, request.headers):
+        return jsonify({
+            "status": "error",
+            "message": "Invalid or missing API token"
+        }), 401
+
+    if SINGLE_CLIENT_MODE:
+        client_id = session.get("client_id")
+        if not client_id:
+            client_id = uuid.uuid4().hex
+            session["client_id"] = client_id
+        now = time.time()
+        with client_lock:
+            allowed, active, seen = single_client_check(
+                ACTIVE_CLIENT_ID,
+                client_id,
+                ACTIVE_CLIENT_LAST_SEEN,
+                now,
+                SINGLE_CLIENT_TIMEOUT_S,
+            )
+            ACTIVE_CLIENT_ID = active
+            ACTIVE_CLIENT_LAST_SEEN = seen
+        if not allowed:
+            return jsonify({
+                "status": "error",
+                "message": "Another client currently controls this single-client session"
+            }), 409
+    return None
 
 
 # ============================================================
 # CAMERA CONFIGURATION
 # ============================================================
 
-# ============================================================
-# EXTERNAL USB WEBCAM ONLY
-#
-# Typical Windows setup:
-#
-# 0 = laptop camera
-# 1 = USB webcam
-#
-# If your USB webcam is another index, change ONLY this number.
-# ============================================================
+# Camera index, backend, and resolution are configurable through environment
+# variables so the same source works on Windows, Linux, and macOS.
+CAMERA_CONFIG = camera_config(os.environ)
+WEBCAM_INDEX = CAMERA_CONFIG["index"]
+CAMERA_WIDTH = int(os.environ.get("TRINEXIS_CAMERA_WIDTH", "1280"))
+CAMERA_HEIGHT = int(os.environ.get("TRINEXIS_CAMERA_HEIGHT", "720"))
+CAMERA_BACKEND_NAME = CAMERA_CONFIG["backend"]
 
-WEBCAM_INDEX = 1
-
-CAMERA_WIDTH = 1280
-CAMERA_HEIGHT = 720
-
-CAMERA_BACKEND = cv2.CAP_DSHOW
+_BACKEND_CONSTANTS = {
+    "AUTO": cv2.CAP_ANY,
+    "DSHOW": getattr(cv2, "CAP_DSHOW", cv2.CAP_ANY),
+    "MSMF": getattr(cv2, "CAP_MSMF", cv2.CAP_ANY),
+    "V4L2": getattr(cv2, "CAP_V4L2", cv2.CAP_ANY),
+}
+CAMERA_BACKEND = _BACKEND_CONSTANTS.get(CAMERA_BACKEND_NAME, cv2.CAP_ANY)
 
 
 # ============================================================
@@ -657,6 +713,7 @@ except Exception as e:
 # GLOBAL STATE
 # ============================================================
 
+# Heuristic constants for a non-metric relative distance index.
 FOCAL_LENGTH = 360
 
 KNOWN_WIDTH = 60
@@ -681,6 +738,14 @@ frame_lock = threading.Lock()
 
 heatmap_accumulator = None
 
+last_heatmap_update = None
+
+HEATMAP_HALF_LIFE_S = float(
+    os.environ.get("TRINEXIS_HEATMAP_HALF_LIFE_S", "60")
+)
+
+recent_inference_times = []
+
 alert_objects = set()
 
 
@@ -697,6 +762,10 @@ stats = {
     "session_start": None,
 
     "fps": 0,
+
+    "capture_fps": 0,
+
+    "inference_fps": 0.0,
 
     "model_name": MODEL_NAME,
 
@@ -1136,35 +1205,14 @@ def build_speech_text(
 
 
     # --------------------------------------------------------
-    # PRIORITY
+    # ALERT-AWARE SELECTION (BEFORE TRUNCATION)
     # --------------------------------------------------------
 
-    ranked = sorted(
-
+    selected = select_speech_objects(
         annotated_objects,
-
-        key=lambda x: (
-
-            0
-            if x["name"] in alert_objects
-            else 1,
-
-            -x["confidence"],
-
-            x["distance"],
-
-        )
-
+        alert_objects,
+        MAX_OBJECTS_TO_SPEAK
     )
-
-
-    # --------------------------------------------------------
-    # ONLY 2 OBJECTS
-    # --------------------------------------------------------
-
-    selected = ranked[
-        :MAX_OBJECTS_TO_SPEAK
-    ]
 
 
     # --------------------------------------------------------
@@ -1209,7 +1257,7 @@ def build_speech_text(
 
     nearest = min(
 
-        annotated_objects,
+        selected,
 
         key=lambda x:
             x["distance"]
@@ -1220,7 +1268,7 @@ def build_speech_text(
     nearest_text = (
 
         f"{nearest['name']} "
-        f"{nearest['distance']:.0f} cm"
+        f"distance index {nearest['distance']:.1f}"
 
     )
 
@@ -1582,49 +1630,41 @@ def update_heatmap(
 ):
 
     global heatmap_accumulator
+    global last_heatmap_update
 
+    now = time.time()
 
     if heatmap_accumulator is None:
 
         heatmap_accumulator = np.zeros(
-
             shape[:2],
-
             dtype=np.float32
-
         )
 
+    elapsed = 0.0
+    if last_heatmap_update is not None:
+        elapsed = max(0.0, now - last_heatmap_update)
+
+    # Frame-rate-independent exponential decay.
+    heatmap_accumulator *= time_decay_factor(
+        elapsed,
+        HEATMAP_HALF_LIFE_S
+    )
 
     for box in boxes:
-
         x1, y1, x2, y2 = box
-
-
-        cx = int(
-            (x1 + x2) / 2
-        )
-
-        cy = int(
-            (y1 + y2) / 2
-        )
-
-
+        cx = int((x1 + x2) / 2)
+        cy = int((y1 + y2) / 2)
         cv2.circle(
-
             heatmap_accumulator,
-
             (cx, cy),
-
             35,
-
             1,
-
             -1,
-
         )
 
+    last_heatmap_update = now
 
-    heatmap_accumulator *= 0.995
 
 
 # ============================================================
@@ -1747,15 +1787,13 @@ def annotate_frame(
 
 
             # ------------------------------------------------
-            # SIMPLE DISTANCE ESTIMATE
+            # RELATIVE DISTANCE INDEX (NOT METRIC DISTANCE)
             # ------------------------------------------------
 
-            distance_cm = (
-
-                KNOWN_WIDTH
-                * FOCAL_LENGTH
-                / width
-
+            distance_index = relative_distance_index(
+                width,
+                KNOWN_WIDTH,
+                FOCAL_LENGTH
             )
 
 
@@ -1941,7 +1979,7 @@ def annotate_frame(
 
                 f"{class_name} "
                 f"{confidence:.0%} | "
-                f"{distance_cm:.0f}cm"
+                f"distance index {distance_index:.1f}"
 
             )
 
@@ -2055,7 +2093,7 @@ def annotate_frame(
 
                 "distance":
                     round(
-                        distance_cm,
+                        distance_index,
                         1
                     ),
 
@@ -2220,26 +2258,11 @@ def annotate_frame(
         # SHORT SPEECH
         # ====================================================
 
-        ranked = sorted(
-
-            annotated,
-
-            key=lambda x:
-                x["confidence"],
-
-            reverse=True
-
-        )
-
-
-        speech_objects = ranked[
-            :MAX_OBJECTS_TO_SPEAK
-        ]
-
-
+        # Pass the complete detection list so alert-aware ranking happens
+        # before the spoken shortlist is truncated.
         speech_text = (
             build_speech_text(
-                speech_objects,
+                annotated,
                 language
             )
         )
@@ -2583,6 +2606,10 @@ def generate_feed():
                 "fps"
             ] = fps_counter
 
+            stats[
+                "capture_fps"
+            ] = fps_counter
+
 
             fps_counter = 0
 
@@ -2619,6 +2646,24 @@ def generate_feed():
 
                     confidence_threshold
 
+                )
+
+
+                # Track detector cadence separately from camera frame rate.
+                now = time.time()
+                recent_inference_times.append(now)
+                cutoff = now - 5.0
+                while (
+                    recent_inference_times
+                    and recent_inference_times[0] < cutoff
+                ):
+                    recent_inference_times.pop(0)
+                stats[
+                    "inference_fps"
+                ] = rate_per_second(
+                    recent_inference_times,
+                    now,
+                    5.0
                 )
 
 
@@ -3007,10 +3052,10 @@ def generate_feed():
 
             frame,
 
-            f"FPS: {stats['fps']}",
+            f"Capture: {stats['capture_fps']} fps",
 
             (
-                width - 130,
+                width - 220,
                 28
             ),
 
@@ -3035,10 +3080,10 @@ def generate_feed():
 
             frame,
 
-            "USB WEBCAM",
+            f"Inference: {stats['inference_fps']:.2f}/s",
 
             (
-                width - 180,
+                width - 220,
                 52
             ),
 
@@ -3510,6 +3555,17 @@ def set_model():
         "yolov8s-worldv2.pt"
 
     )
+
+
+    try:
+        selected_model = normalize_model_name(
+            selected_model
+        )
+    except ValueError as exc:
+        return jsonify({
+            "status": "error",
+            "message": str(exc)
+        }), 400
 
 
     try:
@@ -4115,6 +4171,16 @@ def get_logs():
                     "fps"
                 ],
 
+            "capture_fps":
+                stats[
+                    "capture_fps"
+                ],
+
+            "inference_fps":
+                stats[
+                    "inference_fps"
+                ],
+
             "model_name":
                 stats[
                     "model_name"
@@ -4180,7 +4246,7 @@ def get_logs():
                 WEBCAM_INDEX,
 
             "camera_source":
-                "External USB Webcam",
+                "Configurable camera",
 
         }
 
@@ -4634,9 +4700,17 @@ if __name__ == "__main__":
 
         debug=False,
 
-        host="0.0.0.0",
+        host=os.environ.get(
+            "TRINEXIS_HOST",
+            "127.0.0.1"
+        ),
 
-        port=5000,
+        port=int(
+            os.environ.get(
+                "TRINEXIS_PORT",
+                "5000"
+            )
+        ),
 
         threaded=True
 

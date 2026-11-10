@@ -1,0 +1,9 @@
+# Pinned direct runtime dependencies (versions available on PyPI on 2026-11-10).
+# Transitive dependencies are resolved by pip. Verify compatibility in the
+# deployment environment before production use.
+Flask==3.1.3
+numpy==2.5.4
+opencv-python==5.0.0.93
+ultralytics==8.4.208
+gTTS==2.5.4
+Pillow==13.0.0

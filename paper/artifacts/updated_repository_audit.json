@@ -1,0 +1,147 @@
+{
+  "audit_date": "2026-11-10",
+  "release_tag": "v0.2.0-updated",
+  "release_url": "https://github.com/Unusualyug/tech_yolo/releases/tag/v0.2.0-updated",
+  "source_baseline_commit": "6a0405613171a5ed400a7339c3e0a8f6bb94b26d",
+  "zenodo_doi": null,
+  "zenodo_status": "pending author authorization",
+  "license": "AGPL-3.0-only",
+  "evidence_boundary": "Static and synthetic verification only. No model inference, camera capture, labeled dataset, hardware timing campaign, distance calibration, translated-template rating, or human-participant evaluation was performed.",
+  "repository_fixes": [
+    "AGPL-3.0 LICENSE, README.md, pinned requirements.txt, CITATION.cff, codemeta.json, .env.example, THIRD_PARTY_LICENSES.md",
+    "configurable camera index/backend, host/port, API token, single-client mode, and heatmap half-life",
+    "alert-aware speech selection before shortlist truncation",
+    "separate capture_fps and inference_fps counters",
+    "AVG CONFIDENCE dashboard label",
+    "time-based heatmap decay and unitless relative distance index",
+    "model allowlist for /set_model",
+    "standard-library unit and source-contract tests",
+    "enlarged PNG plus standalone SVG and vector-PDF figures"
+  ],
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "python_version": "3.11.2",
+    "returncode": 0,
+    "test_count": 24,
+    "failures": 0,
+    "errors": 0,
+    "ok": true
+  },
+  "alert_selection_audit": {
+    "experiment": "seeded_synthetic_alert_selection_regression",
+    "seed": 20261110,
+    "cases": 1000,
+    "objects_per_case": 6,
+    "alert_objects_per_case": 1,
+    "max_spoken_objects": 2,
+    "legacy_drop_count": 681,
+    "updated_drop_count": 0,
+    "legacy_drop_rate": 0.681,
+    "updated_drop_rate": 0.0,
+    "absolute_drop_rate_reduction": 0.681,
+    "relative_drop_rate_reduction": 1.0,
+    "evidence_type": "deterministic_software_regression_test",
+    "disclaimer": "Synthetic detection records only. No model inference, camera capture, labeled dataset, human participant, or real-world effectiveness measurement was involved."
+  },
+  "file_count": 64,
+  "files": [
+    ".env.example",
+    ".gitattributes",
+    ".gitignore",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    "LICENSE",
+    "README.md",
+    "RELEASE_NOTES.md",
+    "THIRD_PARTY_LICENSES.md",
+    "app.py",
+    "app23.py",
+    "camera_test.py",
+    "codemeta.json",
+    "experiments/__init__.py",
+    "experiments/alert_selection_audit.py",
+    "paper/README.md",
+    "paper/artifacts/alert_selection_audit.json",
+    "paper/artifacts/fig1_system_architecture.png",
+    "paper/artifacts/fig1_system_architecture_updated.pdf",
+    "paper/artifacts/fig1_system_architecture_updated.png",
+    "paper/artifacts/fig1_system_architecture_updated.svg",
+    "paper/artifacts/fig2_implementation_verification.pdf",
+    "paper/artifacts/fig2_implementation_verification.png",
+    "paper/artifacts/fig2_implementation_verification.svg",
+    "paper/artifacts/fig2_static_audit_workflow.png",
+    "paper/artifacts/repository_audit.json",
+    "paper/audit_repository.py",
+    "paper/audit_updated_repository.py",
+    "paper/build_manuscript.py",
+    "paper/build_updated_manuscript.py",
+    "paper/delivery/tech_yolo_final_paper.zip",
+    "paper/make_figures.py",
+    "paper/make_updated_figures.py",
+    "paper/manuscript_content.py",
+    "paper/requirements-paper.txt",
+    "paper/tech_yolo_final_research_paper.docx",
+    "paper/tech_yolo_final_research_paper.md",
+    "paper/tech_yolo_final_research_paper.pdf",
+    "paper/tech_yolo_updated_research_paper.docx",
+    "paper/tech_yolo_updated_research_paper.md",
+    "paper/tech_yolo_updated_research_paper.pdf",
+    "paper/updated_manuscript_content.py",
+    "requirements.txt",
+    "speech.mp3",
+    "speech_30672.mp3",
+    "speech_5060.mp3",
+    "speech_temp_30012.mp3",
+    "speech_trinexis_19248.mp3",
+    "speech_trinexis_29268.mp3",
+    "static/Unnamed1.png",
+    "static/script.js",
+    "static/style.css",
+    "static/unnamed.png",
+    "templates/index.html",
+    "tests/__init__.py",
+    "tests/test_core.py",
+    "tests/test_source_contract.py",
+    "trinexis_core.py",
+    "utils/coco.txt",
+    "weights/clip/ViT-B-32.pt",
+    "yolo11m.pt",
+    "yolo11x.pt",
+    "yolov8n.pt",
+    "yolov8s-worldv2.pt"
+  ],
+  "artifact_checksums": {
+    "paper/tech_yolo_updated_research_paper.pdf": {
+      "bytes": 35546,
+      "sha256": "bbc92ec0f15d3bc61db3920cf847b27820ca9ae6be3a7a345cb768fbdb1322c1"
+    },
+    "paper/tech_yolo_updated_research_paper.docx": {
+      "bytes": 145995,
+      "sha256": "59aaeb1eb5c7950893e310bdf10e16be4000fea3fb79f8ea44d5640ba51c6742"
+    },
+    "paper/tech_yolo_updated_research_paper.md": {
+      "bytes": 28622,
+      "sha256": "83fd985e405fe1118026fe9e35848bd0cd43300461ba1b80c6a42ef0332222b4"
+    },
+    "paper/artifacts/alert_selection_audit.json": {
+      "bytes": 618,
+      "sha256": "7d700bfa2347e36bc6ab8f38e87ecba76ce5e085d2ede9e90fe8cbb34882d9d4"
+    },
+    "paper/artifacts/fig1_system_architecture_updated.svg": {
+      "bytes": 5571,
+      "sha256": "81e9679e14456d5fb4714a96c77a7a5fce5507582384aff25ee0a59de5c5f081"
+    },
+    "paper/artifacts/fig1_system_architecture_updated.pdf": {
+      "bytes": 3424,
+      "sha256": "99dab079da07179da882855c0d7ba1bc95780ff4aa165f96ce5044be3c0e1b66"
+    },
+    "paper/artifacts/fig2_implementation_verification.svg": {
+      "bytes": 3858,
+      "sha256": "a45ad834c1b6538a396a0e117307123a5eeee13af2b137a0e24187740d59d3fd"
+    },
+    "paper/artifacts/fig2_implementation_verification.pdf": {
+      "bytes": 2825,
+      "sha256": "f9aa6219844e7a53d1bd9bef11eaccf2a2a70677818aa0d2b3f0feb15088bea6"
+    }
+  }
+}

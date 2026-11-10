@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#334155"/></marker></defs>
+<rect width="1000" height="560" fill="white"/>
+<line x1="220.0" y1="125.0" x2="260.0" y2="125.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="440.0" y1="125.0" x2="480.0" y2="125.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="660.0" y1="125.0" x2="700.0" y2="125.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="520.5" y1="170.0" x2="399.5" y2="280.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="440.0" y1="325.0" x2="480.0" y2="325.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="660.0" y1="325.0" x2="700.0" y2="325.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="790.0" y1="170.0" x2="790.0" y2="280.0" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="40" y="80" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="130.0" y="119.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="130.0" dy="0">Frozen source</tspan><tspan x="130.0" dy="24">snapshot</tspan></text>
+<rect x="260" y="80" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="350.0" y="119.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="350.0" dy="0">Repository</tspan><tspan x="350.0" dy="24">fixes</tspan></text>
+<rect x="480" y="80" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="570.0" y="119.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="570.0" dy="0">trinexis_core</tspan><tspan x="570.0" dy="24">pure helpers</tspan></text>
+<rect x="700" y="80" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="790.0" y="119.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="790.0" dy="0">unittest</tspan><tspan x="790.0" dy="24">suite</tspan></text>
+<rect x="260" y="280" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="350.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="350.0" dy="0">Seeded alert</tspan><tspan x="350.0" dy="24">audit</tspan></text>
+<rect x="480" y="280" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="570.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="570.0" dy="0">Tagged</tspan><tspan x="570.0" dy="24">release</tspan></text>
+<rect x="700" y="280" width="180" height="90" rx="10" fill="#EAF2FF" stroke="#2563EB" stroke-width="1.5"/>
+<text x="790.0" y="319.0" text-anchor="middle" font-family="DejaVu Sans, Arial, sans-serif" font-size="19" font-weight="bold" fill="#0F172A"><tspan x="790.0" dy="0">Updated</tspan><tspan x="790.0" dy="24">manuscript</tspan></text>
+<text x="30" y="490" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">All verification is static or synthetic: no model inference, camera capture, dataset, or human data.</text>
+<text x="30" y="512" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" fill="#475569">The tagged release and manuscript are reproducible from checked-in scripts and metadata.</text>
+</svg>

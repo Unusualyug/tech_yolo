@@ -1,5 +1,17 @@
 import cv2
+import os
 import time
+
+from trinexis_core import camera_config
+
+_CAMERA_CONFIG = camera_config(os.environ)
+_BACKEND_NAME = _CAMERA_CONFIG["backend"]
+_BACKEND = {
+    "AUTO": cv2.CAP_ANY,
+    "DSHOW": getattr(cv2, "CAP_DSHOW", cv2.CAP_ANY),
+    "MSMF": getattr(cv2, "CAP_MSMF", cv2.CAP_ANY),
+    "V4L2": getattr(cv2, "CAP_V4L2", cv2.CAP_ANY),
+}.get(_BACKEND_NAME, cv2.CAP_ANY)
 
 print("=" * 60)
 print("TRINEXIS CAMERA DETECTOR")
@@ -13,7 +25,7 @@ for index in range(10):
 
     cap = cv2.VideoCapture(
         index,
-        cv2.CAP_DSHOW
+        _BACKEND
     )
 
     if not cap.isOpened():
@@ -32,7 +44,7 @@ for index in range(10):
         720
     )
 
-    # Give DirectShow time to initialize
+    # Give the selected backend time to initialize.
     time.sleep(1)
 
     valid_frames = 0

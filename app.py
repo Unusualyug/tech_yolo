@@ -1,3 +1,6 @@
+# LEGACY FROZEN VARIANT: app23.py is the maintained backend.
+# This file is retained for historical comparison only.
+
 import cv2
 import time
 import threading

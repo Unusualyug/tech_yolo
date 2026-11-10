@@ -1,0 +1,635 @@
+{
+  "audit_date": "2026-11-10",
+  "repository": "Unusualyug/tech_yolo",
+  "branch": "arena/69777d37-tech-yolo",
+  "commit": "6a0405613171a5ed400a7339c3e0a8f6bb94b26d",
+  "audited_tree": "6a0405613171a5ed400a7339c3e0a8f6bb94b26d",
+  "python_ast_runtime": "CPython 3.11.2 (standard-library ast module)",
+  "tracked_file_count": 22,
+  "tracked_files": [
+    ".gitattributes",
+    ".gitignore",
+    "app.py",
+    "app23.py",
+    "camera_test.py",
+    "speech.mp3",
+    "speech_30672.mp3",
+    "speech_5060.mp3",
+    "speech_temp_30012.mp3",
+    "speech_trinexis_19248.mp3",
+    "speech_trinexis_29268.mp3",
+    "static/Unnamed1.png",
+    "static/script.js",
+    "static/style.css",
+    "static/unnamed.png",
+    "templates/index.html",
+    "utils/coco.txt",
+    "weights/clip/ViT-B-32.pt",
+    "yolo11m.pt",
+    "yolo11x.pt",
+    "yolov8n.pt",
+    "yolov8s-worldv2.pt"
+  ],
+  "source_syntax_parse": {
+    "app.py": "pass",
+    "app23.py": "pass",
+    "camera_test.py": "pass"
+  },
+  "backend_variants": {
+    "app.py": {
+      "file": "app.py",
+      "lines": 987,
+      "routes": 20,
+      "vocabulary_raw": 459,
+      "vocabulary_unique": 457,
+      "language_code_entries": 72,
+      "main_speech_templates": 72,
+      "object_detail_templates": 23,
+      "face_greeting_templates": 0,
+      "max_objects_to_speak": 8,
+      "speech_cooldown_seconds": 4.0,
+      "predict_arguments": {
+        "source": "expression",
+        "conf": "expression",
+        "imgsz": "expression",
+        "iou": 0.5,
+        "max_det": 500,
+        "verbose": false
+      }
+    },
+    "app23.py": {
+      "file": "app23.py",
+      "lines": 4643,
+      "routes": 23,
+      "vocabulary_raw": 457,
+      "vocabulary_unique": 455,
+      "language_code_entries": 72,
+      "main_speech_templates": 62,
+      "object_detail_templates": 0,
+      "face_greeting_templates": 22,
+      "max_objects_to_speak": 2,
+      "speech_cooldown_seconds": 4.5,
+      "predict_arguments": {
+        "source": "expression",
+        "conf": "expression",
+        "imgsz": "expression",
+        "iou": 0.5,
+        "max_det": 100,
+        "verbose": false
+      }
+    }
+  },
+  "python_files": {
+    "app.py": {
+      "lines": 987,
+      "routes": 20,
+      "top_level_functions": 28
+    },
+    "app23.py": {
+      "lines": 4643,
+      "routes": 23,
+      "top_level_functions": 33
+    },
+    "camera_test.py": {
+      "lines": 124,
+      "top_level_functions": 0
+    }
+  },
+  "configuration_constants_app23": {
+    "model_name": "yolov8s-worldv2.pt",
+    "webcam_index": 1,
+    "camera_width": 1280,
+    "camera_height": 720,
+    "img_size": 640,
+    "confidence_threshold": 0.15,
+    "interval_seconds": 1.5,
+    "known_width": 60,
+    "focal_length": 360,
+    "speech_cooldown_seconds": 4.5,
+    "max_objects_to_speak": 2,
+    "face_greeting_cooldown_seconds": 15.0
+  },
+  "vocabulary": {
+    "raw_entries": 457,
+    "unique_entries": 455
+  },
+  "language_resources": {
+    "language_code_map_entries": 72,
+    "speech_prefix_entries": 62,
+    "face_greeting_entries": 22
+  },
+  "coco_label_file": {
+    "nonempty_labels": 80,
+    "unique_labels": 80,
+    "first": "person",
+    "last": "toothbrush"
+  },
+  "routes": {
+    "app.py": [
+      {
+        "path": "/",
+        "handler": "index",
+        "methods": [
+          "GET"
+        ],
+        "line": 784
+      },
+      {
+        "path": "/video_feed",
+        "handler": "video_feed",
+        "methods": [
+          "GET"
+        ],
+        "line": 788
+      },
+      {
+        "path": "/start_detection",
+        "handler": "start_detection",
+        "methods": [
+          "POST"
+        ],
+        "line": 793
+      },
+      {
+        "path": "/stop_detection",
+        "handler": "stop_detection",
+        "methods": [
+          "POST"
+        ],
+        "line": 800
+      },
+      {
+        "path": "/set_language",
+        "handler": "set_language_route",
+        "methods": [
+          "POST"
+        ],
+        "line": 806
+      },
+      {
+        "path": "/set_confidence",
+        "handler": "set_confidence",
+        "methods": [
+          "POST"
+        ],
+        "line": 812
+      },
+      {
+        "path": "/set_interval",
+        "handler": "set_interval_route",
+        "methods": [
+          "POST"
+        ],
+        "line": 818
+      },
+      {
+        "path": "/set_resolution",
+        "handler": "set_resolution",
+        "methods": [
+          "POST"
+        ],
+        "line": 824
+      },
+      {
+        "path": "/set_model",
+        "handler": "set_model",
+        "methods": [
+          "POST"
+        ],
+        "line": 830
+      },
+      {
+        "path": "/toggle_speech",
+        "handler": "toggle_speech",
+        "methods": [
+          "POST"
+        ],
+        "line": 844
+      },
+      {
+        "path": "/set_speech_cooldown",
+        "handler": "set_speech_cooldown",
+        "methods": [
+          "POST"
+        ],
+        "line": 850
+      },
+      {
+        "path": "/set_max_speak_objects",
+        "handler": "set_max_speak_objects",
+        "methods": [
+          "POST"
+        ],
+        "line": 856
+      },
+      {
+        "path": "/set_custom_vocab",
+        "handler": "set_custom_vocab",
+        "methods": [
+          "POST"
+        ],
+        "line": 862
+      },
+      {
+        "path": "/get_languages",
+        "handler": "get_languages",
+        "methods": [
+          "GET"
+        ],
+        "line": 871
+      },
+      {
+        "path": "/get_logs",
+        "handler": "get_logs",
+        "methods": [
+          "GET"
+        ],
+        "line": 898
+      },
+      {
+        "path": "/clear_logs",
+        "handler": "clear_logs",
+        "methods": [
+          "POST"
+        ],
+        "line": 931
+      },
+      {
+        "path": "/snapshot",
+        "handler": "snapshot",
+        "methods": [
+          "GET"
+        ],
+        "line": 942
+      },
+      {
+        "path": "/heatmap",
+        "handler": "get_heatmap",
+        "methods": [
+          "GET"
+        ],
+        "line": 956
+      },
+      {
+        "path": "/export_logs",
+        "handler": "export_logs",
+        "methods": [
+          "GET"
+        ],
+        "line": 965
+      },
+      {
+        "path": "/get_classes",
+        "handler": "get_classes",
+        "methods": [
+          "GET"
+        ],
+        "line": 974
+      }
+    ],
+    "app23.py": [
+      {
+        "path": "/",
+        "handler": "index",
+        "methods": [
+          "GET"
+        ],
+        "line": 3146
+      },
+      {
+        "path": "/video_feed",
+        "handler": "video_feed",
+        "methods": [
+          "GET"
+        ],
+        "line": 3158
+      },
+      {
+        "path": "/start_detection",
+        "handler": "start_detection",
+        "methods": [
+          "POST"
+        ],
+        "line": 3181
+      },
+      {
+        "path": "/stop_detection",
+        "handler": "stop_detection",
+        "methods": [
+          "POST"
+        ],
+        "line": 3209
+      },
+      {
+        "path": "/set_language",
+        "handler": "set_language_route",
+        "methods": [
+          "POST"
+        ],
+        "line": 3231
+      },
+      {
+        "path": "/set_confidence",
+        "handler": "set_confidence",
+        "methods": [
+          "POST"
+        ],
+        "line": 3279
+      },
+      {
+        "path": "/set_interval",
+        "handler": "set_interval_route",
+        "methods": [
+          "POST"
+        ],
+        "line": 3348
+      },
+      {
+        "path": "/set_resolution",
+        "handler": "set_resolution",
+        "methods": [
+          "POST"
+        ],
+        "line": 3417
+      },
+      {
+        "path": "/set_model",
+        "handler": "set_model",
+        "methods": [
+          "POST"
+        ],
+        "line": 3492
+      },
+      {
+        "path": "/toggle_speech",
+        "handler": "toggle_speech",
+        "methods": [
+          "POST"
+        ],
+        "line": 3584
+      },
+      {
+        "path": "/set_speech_cooldown",
+        "handler": "set_speech_cooldown",
+        "methods": [
+          "POST"
+        ],
+        "line": 3632
+      },
+      {
+        "path": "/set_max_speak_objects",
+        "handler": "set_max_speak_objects",
+        "methods": [
+          "POST"
+        ],
+        "line": 3696
+      },
+      {
+        "path": "/set_custom_vocab",
+        "handler": "set_custom_vocab",
+        "methods": [
+          "POST"
+        ],
+        "line": 3760
+      },
+      {
+        "path": "/set_alerts",
+        "handler": "set_alerts",
+        "methods": [
+          "POST"
+        ],
+        "line": 3858
+      },
+      {
+        "path": "/get_languages",
+        "handler": "get_languages",
+        "methods": [
+          "GET"
+        ],
+        "line": 3926
+      },
+      {
+        "path": "/get_logs",
+        "handler": "get_logs",
+        "methods": [
+          "GET"
+        ],
+        "line": 4037
+      },
+      {
+        "path": "/clear_logs",
+        "handler": "clear_logs",
+        "methods": [
+          "POST"
+        ],
+        "line": 4198
+      },
+      {
+        "path": "/snapshot",
+        "handler": "snapshot",
+        "methods": [
+          "GET"
+        ],
+        "line": 4256
+      },
+      {
+        "path": "/heatmap",
+        "handler": "get_heatmap",
+        "methods": [
+          "GET"
+        ],
+        "line": 4317
+      },
+      {
+        "path": "/export_logs",
+        "handler": "export_logs",
+        "methods": [
+          "GET"
+        ],
+        "line": 4397
+      },
+      {
+        "path": "/get_classes",
+        "handler": "get_classes",
+        "methods": [
+          "GET"
+        ],
+        "line": 4451
+      },
+      {
+        "path": "/get_camera",
+        "handler": "get_camera",
+        "methods": [
+          "GET"
+        ],
+        "line": 4472
+      },
+      {
+        "path": "/health",
+        "handler": "health",
+        "methods": [
+          "GET"
+        ],
+        "line": 4502
+      }
+    ]
+  },
+  "frontend_endpoints": {
+    "script_js": [
+      "/clear_logs",
+      "/export_logs",
+      "/get_classes",
+      "/get_languages",
+      "/get_logs",
+      "/heatmap",
+      "/set_alerts",
+      "/set_confidence",
+      "/set_interval",
+      "/set_language",
+      "/set_model",
+      "/set_resolution",
+      "/snapshot",
+      "/start_detection",
+      "/stop_detection",
+      "/toggle_speech"
+    ],
+    "index_html": [],
+    "union": [
+      "/clear_logs",
+      "/export_logs",
+      "/get_classes",
+      "/get_languages",
+      "/get_logs",
+      "/heatmap",
+      "/set_alerts",
+      "/set_confidence",
+      "/set_interval",
+      "/set_language",
+      "/set_model",
+      "/set_resolution",
+      "/snapshot",
+      "/start_detection",
+      "/stop_detection",
+      "/toggle_speech"
+    ]
+  },
+  "route_coverage": {
+    "frontend_endpoints_count": 16,
+    "endpoints_in_app23": [
+      "/clear_logs",
+      "/export_logs",
+      "/get_classes",
+      "/get_languages",
+      "/get_logs",
+      "/heatmap",
+      "/set_alerts",
+      "/set_confidence",
+      "/set_interval",
+      "/set_language",
+      "/set_model",
+      "/set_resolution",
+      "/snapshot",
+      "/start_detection",
+      "/stop_detection",
+      "/toggle_speech"
+    ],
+    "endpoints_missing_from_app23": [],
+    "endpoints_in_app": [
+      "/clear_logs",
+      "/export_logs",
+      "/get_classes",
+      "/get_languages",
+      "/get_logs",
+      "/heatmap",
+      "/set_confidence",
+      "/set_interval",
+      "/set_language",
+      "/set_model",
+      "/set_resolution",
+      "/snapshot",
+      "/start_detection",
+      "/stop_detection",
+      "/toggle_speech"
+    ],
+    "endpoints_missing_from_app": [
+      "/set_alerts"
+    ]
+  },
+  "lfs_weight_pointers": [
+    {
+      "path": "weights/clip/ViT-B-32.pt",
+      "is_lfs_pointer": true,
+      "oid_sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af",
+      "declared_bytes": 353976522
+    },
+    {
+      "path": "yolo11m.pt",
+      "is_lfs_pointer": true,
+      "oid_sha256": "d5ffc1a674953a08e11a8d21e022781b1b23a19b730afc309290bd9fb5305b95",
+      "declared_bytes": 40684120
+    },
+    {
+      "path": "yolo11x.pt",
+      "is_lfs_pointer": true,
+      "oid_sha256": "7bc158aa95c0ebfdd87f70f01653c1131b93e92522dbe15c228bcd742e773a24",
+      "declared_bytes": 114636239
+    },
+    {
+      "path": "yolov8n.pt",
+      "is_lfs_pointer": true,
+      "oid_sha256": "f59b3d833e2ff32e194b5bb8e08d211dc7c5bdf144b90d2c8412c47ccfc83b36",
+      "declared_bytes": 6549796
+    },
+    {
+      "path": "yolov8s-worldv2.pt",
+      "is_lfs_pointer": true,
+      "oid_sha256": "9b2c17ab6124a913e9b3a5c170617920d91b0f01111a8479da69f00e2cf27792",
+      "declared_bytes": 25923032
+    }
+  ],
+  "mp3_artifacts": [
+    {
+      "path": "speech.mp3",
+      "bytes": 0
+    },
+    {
+      "path": "speech_30672.mp3",
+      "bytes": 0
+    },
+    {
+      "path": "speech_5060.mp3",
+      "bytes": 0
+    },
+    {
+      "path": "speech_temp_30012.mp3",
+      "bytes": 27456
+    },
+    {
+      "path": "speech_trinexis_19248.mp3",
+      "bytes": 0
+    },
+    {
+      "path": "speech_trinexis_29268.mp3",
+      "bytes": 214272
+    }
+  ],
+  "repository_checks": {
+    "readme_present": false,
+    "license_present": false,
+    "requirements_present": false,
+    "tests_present": false,
+    "modules_faces_present": false,
+    "dataset_files_present": false,
+    "model_train_calls": 0,
+    "model_val_calls": 0
+  },
+  "source_sha256": {
+    "app.py": "ebe8247421aed17b512279e2a6fca87c9be1d28b43ce7ad7f1d9d1c423393c06",
+    "app23.py": "805b091800f7fcdeb1c47b0474c9a74b6f59f714c006667d60e179de85823a67",
+    "camera_test.py": "612c9c46e217be8bb9570e488e3760c7b06f2cc4ac81136092e5071dc27d41a3",
+    "static/script.js": "c59a969cdfa2a51c221cdfbdc0aa1f9503f144a24e66af69f21f069d0d04e67c",
+    "templates/index.html": "d0d4690061d739ad221f90882a08a88104788177a21d5e002bded800c0dd2716",
+    "static/style.css": "8934720df405365f47d1fffb6d23d54decb8b76ecf94117a611ff809c18a2547",
+    "utils/coco.txt": "d7654b26101572841ed1cd80aa03aa60e35f1b8acb4aea6906c4066886f16e07"
+  }
+}
