@@ -7,3 +7,7 @@ env/
 .idea/
 .env
 *.part
+# YOLO trained and pretrained model weights
+*.pt
+*.pth
+*.onnx
